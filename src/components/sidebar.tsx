@@ -54,26 +54,24 @@ const SidebarLayoutContent = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <div className=" ">
-        <header
-          className="sticky top-0 flex shrink-0 items-center gap-4 border-b bg-background px-5 md:px-10"
-          style={{ height: HEADER_HEIGHT }}
-        >
-          {isMobile ? (
-            <Button variant="ghost" size="icon" onClick={() => toggleSidebar()}>
-              <HamburgerMenu />
-            </Button>
-          ) : (
-            <Link href="/">
-              <Image src={logo} alt="Logo" className="h-9" />
-            </Link>
-          )}
-          <Button className="ml-auto" variant="glass" size="icon">
-            <Notification />
+      <header
+        className="sticky top-0 flex shrink-0 items-center gap-4 border-b bg-background px-5 md:px-10"
+        style={{ height: HEADER_HEIGHT }}
+      >
+        {isMobile ? (
+          <Button variant="ghost" size="icon" onClick={() => toggleSidebar()}>
+            <HamburgerMenu />
           </Button>
-          <Button variant="colorful">Sign up</Button>
-        </header>
-      </div>
+        ) : (
+          <Link href="/">
+            <Image src={logo} alt="Logo" className="h-9" />
+          </Link>
+        )}
+        <Button className="ml-auto" variant="glass" size="icon">
+          <Notification />
+        </Button>
+        <Button variant="colorful">Sign up</Button>
+      </header>
       <main className="flex flex-1">
         <Sidebar
           collapsible="icon"
@@ -124,7 +122,7 @@ const SidebarLayoutContent = ({ children }: { children: React.ReactNode }) => {
             <SidebarTrigger />
           </SidebarFooter>
         </Sidebar>
-        <div className="flex-1">{children}</div>
+        <div className="max-w-dvw flex-1">{children}</div>
       </main>
     </>
   );
