@@ -1,21 +1,33 @@
-import * as React from "react"
+import type * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+export const inputSizeClassName = cn(
+  "h-11 rounded-md px-4 py-3 data-[size=lg]:h-17.5"
+);
+
+export const inputColorClassName = cn(
+  "bg-border selection:bg-primary selection:text-primary-foreground file:bg-transparent file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring disabled:opacity-50 data-[placeholder]:text-muted-foreground data-[disabled]:opacity-50"
+);
+
+export function Input({
+  className,
+  type,
+  ...props
+}: React.ComponentProps<"input">) {
   return (
     <input
       type={type}
       data-slot="input"
       className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        inputSizeClassName,
+        inputColorClassName,
+        "w-full min-w-0 border border-input text-base shadow-xs outline-none transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:font-medium file:text-sm disabled:pointer-events-none disabled:cursor-not-allowed data-disabled:cursor-not-allowed md:text-sm dark:bg-input/30",
+        "focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
         className
       )}
       {...props}
     />
-  )
+  );
 }
-
-export { Input }
