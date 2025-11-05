@@ -5,7 +5,7 @@ import { type Dispatch, type SetStateAction, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import type { CaseFilters as CaseFiltersType } from "@/features/analysis/analysis.type";
-import { AnalyzedDetails } from "@/features/analysis/components/anaylized-details";
+import { AnalyzedDetails } from "@/features/analysis/components/analysis-details";
 import { CaseFilters as CaseFiltersComponent } from "@/features/analysis/components/case-filters";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import mockAnalysedImage from "@/public/mocks/analyzed-homepage.png";
@@ -21,7 +21,7 @@ const quickActionButtons: Array<{
   },
 ] as const;
 
-const CaseAnalysisPage = () => {
+export const CaseAnalysisPage = () => {
   const [filters, setFilters] = useState<CaseFiltersType>({
     screen: "desktop",
     page: "home",
@@ -155,5 +155,3 @@ const AnalysisDetailsMobileView = ({
     </>
   );
 };
-
-export default CaseAnalysisPage;

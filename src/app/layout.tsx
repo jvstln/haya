@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import { Providers } from "@/components/providers";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ export default function RootLayout({
           "bg-background font-lato text-foreground antialiased"
         )}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

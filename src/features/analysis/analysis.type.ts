@@ -10,3 +10,13 @@ export type CaseFilters = z.infer<typeof caseFiltersSchema>;
 export type AnalysisMode = z.infer<typeof analysisModeSchema>;
 export type NewAnalysis = z.infer<typeof newAnalysisSchema>;
 export type NewAnalysisInput = z.input<typeof newAnalysisSchema>;
+
+export type CaseResult = {
+  _id: string;
+  url: string;
+  content: string;
+  status: "pending";
+  analysis_type: "Website_Analysis";
+  createdAt: string;
+  updatedAt: string;
+};
