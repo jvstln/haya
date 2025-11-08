@@ -1,3 +1,4 @@
+"use client";
 import { ArrowDown2 } from "iconsax-reactjs";
 import type { Dispatch, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,25 +20,28 @@ import { Separator } from "@/components/ui/separator";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cn } from "@/lib/utils";
 import { caseFiltersSchema } from "../analysis.schema";
-import type { CaseFilters as CaseFiltersType } from "../analysis.type";
+import type {
+  CaseFilters as CaseFiltersType,
+  ParsedAnalysis,
+} from "../analysis.type";
 
 type CaseFiltersProps = {
-  site: string;
   filters: CaseFiltersType;
   setFilters: Dispatch<SetStateAction<CaseFiltersType>>;
+  analysis: ParsedAnalysis;
 };
 
 export const CaseFilters = ({
-  site,
   filters,
   setFilters,
+  analysis,
 }: CaseFiltersProps) => {
   const isTablet = useBreakpoint("max-lg");
 
   return (
     <ScrollArea>
       <div className="sticky top-(--header-height) flex h-13 items-center gap-4 border-b bg-background p-3.5">
-        <span>{site}</span>
+        <span>{analysis.url}</span>
         <Select
           value={filters.screen}
           onValueChange={(value: CaseFiltersType["screen"]) => {

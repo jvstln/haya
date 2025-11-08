@@ -19,3 +19,10 @@ export function truncate(string: string, startLength: number, endLength = 0) {
   // const delta = string.length - (startLength + endLength);
   return `${string.slice(0, startLength)}...${string.slice(-endLength)}`;
 }
+
+export function toTitleCase(str: string) {
+  return str
+    .split(/_(?=\w)|(?<=[a-z])(?=[A-Z])/g)
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+}

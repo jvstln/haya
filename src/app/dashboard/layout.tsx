@@ -128,7 +128,7 @@ const SidebarLayoutContent = ({ children }: { children: React.ReactNode }) => {
           className={cn(
             !isMobile &&
               "[[data-sidebar-state=collapsed]_*]:max-w-[calc(100vw-var(--sidebar-width-icon))] [[data-sidebar-state=expanded]_*]:max-w-[calc(100vw-var(--sidebar-width))]",
-            "flex w-full flex-1 flex-col"
+            "flex w-full flex-1 flex-col relative"
           )}
         >
           {children}

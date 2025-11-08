@@ -1,40 +1,37 @@
-import { api } from "@/lib/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CaseResult, NewAnalysis } from "./analysis.type";
 import { toast } from "sonner";
+import * as AnalysisService from "./analysis.service";
 
-export const getAnalysisResult = async (analysisId: string) => {
-  const response = await api.get<CaseResult>(`/analyze/analysis/${analysisId}`);
-  return response.data;
-};
-
-export const getAnalysisView = async (analysisId: string) => {
-  const response = await api.get(`/analyze/analysis/${analysisId}/view`);
-  return response.data;
-};
-
-export const useAnalysisResult = (analysisId: string) => {
+/**
+ * Fetch a single analysis
+ * @param analysisId The analysis id of the analysis to fetch
+ */
+export const useAnalysis = (analysisId: string) => {
   return useQuery({
-    queryKey: ["analysisResult", analysisId],
-    queryFn: () => getAnalysisResult(analysisId),
+    queryKey: ["analysis", analysisId],
+    queryFn: () => AnalysisService.getAnalysis(analysisId),
+    select(data) {
+      return {
+        ...data,
+        content: AnalysisService.parseContent(data.content),
+      };
+    },
   });
 };
 
-export const useAnalysisView = (analysisId: string) => {
+/**
+ * Fetch ALL analysis
+ */
+export const useAnalyses = () => {
   return useQuery({
-    queryKey: ["analysisView", analysisId],
-    queryFn: () => getAnalysisView(analysisId),
+    queryKey: ["analyses"],
+    queryFn: AnalysisService.getAnalyses,
   });
 };
 
 export const useCreateAnalysis = () => {
   return useMutation({
-    mutationFn: async (analysisData: NewAnalysis) => {
-      const response = await api.post<CaseResult>(`/analyze/analysis`, {
-        url: analysisData.urls[0],
-      });
-      return response.data;
-    },
+    mutationFn: AnalysisService.createAnalysis,
     onError: (error) => toast.error(`Error: ${error.message}`),
   });
 };

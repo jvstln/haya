@@ -18,8 +18,12 @@ import type {
   NewAnalysis,
 } from "@/features/analysis/analysis.type";
 import { cn } from "@/lib/utils";
-import { useCreateAnalysis } from "@/features/analysis/analysis.api";
+import {
+  useAnalysis,
+  useCreateAnalysis,
+} from "@/features/analysis/analysis.api";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const analysisModeLabel: Record<AnalysisMode, string> = {
   web: "Website Analysis",
@@ -52,6 +56,11 @@ export const AnalysisPage = () => {
 
   return (
     <div className="flex h-full w-full flex-col items-center space-y-7 p-5">
+      <Button variant="outline" asChild>
+        <Link href="/dashboard/analyze/cases" className="self-end">
+          View all cases
+        </Link>
+      </Button>
       <div className="max-w-150 space-y-5 text-center max-sm:my-auto sm:mt-31.5 md:mt-39.25">
         <h1 className="bg-(image:--colorful-gradient) bg-clip-text p-1 font-bold text-2xl text-transparent md:text-4xl">
           Let&apos;s get straight to work
