@@ -33,6 +33,11 @@ async function createAnalysis(analysisData: NewAnalysis) {
   return response.data;
 }
 
+async function deleteAnalyses() {
+  const response = await api.delete("/analyze/analysis");
+  return response.data;
+}
+
 function parseContent(content: string) {
   try {
     const jsonContent = z.json().parse(JSON.parse(content));
@@ -63,5 +68,6 @@ export {
   getAnalysis,
   getAnalysisView,
   createAnalysis,
+  deleteAnalyses,
   parseContent,
 };

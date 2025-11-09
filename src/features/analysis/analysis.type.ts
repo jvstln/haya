@@ -1,12 +1,6 @@
 import type z from "zod";
-import type {
-  analysisModeSchema,
-  caseFiltersSchema,
-  newAnalysisSchema,
-} from "./analysis.schema";
+import type { analysisModeSchema, newAnalysisSchema } from "./analysis.schema";
 import type * as AnalysisService from "./analysis.service";
-
-export type CaseFilters = z.infer<typeof caseFiltersSchema>;
 
 export type AnalysisMode = z.infer<typeof analysisModeSchema>;
 export type NewAnalysis = z.infer<typeof newAnalysisSchema>;

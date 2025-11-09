@@ -1,5 +1,6 @@
 "use client";
 import { ArrowDown2 } from "iconsax-reactjs";
+import Link from "next/link";
 import type { Dispatch, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,22 +20,18 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cn } from "@/lib/utils";
-import { caseFiltersSchema } from "../analysis.schema";
-import type {
-  CaseFilters as CaseFiltersType,
-  ParsedAnalysis,
-} from "../analysis.type";
+import type { ParsedAnalysis } from "../analysis.type";
 
 type CaseFiltersProps = {
-  filters: CaseFiltersType;
-  setFilters: Dispatch<SetStateAction<CaseFiltersType>>;
+  filters: Record<string, string | boolean>;
+  setFilters: Dispatch<SetStateAction<Record<string, string | boolean>>>;
   analysis: ParsedAnalysis;
 };
 
 export const CaseFilters = ({
+  analysis,
   filters,
   setFilters,
-  analysis,
 }: CaseFiltersProps) => {
   const isTablet = useBreakpoint("max-lg");
 
@@ -43,8 +40,7 @@ export const CaseFilters = ({
       <div className="sticky top-(--header-height) flex h-13 items-center gap-4 border-b bg-background p-3.5">
         <span>{analysis.url}</span>
         <Select
-          value={filters.screen}
-          onValueChange={(value: CaseFiltersType["screen"]) => {
+          onValueChange={(value) => {
             setFilters({ ...filters, screen: value });
           }}
         >
@@ -52,19 +48,14 @@ export const CaseFilters = ({
             <SelectValue placeholder="Select a screen" />
           </SelectTrigger>
           <SelectContent>
-            {Object.values(caseFiltersSchema.shape.screen.enum).map(
-              (screen) => (
-                <SelectItem key={screen} value={screen}>
-                  {screen}
-                </SelectItem>
-              )
-            )}
+            <SelectItem value="desktop">Desktop</SelectItem>
+            <SelectItem value="mobile">Mobile</SelectItem>
           </SelectContent>
         </Select>
         <span className="ml-auto">Pages</span>
         <Separator orientation="vertical" />
         <div className="flex gap-2">
-          {Object.values(caseFiltersSchema.shape.page.enum).map((page) => (
+          {["home"].map((page) => (
             <Button
               key={page}
               variant="ghost"
@@ -93,7 +84,12 @@ export const CaseFilters = ({
                   }));
                 }}
               >
-                Show Analysis {filters.showAnalysisDetails ? "UI" : "Details"}
+                Show analysis {filters.showAnalysisDetails ? "UI" : "details"}
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/dashboard/analyze/cases">
+                  View completed analysis
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -101,18 +97,6 @@ export const CaseFilters = ({
           <>
             <Separator orientation="vertical" />
             <span>Analyze</span>
-            <Button
-              variant="ghost"
-              data-active={filters.analysisView === "findings"}
-            >
-              Findings
-            </Button>
-            <Button
-              variant="ghost"
-              data-active={filters.analysisView === "terminal"}
-            >
-              Terminal
-            </Button>
           </>
         )}
       </div>

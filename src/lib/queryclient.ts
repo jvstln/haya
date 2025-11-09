@@ -1,6 +1,13 @@
 import { QueryClient } from "@tanstack/react-query";
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 // This code is only for TypeScript
 // declare global {
