@@ -26,3 +26,11 @@ export function toTitleCase(str: string) {
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+export function shuffleArray<T>(arr: T[]) {
+  return arr.toSorted(() => Math.random() - 0.5);
+}
+
+export function random(min = 0, max = 1) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

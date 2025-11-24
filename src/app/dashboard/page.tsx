@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { OnboardingDialog } from "@/features/auth/components/onboarding-dialog";
 
-const DashboardHomepage = () => {
-  redirect("/dashboard/analyze");
+const DashboardHomepage = async () => {
+  redirect("/dashboard/audits");
   return <OnboardingDialog open={true} />;
 };
 

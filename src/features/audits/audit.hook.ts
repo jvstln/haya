@@ -2,22 +2,25 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/queryclient";
-import * as AnalysisService from "./analysis.service";
+import * as AuditService from "./audit.service";
 
-/**
- * Fetch a single analysis
- * @param analysisId The analysis id of the analysis to fetch
- */
-export const useAnalysis = (analysisId: string) => {
+export const useAudits = () => {
+  return useQuery({
+    queryKey: ["analyses"],
+    queryFn: AuditService.getAudits,
+  });
+};
+
+export const useAudit = (auditId: string) => {
   const refetchCount = useRef(0);
 
   const query = useQuery({
-    queryKey: ["analysis", analysisId],
-    queryFn: () => AnalysisService.getAnalysis(analysisId),
+    queryKey: ["audit", auditId],
+    queryFn: () => AuditService.getAudit(auditId),
     select(data) {
       return {
         ...data,
-        content: AnalysisService.parseContent(data.content),
+        content: AuditService.parseContent(data.content),
       };
     },
     refetchInterval(query) {
@@ -35,27 +38,17 @@ export const useAnalysis = (analysisId: string) => {
   return { ...query, refetchCount: refetchCount.current };
 };
 
-/**
- * Fetch ALL analysis
- */
-export const useAnalyses = () => {
-  return useQuery({
-    queryKey: ["analyses"],
-    queryFn: AnalysisService.getAnalyses,
-  });
-};
-
-export const useCreateAnalysis = () => {
+export const useCreateAudit = () => {
   return useMutation({
-    mutationFn: AnalysisService.createAnalysis,
+    mutationFn: AuditService.createAudit,
     onError: (error) => toast.error(`Error: ${error.message}`),
-    onSuccess: () => toast.success("Analysis started successfully"),
+    onSuccess: () => toast.success("Case started successfully"),
   });
 };
 
-export const useDeleteAnalyses = () => {
+export const useDeleteAudits = () => {
   return useMutation({
-    mutationFn: AnalysisService.deleteAnalyses,
+    mutationFn: AuditService.deleteAudits,
     onError: (error) => toast.error(`Error: ${error.message}`),
     onSuccess: () => {
       toast.success("All analyses deleted successfully");

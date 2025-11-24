@@ -8,6 +8,7 @@
   --color-foreground: var(--foreground);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-compliment: var(--primary-compliment);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-border: var(--border);
@@ -32,6 +33,14 @@
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
 
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --text-h1: var(--text-xl);
+  --text-h1--font-weight: var(--font-weight-semibold);
+
   /* Only enable variables when needed */
   /* 
   --color-chart-5: var(--chart-5);
@@ -40,21 +49,21 @@
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
   --color-input: var(--input);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
   */
 }
 
 :root {
-  --background: #1e1f1f;
-  --foreground: oklch(from #bdbdc0 l c h);
+  --background: oklch(from #121212 l c h);
+  --foreground: oklch(from #a3a3a4 l c h);
   --primary: oklch(60.795% 0.2218 284.387);
   --primary-foreground: var(--color-white);
-  --secondary: oklch(80.915% 0.1083 19.651);
+  --primary-compliment: oklch(from #ffafa4 l c h);
+  --secondary: oklch(23.503% 0.00003 271.152);
   --secondary-foreground: var(--foreground);
-  --border: #303131;
+  --muted: var(--background);
+  --muted-foreground: var(--color-white);
+
+  --border: oklch(from #303131 l c h);
   --ring: var(--border);
 
   --accent: var(--border);
@@ -78,11 +87,12 @@
 
   --colorful-gradient: linear-gradient(
     261.15deg,
-    #ffafa4 -29.14%,
-    #7a63ff 99.41%
+    var(--primary-compliment) -29.14%,
+    var(--primary) 99.41%
   );
-  /* 
+
   --radius: 0.625rem;
+  /* 
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -137,11 +147,4 @@
   button {
     @apply cursor-pointer;
   }
-}
-
-@layer components {
-  /* .bg-colorful-gradient {
-    background-image: var(--colorful-gradient) ;
-    
-  } */
 }

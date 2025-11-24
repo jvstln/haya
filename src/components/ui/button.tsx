@@ -12,6 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         glass: "bg-border text-foreground hover:bg-border/90",
+        "glass-primary": "bg-primary/15 text-primary hover:bg-primary/25",
         ghost:
           "hover:bg-border data-[active=true]:bg-border dark:data-[active=true]:bg-border/50 dark:hover:bg-border/50",
         colorful: "bg-(image:--colorful-gradient) text-background",
@@ -27,8 +28,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-8.75 px-6 py-2 has-[>svg]:px-3",
-        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
-        lg: "h-17.5 rounded-md px-6 has-[>svg]:px-4",
+        sm: "h-7 gap-1.5 rounded-md px-3 text-xs has-[>svg]:px-2.5",
+        lg: "h-12.75 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-8.75",
         "icon-sm": "size-8",
         "icon-lg": "size-10",

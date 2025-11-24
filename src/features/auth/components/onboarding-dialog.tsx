@@ -112,7 +112,7 @@ export const OnboardingDialogStep2 = ({
   );
 };
 
-export const OnboardingDialogStep3 = (props: StepProps) => {
+export const OnboardingDialogStep3 = (_props: StepProps) => {
   return (
     <div className="flex w-108.5 flex-col items-center justify-center gap-6 text-center">
       <svg
@@ -187,7 +187,7 @@ export const OnboardingDialogStep3 = (props: StepProps) => {
       <Button
         variant="colorful"
         className="self-stretch"
-        onClick={() => redirect("/dashboard/analyze")}
+        onClick={() => redirect("/dashboard/audits")}
       >
         Close
       </Button>
