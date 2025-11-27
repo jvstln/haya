@@ -2,23 +2,28 @@
 
 Seamless infrastructure for onchain UX analytics, empowering builders to identify and fix friction points in minutes, not weeks.
 
-A modern web application built with Next.js, React, and Tailwind CSS. Haya features a clean, responsive design with a focus on user experience.
+Haya is a modern web application that provides AI-powered UX audits for websites, focusing on visual hierarchy, conversion psychology, and industry-specific best practices.
 
 ## 🚀 Features
 
-- **Modern Stack**: Built with Next.js 15, React 19, and TypeScript
-- **Styling**: Styled with Tailwind CSS and shadcn/ui components
-- **Performance**: Optimized for performance with Turbopack
-- **Code Quality**: Enforced with Biome (formatting and linting)
-- **Responsive**: Fully responsive design that works on all devices
+- **AI-Powered UX Audits**: Automatically analyze websites for UX violations and improvement opportunities.
+- **Comprehensive Analysis**:
+  - **Visual Hierarchy & Information Architecture**: Evaluate element order and layout effectiveness.
+  - **Conversion Psychology**: Analyze hero communication, CTAs, and cognitive load.
+  - **UX Laws**: Check compliance with Jakob's Law, Fitts's Law, Miller's Law, and more.
+  - **Accessibility**: Assess WCAG contrast, alt text, and navigation support.
+  - **Industry Best Practices**: Specific insights for AI SaaS, Blockchain, B2B, and Web3.
+- **Actionable Insights**: Get concrete suggestions to fix UX violations.
+- **Modern Dashboard**: Manage and review your audit history in a clean, responsive interface.
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js](https://nextjs.org/) (v15.5.6)
-- **UI Library**: [React](https://react.dev/) (v19.1.0)
+- **Framework**: [Next.js](https://nextjs.org/) (v16)
+- **UI Library**: [React](https://react.dev/) (v19)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v4)
-- **Type Safety**: [TypeScript](https://www.typescriptlang.org/) (v5)
-- **Icons**: [Iconsax](https://iconsax-reactjs.vercel.app/)
+- **Data Fetching**: [TanStack Query](https://tanstack.com/query/latest)
+- **Forms**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **Icons**: [Iconsax](https://iconsax-reactjs.vercel.app/) & [Lucide](https://lucide.dev/)
 - **Code Quality**: [Biome](https://biomejs.dev/) (formatter & linter)
 
 ## 🚀 Getting Started
@@ -26,7 +31,7 @@ A modern web application built with Next.js, React, and Tailwind CSS. Haya featu
 ### Prerequisites
 
 - Node.js 18.17 or later
-- npm, pnpm, or yarn
+- pnpm (recommended), npm, or yarn
 
 ### Installation
 
@@ -40,24 +45,13 @@ A modern web application built with Next.js, React, and Tailwind CSS. Haya featu
 2. Install dependencies:
 
    ```bash
-   # Using pnpm (recommended)
    pnpm install
-
-   # Or using npm
-   npm install
-
-   # Or using yarn
-   yarn install
    ```
 
 3. Start the development server:
 
    ```bash
    pnpm dev
-   # or
-   npm run dev
-   # or
-   yarn dev
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
@@ -67,44 +61,32 @@ A modern web application built with Next.js, React, and Tailwind CSS. Haya featu
 - **Run the development server**: `pnpm dev`
 - **Build for production**: `pnpm build`
 - **Start production server**: `pnpm start`
-- **Lint code**: `pnpm lint`
-- **Format code**: `pnpm format`
+- **Lint & Format**: `pnpm lint` / `pnpm format`
 
 ## 📂 Project Structure
 
 ```
 .
 ├── public/              # Static files
-│   ├── logo.svg         # Main logo
-│   └── logo-icon.svg    # Favicon and app icon
 ├── src/
-│   ├── app/             # App router
-│   │   ├── dashboard/   # Dashboard pages
-│   │   ├── globals.css  # Global styles
-│   │   └── layout.tsx   # Root layout
-│   ├── components/      # Reusable components
-│   │   └── ui/          # UI components (shadcn/ui)
-│   └── lib/             # Utility functions
-├── .gitignore          # Git ignore file
+│   ├── app/             # Next.js App Router
+│   ├── components/      # Shared components (including shadcn/ui)
+│   ├── features/        # Feature-based modules (audits, auth)
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Utility functions and API configuration
+│   └── styles/          # Global styles
 ├── biome.json          # Biome configuration
-├── components.json     # shadcn/ui configuration
 ├── next.config.ts      # Next.js configuration
-├── package.json        # Project dependencies
-├── postcss.config.mjs  # PostCSS configuration
-└── tailwind.config.ts  # Tailwind CSS configuration
+└── package.json        # Project dependencies
 ```
 
 ## 🌟 Design System
 
-Haya uses a custom design system implemented with Tailwind CSS and shadcn/ui components. The design follows modern UI/UX principles with a focus on accessibility and responsiveness.
+Haya uses a custom design system implemented with Tailwind CSS v4 and shadcn/ui components. The design prioritizes:
 
-### Colors
-
-Primary colors and design tokens are defined in the Tailwind configuration.
-
-### Typography
-
-The application uses a clean, readable typography system with system fonts for optimal performance.
+- **Clean Aesthetics**: Minimalist interface to focus on data.
+- **Responsiveness**: Fully functional on mobile and desktop.
+- **Accessibility**: Built with accessible primitives.
 
 ## 🤝 Contributing
 
@@ -119,10 +101,3 @@ Contributions are welcome! Please follow these steps:
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [shadcn/ui Documentation](https://ui.shadcn.com/)
-- [Figma Design](https://www.figma.com/design/f83Gu5pmNssnGaAIcCPrGW/Haya-Project--Copy-?node-id=44-47&t=ymWhh81ATVZnIrsZ-0)
