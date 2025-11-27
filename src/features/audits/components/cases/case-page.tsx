@@ -1,26 +1,32 @@
 "use client";
 import { ArrowLeft, Share } from "iconsax-reactjs";
+import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { HayaSpinner } from "@/components/ui/spinner";
-import { random } from "@/lib/utils";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { cn, random } from "@/lib/utils";
 import { useAudit } from "../../audit.hook";
 import { CaseSection } from "./case-content";
 
 export const CasePage = () => {
   const params = useParams();
+  const [currentView, setCurrentView] = useState<"image" | "content">("image");
+  const isMobile = useBreakpoint("max-md");
+
   const audit = useAudit(String(params.auditId));
 
   if (audit.isError) return "error";
 
-  console.log(audit.data);
-
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center gap-5">
-        <Button size="sm" variant="glass-primary">
-          <ArrowLeft />
-          Back to Audit Dashboard
+        <Button size="sm" variant="glass-primary" asChild>
+          <Link href="/dashboard/audits">
+            <ArrowLeft />
+            Back to Audit Dashboard
+          </Link>
         </Button>
         <Button variant="glass-primary" size="sm" className="ml-auto">
           <Share />
@@ -28,10 +34,37 @@ export const CasePage = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 rounded-xl bg-secondary">
-        {/* top left */}
+      <div
+        className={cn(
+          "flex grid-cols-2 flex-col rounded-xl bg-secondary md:grid"
+        )}
+      >
+        {/* Control to switch between image view and content view */}
+        <div className="col-span-full flex items-center justify-center gap-1 rounded-s-xl border-transparent border-r border-b p-4 md:hidden">
+          <Button
+            variant="ghost"
+            size="sm"
+            data-active={currentView === "image"}
+            onClick={() => setCurrentView("image")}
+          >
+            Image View
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            data-active={currentView === "content"}
+            onClick={() => setCurrentView("content")}
+          >
+            Content View
+          </Button>
+        </div>
+
+        {/* top left image control */}
         <div
-          className="flex items-center gap-1 rounded-s-xl border-transparent border-r border-b p-4"
+          className={cn(
+            "flex items-center gap-1 rounded-xl border-transparent border-r border-b p-4 md:rounded-s-xl",
+            isMobile && currentView !== "image" && "hidden"
+          )}
           style={{
             background:
               "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to right, var(--color-primary), var(--color-primary-compliment)) border-box",
@@ -51,9 +84,12 @@ export const CasePage = () => {
           </Button>
         </div>
 
-        {/* top right */}
+        {/* top right content control */}
         <div
-          className="flex items-center gap-1 rounded-e-xl border-transparent border-b p-4"
+          className={cn(
+            "flex items-center gap-1 rounded-xl border-transparent border-b p-4 md:rounded-e-xl",
+            isMobile && currentView !== "content" && "hidden"
+          )}
           style={{
             background:
               "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to left, var(--color-primary), var(--color-primary-compliment)) border-box",
@@ -68,9 +104,12 @@ export const CasePage = () => {
           </Button>
         </div>
 
-        {/* bottom left */}
+        {/* bottom left and image view*/}
         <div
-          className="flex flex-col rounded-b-xl border-transparent border-r px-4 py-8"
+          className={cn(
+            "flex flex-col rounded-b-xl rounded-tl-xl border-transparent border-r px-4 py-8 max-md:border-b",
+            isMobile && currentView !== "image" && "hidden"
+          )}
           style={{
             background:
               "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top, var(--color-primary), var(--color-primary-compliment)) border-box",
@@ -113,13 +152,16 @@ export const CasePage = () => {
           )}
         </div>
 
-        {/* bottom right */}
+        {/* bottom right and content view */}
         <div
-          className="flex flex-col gap-2 rounded-b-xl border-transparent border-l px-4 py-8"
-          style={{
-            background:
-              "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top, var(--color-primary), var(--color-primary-compliment))",
-          }}
+          className={cn(
+            "flex flex-col gap-2 rounded-b-xl rounded-tr-xl border-transparent border-l px-4 py-8 max-md:border-b",
+            isMobile && currentView !== "content" && "hidden"
+          )}
+          // style={{
+          //   background:
+          //     "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top, var(--color-primary), var(--color-primary-compliment))",
+          // }}
         >
           {audit.isPending ? (
             <div className="flex flex-col items-center gap-2">

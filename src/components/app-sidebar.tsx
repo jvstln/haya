@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { SignupFormDialog } from "@/features/auth/components/signup-dialog";
 import { cn } from "@/lib/utils";
 import logo from "@/public/logo.svg";
 import { Button } from "./ui/button";
@@ -173,7 +174,9 @@ export const AppHeader = () => {
       <Button className="ml-auto" variant="glass" size="icon">
         <Notification />
       </Button>
-      <Button variant="colorful">Sign up</Button>
+      <SignupFormDialog>
+        <Button>Sign up</Button>
+      </SignupFormDialog>
     </header>
   );
 };

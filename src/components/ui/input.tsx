@@ -7,7 +7,7 @@ export const inputSizeClassName = cn(
 );
 
 export const inputColorClassName = cn(
-  "bg-border selection:bg-primary selection:text-primary-foreground file:bg-transparent file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring disabled:opacity-50 data-[placeholder]:text-muted-foreground data-[disabled]:opacity-50"
+  "border-border bg-[linear-gradient(var(--color-border),var(--color-red-500))_content-box,var(--colorful-gradient)_border-box] selection:bg-primary selection:text-primary-foreground file:bg-transparent file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring disabled:opacity-50 data-placeholder:text-muted-foreground data-disabled:opacity-50"
 );
 
 export function Input({
@@ -22,7 +22,7 @@ export function Input({
       className={cn(
         inputSizeClassName,
         inputColorClassName,
-        "w-full min-w-0 border border-input text-base shadow-xs outline-none transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:font-medium file:text-sm disabled:pointer-events-none disabled:cursor-not-allowed data-disabled:cursor-not-allowed md:text-sm dark:bg-input/30",
+        "w-full min-w-0 border text-base shadow-xs outline-none transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:font-medium file:text-sm disabled:pointer-events-none disabled:cursor-not-allowed data-disabled:cursor-not-allowed md:text-sm dark:bg-input/30",
         "focus-visible:ring-[3px] focus-visible:ring-ring/50",
         "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
         className

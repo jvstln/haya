@@ -80,7 +80,10 @@ export const NewAuditForm = ({
           >
             <Field data-invalid={!!form.formState.errors.url}>
               <FieldLabel>Website URL</FieldLabel>
-              <Input {...form.register("url")} />
+              <Input
+                {...form.register("url")}
+                aria-invalid={!!form.formState.errors.url}
+              />
               <FieldError errors={[form.formState.errors.url]} />
             </Field>
             <Button size="lg">Audit now</Button>

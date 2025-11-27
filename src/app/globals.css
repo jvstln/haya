@@ -40,6 +40,8 @@
 
   --text-h1: var(--text-xl);
   --text-h1--font-weight: var(--font-weight-semibold);
+  --text-h2: var(--text-base);
+  --text-h2--font-weight: var(--font-weight-semibold);
 
   /* Only enable variables when needed */
   /* 

@@ -23,8 +23,7 @@ export default function DashboardLayout({
         <AppSidebar sidebarItems={getSidebarContent(pathname)} />
         <main
           className={cn(
-            // !isMobile &&
-            "[[data-sidebar-state=collapsed]_*]:max-w-[calc(100vw-var(--sidebar-width-icon))] [[data-sidebar-state=expanded]_*]:max-w-[calc(100vw-var(--sidebar-width))]",
+            "md:[[data-sidebar-state=collapsed]_*]:max-w-[calc(100vw-var(--sidebar-width-icon))] md:[[data-sidebar-state=expanded]_*]:max-w-[calc(100vw-var(--sidebar-width))]",
             "relative flex w-full flex-1 flex-col"
           )}
         >
