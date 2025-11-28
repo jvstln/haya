@@ -6,7 +6,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn, toTitleCase } from "@/lib/utils";
-import type { AuditSection } from "../../audit.type";
+import type { AuditSection, DetailedAuditSection } from "../../audit.type";
 
 export const CaseSection = ({ section }: { section: AuditSection }) => {
   return (
@@ -24,7 +24,93 @@ export const CaseSection = ({ section }: { section: AuditSection }) => {
               ? section.category
               : section.textContent}
           </h2>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto in-data-[state=open]:rotate-180"
+          >
+            <ArrowUp2 />
+          </Button>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="px-6 pb-4.5 text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_ul]:list-disc [&_ul]:pl-4">
+        <Collapsible
+          className="-m-2 mb-4 rounded-md border p-2"
+          defaultOpen={false}
+        >
+          <CollapsibleTrigger asChild>
+            <h3 className="mb-0! flex cursor-pointer items-center justify-between gap-2">
+              Content
+              <span
+                className="ml-auto rounded-sm border px-1 py-0.5 text-xs"
+                style={{ backgroundColor: `var(${section.meta.accent})` }}
+              >
+                {section.category}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="in-data-[state=open]:rotate-180"
+              >
+                <ArrowUp2 />
+              </Button>
+            </h3>
+          </CollapsibleTrigger>
+          <CollapsibleContent>{section.textContent}</CollapsibleContent>
+        </Collapsible>
+
+        {section.aiAnalysis.problems && (
+          <>
+            <h3>Problems</h3>
+            <ul>
+              {section.aiAnalysis.problems.map((problem) => (
+                <li key={problem}>{problem}</li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {section.aiAnalysis.solutions && (
+          <>
+            <h3>Solutions</h3>
+            <ul className="marker:content-[✔️✅☑️]">
+              {section.aiAnalysis.solutions.map((solution) => (
+                <li key={solution}>{solution}</li>
+              ))}
+            </ul>
+          </>
+        )}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
+
+/** @deprecated Use the CaseSection instead */
+export const DetailedCaseSection = ({
+  section,
+}: {
+  section: DetailedAuditSection;
+}) => {
+  return (
+    <Collapsible className="rounded-md border text-white">
+      <CollapsibleTrigger title={section.textContent} asChild>
+        <div className="flex w-full cursor-pointer items-center gap-3 px-6 pt-4.5 pb-6">
+          <div
+            className="flex size-5 shrink-0 items-center justify-center rounded-full p-1 text-background text-xs"
+            style={{ background: `var(${section.meta.accent})` }}
+          >
+            {section.meta.sectionNumber}
+          </div>
+          <h2 className="truncate font-semibold text-sm">
+            {section.category !== "content"
+              ? section.category
+              : section.textContent}
+          </h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto in-data-[state=open]:rotate-180"
+          >
             <ArrowUp2 />
           </Button>
         </div>

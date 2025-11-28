@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 import { shuffleArray } from "@/lib/utils";
-import type { Audit, AuditSection, NewAudit } from "./audit.type";
+import type { Audit, AuditPage, AuditSection, NewAudit } from "./audit.type";
 
 async function getAudits() {
   const response = await api.get<Omit<Audit, "content">[]>("/analyze/analysis");
@@ -12,10 +12,8 @@ async function getAudit(auditId: string) {
   return response.data;
 }
 
-async function createAudit(url: NewAudit) {
-  const response = await api.post<Audit>("/analyze/analysis", {
-    url,
-  });
+async function createAudit(payload: NewAudit) {
+  const response = await api.post<Audit>("/analyze/analysis", payload);
   return response.data;
 }
 
@@ -26,7 +24,7 @@ async function deleteAudits() {
 
 function parseContent(content: string) {
   try {
-    const jsonContent = JSON.parse(content);
+    let jsonContent = JSON.parse(content);
     if (!jsonContent || typeof jsonContent !== "object") return null;
 
     const colors: AuditSection["meta"]["accent"][] = shuffleArray([
@@ -39,17 +37,22 @@ function parseContent(content: string) {
       "--color-emerald-300",
     ]);
 
-    jsonContent.sections = jsonContent.sections.map(
-      (section: AuditSection, index: number) => ({
-        ...section,
-        meta: {
-          sectionNumber: index + 1,
-          accent: colors[index],
-        },
-      })
-    );
+    // Add section metadata to content
+    jsonContent = {
+      ...jsonContent,
+      pages: jsonContent.pages.map((page: AuditPage) => ({
+        ...page,
+        sections: page.sections.map((section: AuditSection, index: number) => ({
+          ...section,
+          meta: {
+            sectionNumber: index + 1,
+            accent: colors[index],
+          },
+        })),
+      })),
+    };
 
-    return jsonContent as { sections: AuditSection[] };
+    return jsonContent as { pages: AuditPage[] };
   } catch (error) {
     console.log("Error parsing analysis content", error, content);
     return null;
