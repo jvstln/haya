@@ -23,17 +23,16 @@ export const useAudit = (auditId: string) => {
         content: AuditService.parseContent(data.content),
       };
     },
-    // Disable pooling until the server can handle many requests nicely
-    // refetchInterval(query) {
-    //   // Refetch analysis every ^2 seconds (exponentially.. 2 4 8 16s) if status is pending
-    //   const status = query.state.data?.status;
-    //   if (!status || status !== "pending") {
-    //     refetchCount.current = 0;
-    //     return false;
-    //   }
+    refetchInterval(query) {
+      // Refetch analysis every ^2 seconds (exponentially.. 2 4 8 16s) if status is pending
+      const status = query.state.data?.status;
+      if (status && !["pending", "in_progress"].includes(status)) {
+        refetchCount.current = 0;
+        return false;
+      }
 
-    //   return 1000 * 2 ** ++refetchCount.current;
-    // },
+      return 1000 * 2 ** ++refetchCount.current;
+    },
   });
 
   return { ...query, refetchCount: refetchCount.current };

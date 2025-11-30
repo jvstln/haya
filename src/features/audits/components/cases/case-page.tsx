@@ -37,7 +37,6 @@ export const CasePage = () => {
   // if audit content is loaded and currentPage is not set, set it to the first page
   // Pattern is supported (from react docs)
   if (audit.data?.content?.pages && !currentPage) {
-    console.log(audit.data.content.pages);
     setCurrentPage(audit.data.content.pages?.[0]);
   }
 
@@ -228,6 +227,19 @@ export const CasePage = () => {
               </div>
             ))
           )}
+          {audit.data?.status === "in_progress" && (
+            <div
+              className="-mt-20 pointer-events-none flex flex-col items-center gap-2 rounded-xl bg-secondary pt-12"
+              style={{
+                maskImage:
+                  "radial-gradient(ellipse at top, transparent 20%, black 70%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse at top, transparent 20%, black 70%)",
+              }}
+            >
+              <HayaSpinner />
+            </div>
+          )}
         </div>
 
         {/* bottom right and content view */}
@@ -248,8 +260,21 @@ export const CasePage = () => {
             </div>
           ) : (
             currentPage?.sections.map((section) => (
-              <CaseSection key={section.textContent} section={section} />
+              <CaseSection key={section.meta.sectionNumber} section={section} />
             ))
+          )}
+          {audit.data?.status === "in_progress" && (
+            <div
+              className="-mt-20 pointer-events-none flex flex-col items-center gap-2 rounded-xl bg-secondary pt-12"
+              style={{
+                maskImage:
+                  "radial-gradient(ellipse at top, transparent 20%, black 70%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse at top, transparent 20%, black 70%)",
+              }}
+            >
+              <HayaSpinner />
+            </div>
           )}
         </div>
       </div>

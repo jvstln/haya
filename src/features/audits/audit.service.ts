@@ -52,6 +52,8 @@ function parseContent(content: string) {
       })),
     };
 
+    console.log("Fetched content", jsonContent);
+
     return jsonContent as { pages: AuditPage[] };
   } catch (error) {
     console.log("Error parsing analysis content", error, content);

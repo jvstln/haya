@@ -33,7 +33,7 @@ export const CaseSection = ({ section }: { section: AuditSection }) => {
           </Button>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent className="px-6 pb-4.5 text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_ul]:list-disc [&_ul]:pl-4">
+      <CollapsibleContent className="px-6 pb-4.5 text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h3~:not(ul,li)]:ml-3 [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_section]:mb-4 [&_ul]:list-disc [&_ul]:pl-4">
         <Collapsible
           className="-m-2 mb-4 rounded-md border p-2"
           defaultOpen={false}
@@ -59,27 +59,31 @@ export const CaseSection = ({ section }: { section: AuditSection }) => {
           <CollapsibleContent>{section.textContent}</CollapsibleContent>
         </Collapsible>
 
-        {section.aiAnalysis.problems && (
-          <>
-            <h3>Problems</h3>
+        <section>
+          <h3>Problems</h3>
+          {section.aiAnalysis?.problems ? (
             <ul>
               {section.aiAnalysis.problems.map((problem) => (
                 <li key={problem}>{problem}</li>
               ))}
             </ul>
-          </>
-        )}
+          ) : (
+            <p className="italic">No problems found</p>
+          )}
+        </section>
 
-        {section.aiAnalysis.solutions && (
-          <>
-            <h3>Solutions</h3>
+        <section>
+          <h3>Solutions</h3>
+          {section.aiAnalysis?.solutions ? (
             <ul className="marker:content-[✔️✅☑️]">
               {section.aiAnalysis.solutions.map((solution) => (
                 <li key={solution}>{solution}</li>
               ))}
             </ul>
-          </>
-        )}
+          ) : (
+            <p className="italic">No solutions found</p>
+          )}
+        </section>
       </CollapsibleContent>
     </Collapsible>
   );

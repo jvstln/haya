@@ -5,7 +5,7 @@ import type * as AnalysisService from "./audit.service";
 export type NewAudit = z.infer<typeof newAuditSchema>;
 export type NewAuditInput = z.input<typeof newAuditSchema>;
 
-export type AuditStatus = "pending" | "completed" | "failed";
+export type AuditStatus = "pending" | "completed" | "failed" | "in_progress";
 
 export type AuditType = "Website_Analysis" | string; // Allowing string for potential future types
 
@@ -33,7 +33,10 @@ export interface AuditSection {
   category: string;
   screenshotUrl: string;
   textContent: string;
-  aiAnalysis: AiAnalysis;
+  aiAnalysis: {
+    problems: string[];
+    solutions: string[];
+  } | null;
   meta: {
     sectionNumber: number;
     accent: `--color-${string}`;
@@ -42,11 +45,6 @@ export interface AuditSection {
 
 export interface DetailedAuditSection extends Omit<AuditSection, "aiAnalysis"> {
   aiAnalysis: DetailedAiAnalysis;
-}
-
-export interface AiAnalysis {
-  problems: string[];
-  solutions: string[];
 }
 
 export interface DetailedAiAnalysis {
