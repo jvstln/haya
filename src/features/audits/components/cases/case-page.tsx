@@ -21,10 +21,10 @@ import {
 } from "@/components/ui/select";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { cn, random } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useAudit } from "../../audit.hook";
 import type { AuditPage } from "../../audit.type";
-import { CaseSection } from "./case-content";
+import { CaseImageSection, CaseSection } from "./case-content";
 
 export const CasePage = () => {
   const params = useParams();
@@ -70,14 +70,20 @@ export const CasePage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 bg-linear-to-b from-0% from-primary/40 via-transparent p-4">
-      <div className="flex items-center gap-5">
+    <div className="flex flex-col gap-4 from-0% from-primary/20 via-transparent p-4 max-md:bg-linear-to-b">
+      <div className="flex flex-wrap items-center gap-2 md:gap-5">
         <Button size="sm" variant="glass-primary" asChild>
           <Link href="/dashboard/audits">
             <ArrowLeft />
             Back to Audit Dashboard
           </Link>
         </Button>
+        {currentPage && (
+          <a href={currentPage.pageUrl} target="_blank" rel="noreferrer">
+            {currentPage.pageUrl}
+          </a>
+        )}
+
         <Button variant="glass-primary" size="sm" className="ml-auto">
           <Share />
           Share Findings
@@ -199,32 +205,7 @@ export const CasePage = () => {
             </div>
           ) : (
             currentPage?.sections.map((section) => (
-              <div
-                key={section.textContent}
-                className="relative border-(--accent-fade) border-2 not-first:border-t border-b last:border-b-2 hover:border-(--accent-color)"
-                style={
-                  {
-                    "--accent-fade": `oklch(from var(${section.meta.accent}) l c h / 0.5)`,
-                    "--accent-color": `var(${section.meta.accent})`,
-                  } as React.CSSProperties
-                }
-              >
-                <picture>
-                  <img
-                    src={section.screenshotUrl}
-                    alt={`${audit.data.url} Audit`}
-                  />
-                </picture>
-                <div
-                  className="absolute z-10 flex size-10 items-center justify-center rounded-full bg-(--accent-color) p-1 text-background text-lg"
-                  style={{
-                    top: `${random(1, 5)}%`,
-                    right: `${random(2, 60)}%`,
-                  }}
-                >
-                  {section.meta.sectionNumber}
-                </div>
-              </div>
+              <CaseImageSection key={section.textContent} section={section} />
             ))
           )}
           {audit.data?.status === "in_progress" && (

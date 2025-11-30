@@ -1,11 +1,13 @@
 import { ArrowUp2 } from "iconsax-reactjs";
+import Image from "next/image";
+import { type CSSProperties, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { cn, toTitleCase } from "@/lib/utils";
+import { cn, random, toTitleCase } from "@/lib/utils";
 import type { AuditSection, DetailedAuditSection } from "../../audit.type";
 
 export const CaseSection = ({ section }: { section: AuditSection }) => {
@@ -251,5 +253,42 @@ export const DetailedCaseSection = ({
         )}
       </CollapsibleContent>
     </Collapsible>
+  );
+};
+
+export const CaseImageSection = ({ section }: { section: AuditSection }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <div
+      className="relative border-(--accent-fade) border-2 not-first:border-t border-b shadow-(--accent-color) last:border-b-2 hover:border-(--accent-color) hover:shadow-md"
+      style={
+        {
+          "--accent-fade": `oklch(from var(${section.meta.accent}) l c h / 0.5)`,
+          "--accent-color": `var(${section.meta.accent})`,
+        } as CSSProperties
+      }
+    >
+      <Image
+        src={section.screenshotUrl}
+        alt={`${section.textContent}`}
+        width={0}
+        height={0}
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="h-auto w-full"
+        onLoad={() => setIsLoaded(true)}
+      />
+      {isLoaded && (
+        <div
+          className="absolute z-10 flex size-10 items-center justify-center rounded-full bg-(--accent-color) p-1 text-background text-lg"
+          style={{
+            top: `${random(1, 5)}%`,
+            right: `${random(2, 60)}%`,
+          }}
+        >
+          {section.meta.sectionNumber}
+        </div>
+      )}
+    </div>
   );
 };
