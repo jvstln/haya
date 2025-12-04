@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { useAudit } from "../../audit.hook";
 import type { AuditPage } from "../../audit.type";
 import { CaseImageSection, CaseSection } from "./case-content";
+import { ShareAuditDialog } from "../share-audit-dialog";
 
 export const CasePage = () => {
   const params = useParams();
@@ -79,15 +80,22 @@ export const CasePage = () => {
           </Link>
         </Button>
         {currentPage && (
-          <a href={currentPage.pageUrl} target="_blank" rel="noreferrer">
+          <a
+            href={currentPage.pageUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs"
+          >
             {currentPage.pageUrl}
           </a>
         )}
 
-        <Button variant="glass-primary" size="sm" className="ml-auto">
-          <Share />
-          Share Findings
-        </Button>
+        <ShareAuditDialog>
+          <Button variant="glass-primary" size="sm" className="ml-auto">
+            <Share />
+            Share Findings
+          </Button>
+        </ShareAuditDialog>
       </div>
 
       {/* Control to switch between image view and content view only on mobile */}

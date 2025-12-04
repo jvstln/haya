@@ -1,4 +1,4 @@
-import { ArrowUp2 } from "iconsax-reactjs";
+import { ArrowDown2 } from "iconsax-reactjs";
 import Image from "next/image";
 import { type CSSProperties, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import type { AuditSection, DetailedAuditSection } from "../../audit.type";
 export const CaseSection = ({ section }: { section: AuditSection }) => {
   return (
     <Collapsible className="rounded-md border text-white">
-      <CollapsibleTrigger title={section.textContent} asChild>
+      <CollapsibleTrigger asChild>
         <div className="flex w-full cursor-pointer items-center gap-3 px-6 pt-4.5 pb-6">
           <div
             className="flex size-5 shrink-0 items-center justify-center rounded-full p-1 text-background text-xs"
@@ -31,36 +31,11 @@ export const CaseSection = ({ section }: { section: AuditSection }) => {
             size="icon"
             className="ml-auto in-data-[state=open]:rotate-180"
           >
-            <ArrowUp2 />
+            <ArrowDown2 />
           </Button>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className="px-6 pb-4.5 text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h3~:not(ul,li)]:ml-3 [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_section]:mb-4 [&_ul]:list-disc [&_ul]:pl-4">
-        <Collapsible
-          className="-m-2 mb-4 rounded-md border p-2"
-          defaultOpen={false}
-        >
-          <CollapsibleTrigger asChild>
-            <h3 className="mb-0! flex cursor-pointer items-center justify-between gap-2">
-              Content
-              <span
-                className="ml-auto rounded-sm border px-1 py-0.5 text-xs"
-                style={{ backgroundColor: `var(${section.meta.accent})` }}
-              >
-                {section.category}
-              </span>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className="in-data-[state=open]:rotate-180"
-              >
-                <ArrowUp2 />
-              </Button>
-            </h3>
-          </CollapsibleTrigger>
-          <CollapsibleContent>{section.textContent}</CollapsibleContent>
-        </Collapsible>
-
         <section>
           <h3>Problems</h3>
           {section.aiAnalysis?.problems ? (
@@ -99,7 +74,7 @@ export const DetailedCaseSection = ({
 }) => {
   return (
     <Collapsible className="rounded-md border text-white">
-      <CollapsibleTrigger title={section.textContent} asChild>
+      <CollapsibleTrigger asChild>
         <div className="flex w-full cursor-pointer items-center gap-3 px-6 pt-4.5 pb-6">
           <div
             className="flex size-5 shrink-0 items-center justify-center rounded-full p-1 text-background text-xs"
@@ -117,7 +92,7 @@ export const DetailedCaseSection = ({
             size="icon"
             className="ml-auto in-data-[state=open]:rotate-180"
           >
-            <ArrowUp2 />
+            <ArrowDown2 />
           </Button>
         </div>
       </CollapsibleTrigger>

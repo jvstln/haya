@@ -1,10 +1,11 @@
 "use client";
-import { Add, HamburgerMenu, type Icon, Notification } from "iconsax-reactjs";
+import { Add, HamburgerMenu, Notification } from "iconsax-reactjs";
 import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
+import type { LinkGroup, LinkItem, SidebarItemable } from "@/data/navlinks";
 import { SignupFormDialog } from "@/features/auth/components/signup-dialog";
 import { cn } from "@/lib/utils";
 import logo from "@/public/logo.svg";
@@ -30,17 +31,6 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-export type SidebarMenuItemType = {
-  title: string;
-  url: Route;
-  icon: Icon;
-  tooltip?: React.ReactNode;
-  exact?: boolean; // Default is true
-};
-export type SidebarGroupLabelType = { title: string };
-export type SidebarItemable = SidebarGroupLabelType | SidebarMenuItemType;
-export type SidebarGroupType = { title: string; items: SidebarMenuItemType[] };
-
 export const AppSidebar = ({
   sidebarItems,
 }: {
@@ -51,7 +41,7 @@ export const AppSidebar = ({
   const { isMobile, toggleSidebar } = useSidebar();
 
   const parsedSidebaItems = useMemo(() => {
-    const newSidebarItems: SidebarGroupType[] = [];
+    const newSidebarItems: LinkGroup[] = [];
     const normalizeUrl = (url: string) => {
       return url.replace(/\[(.*?)\]/g, (match, param) => {
         return Array.isArray(params[param])
@@ -69,7 +59,7 @@ export const AppSidebar = ({
       if ("url" in item && currentGroup) {
         currentGroup.items.push({
           ...item,
-          url: normalizeUrl(item.url) as SidebarMenuItemType["url"],
+          url: normalizeUrl(item.url) as LinkItem["url"],
         });
         return;
       }
@@ -114,7 +104,7 @@ export const AppSidebar = ({
                           isActive={isActive}
                           asChild
                         >
-                          <Link href={url}>
+                          <Link href={url as Route}>
                             {/* Highlighter */}
                             <span
                               className="pointer-events-none absolute top-0 left-0 h-full w-1 [[data-active=true]_*]:bg-primary"

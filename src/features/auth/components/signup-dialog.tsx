@@ -26,7 +26,7 @@ export const SignupFormDialog = ({
   return (
     <Dialog {...props}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="flex flex-col sm:max-w-197.5">
+      <DialogContent className="flex flex-col">
         <DialogHeader className="mb-8 flex flex-row items-center gap-1">
           <Button
             variant="ghost"
@@ -76,10 +76,7 @@ export const SignupEmailForm = () => {
           New to web3? we have got you. Sign in manually with your email account
         </DialogDescription>
       </DialogHeader>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="*:data-[slot=field]:not-last:-mb-2 flex flex-col gap-4"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <Field data-invalid={!!errors.email}>
           <FieldLabel>Email address</FieldLabel>
           <Input placeholder="address@gmail.com" {...register("email")} />
@@ -99,7 +96,7 @@ export const SignupEmailForm = () => {
           <FieldError errors={[errors.confirmPassword]} />
         </Field>
 
-        <div className="flex items-center gap-2 text-xs [&_hr]:grow">
+        <div className="my-4 flex items-center gap-2 text-sm [&_hr]:grow">
           <hr />
           <span>Or</span>
           <hr />

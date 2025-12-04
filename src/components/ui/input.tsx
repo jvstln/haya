@@ -3,7 +3,7 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 export const inputSizeClassName = cn(
-  "h-11 rounded-md px-4 py-3 data-[size=lg]:h-17.5"
+  "h-11.5 text-xs rounded-md px-8 py-4 data-[size=lg]:h-17.5"
 );
 
 export const inputColorClassName = cn(
@@ -22,11 +22,15 @@ export function Input({
       className={cn(
         inputSizeClassName,
         inputColorClassName,
-        "w-full min-w-0 border text-base shadow-xs outline-none transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:font-medium file:text-sm disabled:pointer-events-none disabled:cursor-not-allowed data-disabled:cursor-not-allowed md:text-sm dark:bg-input/30",
-        "focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "w-full min-w-0 border border-transparent shadow-xs outline-none transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:font-medium file:text-sm disabled:pointer-events-none disabled:cursor-not-allowed data-disabled:cursor-not-allowed",
+        "focus-visible:ring-[3px] focus-visible:ring-ring/50 ",
         "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
         className
       )}
+      style={{
+        background:
+          "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, var(--colorful-gradient) border-box",
+      }}
       {...props}
     />
   );

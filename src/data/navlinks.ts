@@ -6,8 +6,20 @@ import {
   Ranking,
   Scan,
   Shop,
+  type Icon,
 } from "iconsax-reactjs";
-import type { SidebarItemable } from "@/components/app-sidebar";
+import type { Route } from "next";
+
+export type LinkItem = {
+  title: string;
+  url: Route | string;
+  icon: Icon;
+  tooltip?: React.ReactNode;
+  exact?: boolean; // Default is true
+};
+export type LinkGroupLabel = { title: string };
+export type SidebarItemable = LinkGroupLabel | LinkItem;
+export type LinkGroup = { title: string; items: LinkItem[] };
 
 const sidebarContents = {
   "/dashboard/audits/*": [
@@ -20,40 +32,40 @@ const sidebarContents = {
     },
     {
       title: "Campaign",
-      url: "campaigne",
+      url: "#",
       icon: ClipboardExport,
       tooltip: "Coming Soon",
     },
     {
       title: "Perfomance Metrics",
-      url: "metrics",
+      url: "#",
       icon: Ranking,
       tooltip: "Coming Soon",
     },
-    { title: "Team", url: "team", icon: People, tooltip: "Coming Soon" },
+    { title: "Team", url: "#", icon: People, tooltip: "Coming Soon" },
   ],
   "/dashboard/*": [
     { title: "Audit Dashboard", url: "/dashboard/audits", icon: Scan },
     {
       title: "Resources",
-      url: "/dashboard/resources",
+      url: "#",
       icon: Shop,
       tooltip: "Coming Soon",
     },
     {
       title: "Agentic SDK's",
-      url: "/dashboard/sdk",
+      url: "#",
       icon: CodeCircle,
       tooltip: "Coming Soon",
     },
     {
       title: "Team",
-      url: "/dashboard/community",
+      url: "#",
       icon: People,
       tooltip: "Coming Soon",
     },
   ],
-} as const as Record<string, SidebarItemable[]>;
+} as const satisfies Record<string, SidebarItemable[]>;
 
 export const getSidebarContent = (pathname: string) => {
   for (const pattern in sidebarContents) {
