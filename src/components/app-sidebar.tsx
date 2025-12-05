@@ -165,7 +165,7 @@ export const AppHeader = () => {
         <Notification />
       </Button>
       <SignupFormDialog>
-        <Button>Sign up</Button>
+        <Button className="animate-border-glow rounded-full">Sign up</Button>
       </SignupFormDialog>
     </header>
   );

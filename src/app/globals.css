@@ -38,10 +38,14 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --text-h1: var(--text-xl);
+  --text-h1: var(--text-2xl);
   --text-h1--font-weight: var(--font-weight-semibold);
   --text-h2: var(--text-base);
   --text-h2--font-weight: var(--font-weight-semibold);
+  --text-h3: var(--text-lg);
+  --text-h3--font-weight: var(--font-weight-semibold);
+
+  --font-lato: var(--font-lato);
 
   /* Only enable variables when needed */
   /* 
@@ -60,7 +64,7 @@
   --primary: oklch(60.795% 0.2218 284.387);
   --primary-foreground: var(--color-white);
   --primary-compliment: oklch(from #ffafa4 l c h);
-  --secondary: oklch(23.503% 0.00003 271.152);
+  --secondary: oklch(from #1e1e1e l c h);
   --secondary-foreground: var(--foreground);
   --muted: var(--background);
   --muted-foreground: var(--color-white);
@@ -148,5 +152,38 @@
   }
   button {
     @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  /* Animated border glow effect */
+  .animate-border-glow {
+    @apply relative overflow-hidden z-0;
+  }
+
+  .animate-border-glow::before {
+    @apply absolute w-16 content-[''] pointer-events-none h-full left-0 top-0 bg-linear-to-r from-transparent via-white to-transparent -z-2;
+
+    offset-path: border-box;
+    offset-anchor: 100% 50%; /* Front of the beam leads */
+    animation: border-beam 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+
+  @keyframes border-beam {
+    0% {
+      opacity: 0.2;
+    }
+    50% {
+      width: 20%;
+      opacity: 1;
+    }
+    100% {
+      offset-distance: 100%;
+      opacity: 0.2;
+    }
+  }
+
+  .animate-border-glow::after {
+    @apply absolute inset-0.5 -z-1 content-[''] bg-inherit rounded-[inherit];
   }
 }

@@ -26,3 +26,15 @@ export function useBreakpoint(breakpoint: keyof typeof breakpoints) {
 
   return !!isMatch;
 }
+
+export function useScreens() {
+  const isMobile = useBreakpoint("max-md");
+  const isTablet = useBreakpoint("max-lg");
+  const isDesktop = !isMobile && !isTablet;
+
+  return {
+    isMobile,
+    isTablet,
+    isDesktop,
+  };
+}

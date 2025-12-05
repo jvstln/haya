@@ -1,36 +1,50 @@
 "use client";
-import { Add, ArchiveBook } from "iconsax-reactjs";
+import { FolderOpen, SearchNormal } from "iconsax-reactjs";
 import type { Route } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FolderIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAudits } from "@/features/audits/audit.hook";
 import { cn } from "@/lib/utils";
 import { NewAuditForm } from "./audit-form";
-import { MeshBackground } from "./mesh-background";
 
 export const AuditPage = () => {
   const audits = useAudits();
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden p-3 md:p-6">
-      {/* Mesh Background */}
+    <div className="relative flex min-h-screen w-full flex-col gap-6 overflow-hidden p-3 md:p-6">
+      {/* Gradient background */}
       <div
-        className="-z-10 pointer-events-none absolute inset-0 flex items-center justify-center"
-        style={
-          {
-            // background:
-            // "radial-gradient(circle at 50% -20%, #2a1e56 0%, #0a0a0a 100%)",
-          }
-        }
-      >
-        <MeshBackground className="h-full w-full" />
+        className="-z-10 absolute inset-x-0 top-0 h-39.25"
+        style={{
+          background:
+            "linear-gradient(152.36deg, rgba(122, 99, 255, 0.38) 22.82%, #121212 82.58%)",
+          opacity: 0.7,
+          filter: "blur(50px)",
+        }}
+      />
+
+      <NewAuditBanner />
+
+      {/* Empty state */}
+      {/* <div className="flex grow flex-col items-center justify-center text-sm">
+        <FolderIcon className="size-40" />
+        <p>No audit yet</p>
+      </div> */}
+
+      <div className="flex items-center justify-between">
+        <p className="text-h3">All audits</p>
+        <div className="relative">
+          <Input
+            className="rounded-full border-secondary pl-12"
+            placeholder="Search audits"
+          />
+          <SearchNormal className="-translate-y-1/2 absolute top-1/2 left-4 size-4" />{" "}
+        </div>
       </div>
-      <h1 className="mb-4 text-h1 text-white">
-        Let&apos;s get straight to work
-      </h1>
-      <p className="mb-6">Spot Ux friction before your users does.</p>
 
       {/* Cases */}
       <div
@@ -63,57 +77,90 @@ export const AuditPage = () => {
             />
           ))
         )}
-
-        <NewAuditForm>
-          {/* <AuditCard
-            icon={Add}
-            label="Create new case"
-            className="border border-primary bg-secondary text-white"
-          /> */}
-          <button
-            type="button"
-            className={cn(
-              "hover:-mt-1 flex h-28.5 flex-col items-center justify-center gap-4 rounded-2xl bg-primary/15 p-4 text-white shadow-primary transition hover:shadow-md md:h-39.5"
-            )}
-          >
-            <Add className="size-7.5 shrink-0 rounded-md bg-primary p-1" />
-            <span className="wrap-anywhere text-sm">Create new case</span>
-          </button>
-        </NewAuditForm>
       </div>
     </div>
   );
 };
 
 const AuditCard = ({
-  icon: Icon = ArchiveBook,
   label = "Audit",
   className,
   link,
-  onClick,
 }: {
-  icon?: typeof ArchiveBook;
   label?: string;
   className?: string;
-  link?: Route;
-  onClick?: () => void;
+  link: Route;
 }) => {
-  const Comp = link ? Link : "button";
-
   return (
-    <Comp
-      href={link ?? "/"}
-      onClick={onClick}
-      type="button"
+    <Link
+      href={link}
       className={cn(
-        "hover:-mt-1 flex h-28.5 flex-col items-center justify-center gap-4 rounded-2xl bg-primary/15 pt-4 shadow-primary transition hover:shadow-md md:h-39.5",
+        "group relative flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl bg-secondary p-4 text-center shadow-primary transition hover:shadow-sm",
         className
       )}
     >
-      <FolderIcon className="size-25 shrink-0" />
-      <span className="wrap-anywhere flex w-full flex-col items-center justify-center gap-2 rounded-b-2xl bg-card px-6 py-3 font-semibold text-white text-xs">
+      <FolderIcon className="size-24 shrink-0" />
+      <span className="wrap-anywhere flex w-full flex-col items-center justify-center gap-2 rounded-b-2xl font-semibold text-white text-xs">
         {label}
       </span>
-    </Comp>
+
+      {/* Overlay */}
+      <span className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-secondary text-white opacity-0 transition-opacity group-hover:opacity-100">
+        <FolderOpen className="size-7.5 shrink-0 rounded-md bg-primary p-1" />
+        <span className="font-semibold text-sm">Open report</span>
+      </span>
+    </Link>
+  );
+};
+
+const NewAuditBanner = () => {
+  return (
+    <div
+      className="flex overflow-hidden rounded-xl border border-transparent"
+      style={{
+        background: `
+          linear-gradient(87.5deg, rgba(30, 30, 30, 0.26) 1.42%, oklch(from var(--color-primary) l c h / 0.26) 99.44%),
+          url(/images/noise-texture.png) padding-box,
+          linear-gradient(87.5deg, rgba(30, 30, 30, 0.26) 1.42%, oklch(from var(--color-primary) l c h / 0.26) 99.44%),
+          linear-gradient(to bottom right, var(--color-background), var(--color-background)) padding-box,
+          linear-gradient(to bottom right, var(--color-primary), var(--color-primary-compliment)) border-box`,
+      }}
+    >
+      <div className="flex w-full basis-3/5 flex-col items-start gap-4 px-4 py-5 md:gap-6 md:p-8">
+        <h1 className="text-base text-white lg:text-h1">
+          UX Insights That Improve Conversions, Not Opinion
+        </h1>
+        <p className="text-xs max-md:hidden lg:text-base">
+          Haya gives you a real UX audit with data-driven recommendations so you
+          know what to fix, why it matters, and how it impacts growth.
+        </p>
+        {/* Text for mobile */}
+        <p className="text-xs md:hidden">
+          Haya gives you a real UX audit with data-driven recommendations.
+        </p>
+        <NewAuditForm>
+          <Button
+            className="hidden animate-border-glow rounded-full md:block"
+            size="lg"
+          >
+            Audit website now
+          </Button>
+        </NewAuditForm>
+        {/* Button for mobile */}
+        <NewAuditForm>
+          <Button className="animate-border-glow rounded-full md:hidden">
+            Audit website now
+          </Button>
+        </NewAuditForm>
+      </div>
+      <div className="relative basis-2/5">
+        <Image
+          src="/images/archive-illustration.svg"
+          alt="New audit"
+          fill
+          className="object-cover object-left-top"
+        />
+      </div>
+    </div>
   );
 };
