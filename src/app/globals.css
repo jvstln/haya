@@ -38,10 +38,14 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --text-h1: var(--text-xl);
+  --text-h1: var(--text-2xl);
   --text-h1--font-weight: var(--font-weight-semibold);
   --text-h2: var(--text-base);
   --text-h2--font-weight: var(--font-weight-semibold);
+  --text-h3: var(--text-lg);
+  --text-h3--font-weight: var(--font-weight-semibold);
+
+  --font-lato: var(--font-lato);
 
   /* Only enable variables when needed */
   /* 
@@ -60,7 +64,7 @@
   --primary: oklch(60.795% 0.2218 284.387);
   --primary-foreground: var(--color-white);
   --primary-compliment: oklch(from #ffafa4 l c h);
-  --secondary: oklch(23.503% 0.00003 271.152);
+  --secondary: oklch(from #1e1e1e l c h);
   --secondary-foreground: var(--foreground);
   --muted: var(--background);
   --muted-foreground: var(--color-white);
@@ -149,4 +153,38 @@
   button {
     @apply cursor-pointer;
   }
+}
+
+/* Animated border glow effect */
+.animate-border-glow {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.animate-border-glow::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 270deg,
+    white 290deg,
+    white 300deg,
+    transparent 320deg,
+    transparent 360deg
+  );
+  animation: var(--animate-spin);
+  animation-duration: 3s;
+  z-index: -2;
+}
+
+.animate-border-glow::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: var(--primary);
+  border-radius: inherit;
+  z-index: -1;
 }
