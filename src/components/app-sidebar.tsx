@@ -1,12 +1,11 @@
 "use client";
-import { Add, HamburgerMenu, Notification } from "iconsax-reactjs";
+import { Add } from "iconsax-reactjs";
 import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
 import type { LinkGroup, LinkItem, SidebarItemable } from "@/data/navlinks";
-import { SignupFormDialog } from "@/features/auth/components/signup-dialog";
 import { cn } from "@/lib/utils";
 import logo from "@/public/logo.svg";
 import { Button } from "./ui/button";
@@ -144,29 +143,5 @@ export const AppSidebar = ({
         <SidebarTrigger />
       </SidebarFooter>
     </Sidebar>
-  );
-};
-
-export const AppHeader = () => {
-  const { isMobile, toggleSidebar } = useSidebar();
-
-  return (
-    <header className="sticky top-0 z-50 flex h-(--header-height) w-full shrink-0 items-center gap-4 border-b bg-background px-5 md:px-10">
-      {isMobile ? (
-        <Button variant="ghost" size="icon" onClick={() => toggleSidebar()}>
-          <HamburgerMenu />
-        </Button>
-      ) : (
-        <Link href="/">
-          <Image src={logo} alt="Logo" className="h-9" />
-        </Link>
-      )}
-      <Button className="ml-auto" variant="glass" size="icon">
-        <Notification />
-      </Button>
-      <SignupFormDialog>
-        <Button className="animate-border-glow rounded-full">Sign up</Button>
-      </SignupFormDialog>
-    </header>
   );
 };

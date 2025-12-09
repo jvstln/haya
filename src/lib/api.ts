@@ -1,7 +1,17 @@
 import axios from "axios";
+import { useAuthStore } from "@/features/auth/auth.store";
 
 export const api = axios.create({
-  baseURL: "https://api.usehaya.io/api/v2",
+  baseURL: "https://api.usehaya.io/api/v1",
+});
+
+// Attach JWT token to all requests
+api.interceptors.request.use((config) => {
+  const accessToken = useAuthStore.getState().accessToken;
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  return config;
 });
 
 api.interceptors.response.use(

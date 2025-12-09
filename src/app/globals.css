@@ -16,6 +16,7 @@
   --color-accent: var(--accent);
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
+  --color-success: var(--success);
 
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
@@ -74,7 +75,8 @@
 
   --accent: var(--border);
   --accent-foreground: var(--primary-foreground);
-  --destructive: var(--color-red-500);
+  --destructive: oklch(60% 0.2 25);
+  --success: oklch(60% 0.2 140);
   --muted-foreground: oklab(79.926% 0.00117 -0.0041);
 
   --card: oklch(from #303131 l c h);
@@ -150,7 +152,8 @@
   * {
     @apply border-border outline-ring/50;
   }
-  button {
+  button,
+  [data-slot="dropdown-menu-item"] {
     @apply cursor-pointer;
   }
 }
@@ -166,7 +169,7 @@
 
     offset-path: border-box;
     offset-anchor: 100% 50%; /* Front of the beam leads */
-    animation: border-beam 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    animation: border-beam 3s linear infinite;
   }
 
   @keyframes border-beam {

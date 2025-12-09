@@ -1,73 +1,39 @@
-"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Google } from "iconsax-reactjs";
-import { type ComponentProps, useState } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { SolanaIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signupEmailSchema } from "../auth.schema";
-import type { SignupEmail } from "../auth.type";
+import { api } from "@/lib/api";
 
-export const SignupFormDialog = ({
-  children,
-  ...props
-}: Partial<ComponentProps<typeof Dialog>>) => {
-  const [signupType, setSignupType] = useState<"email" | "wallet">("email");
-  return (
-    <Dialog {...props}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="flex flex-col">
-        <DialogHeader className="mb-8 flex flex-row items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            data-active={signupType === "email"}
-            onClick={() => setSignupType("email")}
-          >
-            Sign-up with email
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            data-active={signupType === "wallet"}
-            onClick={() => setSignupType("wallet")}
-          >
-            Connect wallet
-          </Button>
-        </DialogHeader>
+import { signUpEmailSchema } from "../auth.schema";
+import type { SignUpEmail, SignUpEmailInput } from "../auth.type";
+import { PasswordRequirements } from "./password-requirements";
 
-        {signupType === "email" && <SignupEmailForm />}
-        {signupType === "wallet" && <SignupWalletForm />}
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-export const SignupEmailForm = () => {
+export const SignupEmailForm = ({
+  form,
+  onSubmit,
+  isLoading,
+}: {
+  form: UseFormReturn<SignUpEmailInput, unknown, SignUpEmail>;
+  onSubmit: (values: SignUpEmail) => void;
+  isLoading: boolean;
+}) => {
   const {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<SignupEmail>({
-    resolver: zodResolver(signupEmailSchema),
-  });
-
-  const onSubmit = (data: SignupEmail) => {
-    console.log(data);
-  };
+    control,
+  } = form;
 
   return (
-    <div className="flex flex-col justify-center gap-4 text-center">
+    <div className="flex flex-col justify-center gap-4">
       <DialogHeader className="gap-2">
         <DialogTitle className="text-h2 text-white">
           Sign up with email
@@ -77,6 +43,11 @@ export const SignupEmailForm = () => {
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+        <Field data-invalid={!!errors.name}>
+          <FieldLabel>Full name</FieldLabel>
+          <Input placeholder="John Doe" {...register("name")} />
+          <FieldError errors={[errors.name]} />
+        </Field>
         <Field data-invalid={!!errors.email}>
           <FieldLabel>Email address</FieldLabel>
           <Input placeholder="address@gmail.com" {...register("email")} />
@@ -84,12 +55,21 @@ export const SignupEmailForm = () => {
         </Field>
         <Field data-invalid={!!errors.password}>
           <FieldLabel>Password</FieldLabel>
-          <Input placeholder="Password" {...register("password")} />
-          <FieldError errors={[errors.password]} />
+          <Input
+            type="password"
+            placeholder="Password"
+            {...register("password")}
+          />
+          <PasswordRequirements
+            control={control}
+            name="password"
+            isInvalid={!!errors.password}
+          />
         </Field>
         <Field data-invalid={!!errors.confirmPassword}>
           <FieldLabel>Confirm password</FieldLabel>
           <Input
+            type="password"
             placeholder="Retype password"
             {...register("confirmPassword")}
           />
@@ -102,28 +82,36 @@ export const SignupEmailForm = () => {
           <hr />
         </div>
 
-        <Button size="lg" type="button" variant="outline" className="group">
+        <Button
+          size="lg"
+          type="button"
+          variant="outline"
+          className="group"
+          disabled={isLoading}
+        >
           <Google className="fill-current" />
           Continue with Google
           <ArrowRight className="ml-auto text-primary transition group-hover:translate-x-1" />
         </Button>
-        <Button size="lg">Sign up now</Button>
+        <Button size="lg" isLoading={isLoading}>
+          Sign up now
+        </Button>
       </form>
     </div>
   );
 };
 
 export const SignupWalletForm = () => {
-  const { handleSubmit } = useForm<SignupEmail>({
-    resolver: zodResolver(signupEmailSchema),
+  const { handleSubmit } = useForm<SignUpEmailInput, unknown, SignUpEmail>({
+    resolver: zodResolver(signUpEmailSchema),
   });
 
-  const onSubmit = (data: SignupEmail) => {
+  const onSubmit = (data: SignUpEmail) => {
     console.log(data);
   };
 
   return (
-    <div className="flex flex-col gap-4 text-center">
+    <div className="flex flex-col gap-4">
       <DialogHeader className="gap-2">
         <DialogTitle className="text-h2 text-white">
           Connect your wallet
@@ -138,7 +126,16 @@ export const SignupWalletForm = () => {
           Solana
           <ArrowRight className="ml-auto text-primary transition group-hover:translate-x-1" />
         </Button>
-        <Button size="lg">Connect wallet</Button>
+        <Button
+          size="lg"
+          onClick={async () => {
+            await api.post("https://api.usehaya.io/api/v1/auth/nonce", {
+              walletAddress: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+            });
+          }}
+        >
+          Connect wallet
+        </Button>
       </form>
     </div>
   );

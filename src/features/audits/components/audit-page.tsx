@@ -3,16 +3,20 @@ import { FolderOpen, SearchNormal } from "iconsax-reactjs";
 import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { FolderIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAudits } from "@/features/audits/audit.hook";
+import { useAuth } from "@/features/auth/auth.hook";
+import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 import { cn } from "@/lib/utils";
 import { NewAuditForm } from "./audit-form";
 
 export const AuditPage = () => {
   const audits = useAudits();
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-6 overflow-hidden p-3 md:p-6">
@@ -29,12 +33,6 @@ export const AuditPage = () => {
 
       <NewAuditBanner />
 
-      {/* Empty state */}
-      {/* <div className="flex grow flex-col items-center justify-center text-sm">
-        <FolderIcon className="size-40" />
-        <p>No audit yet</p>
-      </div> */}
-
       <div className="flex items-center justify-between">
         <p className="text-h3">All audits</p>
         <div className="relative">
@@ -46,38 +44,48 @@ export const AuditPage = () => {
         </div>
       </div>
 
-      {/* Cases */}
-      <div
-        className="grid gap-6 [--audit-card-width:175px] md:[--audit-card-width:212px]"
-        style={{
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(var(--audit-card-width), 1fr))",
-        }}
-      >
-        {audits.isPending ? (
-          <>
-            <Skeleton className="h-28.5 w-43.75 rounded-2xl md:h-34.5 md:w-53" />
-            <Skeleton className="h-28.5 w-43.75 md:h-34.5 md:w-53rounded-2xl" />
-          </>
-        ) : audits.isError ? (
-          <div className="flex h-28.5 w-43.75 flex-col items-center justify-center gap-2 rounded-2xl border border-destructive p-2 text-center md:h-34.5 md:w-53">
-            <p className="text-red-500 text-sm">
-              Error fetching analyses: {audits.error.message}
-            </p>
-            <Button size="sm" variant="glass" onClick={() => audits.refetch()}>
-              Retry
-            </Button>
-          </div>
-        ) : (
-          audits.data.map((analysis) => (
-            <AuditCard
-              key={analysis._id}
-              label={analysis.url}
-              link={`/dashboard/audits/${analysis._id}` as Route}
-            />
-          ))
-        )}
-      </div>
+      {isAuthenticated && audits.data?.length ? (
+        <div
+          className="grid gap-6 [--audit-card-width:175px] md:[--audit-card-width:212px]"
+          style={{
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(var(--audit-card-width), 1fr))",
+          }}
+        >
+          {audits.isPending ? (
+            <>
+              <Skeleton className="h-28.5 w-43.75 rounded-2xl md:h-34.5 md:w-53" />
+              <Skeleton className="h-28.5 w-43.75 md:h-34.5 md:w-53rounded-2xl" />
+            </>
+          ) : audits.isError ? (
+            <div className="flex h-28.5 w-43.75 flex-col items-center justify-center gap-2 rounded-2xl border border-destructive p-2 text-center md:h-34.5 md:w-53">
+              <p className="text-red-500 text-sm">
+                Error fetching analyses: {audits.error.message}
+              </p>
+              <Button
+                size="sm"
+                variant="glass"
+                onClick={() => audits.refetch()}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : (
+            audits.data.map((analysis) => (
+              <AuditCard
+                key={analysis._id}
+                label={analysis.url}
+                link={`/dashboard/audits/${analysis._id}` as Route}
+              />
+            ))
+          )}
+        </div>
+      ) : (
+        <div className="flex grow flex-col items-center justify-center text-sm">
+          <FolderIcon className="size-40" />
+          <p>No audit yet</p>
+        </div>
+      )}
     </div>
   );
 };
@@ -114,6 +122,17 @@ const AuditCard = ({
 };
 
 const NewAuditBanner = () => {
+  const { isAuthenticated } = useAuth();
+  const [isAuditFormOpen, setIsAuditFormOpen] = useState(false);
+
+  const handleNewAudit = () => {
+    if (isAuthenticated) {
+      setIsAuditFormOpen(true);
+    } else {
+      setOnboardingFormDialogView("login");
+    }
+  };
+
   return (
     <div
       className="flex overflow-hidden rounded-xl border border-transparent"
@@ -138,20 +157,20 @@ const NewAuditBanner = () => {
         <p className="text-xs md:hidden">
           Haya gives you a real UX audit with data-driven recommendations.
         </p>
-        <NewAuditForm>
-          <Button
-            className="hidden animate-border-glow rounded-full md:block"
-            size="lg"
-          >
-            Audit website now
-          </Button>
-        </NewAuditForm>
+        <Button
+          className="hidden animate-border-glow rounded-full md:block"
+          size="lg"
+          onClick={handleNewAudit}
+        >
+          Audit website now
+        </Button>
         {/* Button for mobile */}
-        <NewAuditForm>
-          <Button className="animate-border-glow rounded-full md:hidden">
-            Audit website now
-          </Button>
-        </NewAuditForm>
+        <Button
+          className="animate-border-glow rounded-full md:hidden"
+          onClick={handleNewAudit}
+        >
+          Audit website now
+        </Button>
       </div>
       <div className="relative basis-2/5">
         <Image
@@ -161,6 +180,8 @@ const NewAuditBanner = () => {
           className="object-cover object-left-top"
         />
       </div>
+
+      <NewAuditForm open={isAuditFormOpen} onOpenChange={setIsAuditFormOpen} />
     </div>
   );
 };
