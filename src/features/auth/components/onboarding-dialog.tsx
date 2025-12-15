@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ArrowLeft2 } from "iconsax-reactjs";
-import type { ComponentProps } from "react";
+import { type ComponentProps, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -32,7 +33,7 @@ import type {
 import { ForgotPasswordForm, ResetPasswordForm } from "./forgot-password-form";
 import { LoginForm } from "./login-form";
 import { VerifyOtpForm } from "./otp-form";
-import { SignupEmailForm, SignupWalletForm } from "./sign-up-form";
+import { SignUpWalletForm, SignupEmailForm } from "./sign-up-form";
 
 export type Views =
   | "signUpEmail"
@@ -56,6 +57,19 @@ export const OnboardingFormDialog = ({
 }: Partial<ComponentProps<typeof Dialog>>) => {
   const view = useOnboardingFormDialogView();
   const setView = setOnboardingFormDialogView;
+
+  const { visible } = useWalletModal();
+  const [previousView, setPreviousView] = useState<Views | null>(null);
+
+  useEffect(() => {
+    if (visible && view) {
+      setPreviousView(view);
+      setView(null);
+    } else if (!visible && previousView) {
+      setView(previousView);
+      setPreviousView(null);
+    }
+  }, [visible, view, previousView, setView]);
 
   const signUpEmailForm = useForm<SignUpEmailInput, unknown, SignUpEmail>({
     defaultValues: {
@@ -207,7 +221,7 @@ export const OnboardingFormDialog = ({
           </div>
         )}
 
-        {view === "signUpWallet" && <SignupWalletForm />}
+        {view === "signUpWallet" && <SignUpWalletForm />}
 
         {view === "verifyOtp" && (
           <VerifyOtpForm

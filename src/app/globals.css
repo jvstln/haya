@@ -190,3 +190,8 @@
     @apply absolute inset-0.5 -z-1 content-[''] bg-inherit rounded-[inherit];
   }
 }
+/* Fix interaction blocking by ensuring proper z-index and pointer-events */
+.wallet-adapter-modal {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}

@@ -54,7 +54,7 @@ function useResendVerification() {
 }
 
 function useLogin() {
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { setAuth } = useAuth();
 
   return useMutation({
     mutationFn: AuthService.login,
@@ -77,7 +77,7 @@ function useLogin() {
 }
 
 function useLogout() {
-  const resetAuth = useAuthStore((state) => state.resetAuth);
+  const { resetAuth } = useAuth();
 
   return useMutation({
     mutationFn: AuthService.logout,

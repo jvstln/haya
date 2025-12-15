@@ -6,6 +6,7 @@ interface User {
   email: string;
   authMethod: string;
   lastLogin: string;
+  walletAddress?: string;
 }
 
 interface AuthState {
@@ -26,8 +27,13 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       refreshToken: null,
       user: null,
       setAuth: (authState: AuthState) => set(authState),
-      resetAuth: () =>
-        set({ accessToken: null, refreshToken: null, user: null }),
+      resetAuth: () => {
+        set({ accessToken: null, refreshToken: null, user: null });
+        // Disconnect wallet if connected
+        if (window.solana?.disconnect) {
+          window.solana.disconnect();
+        }
+      },
     }),
     {
       name: "haya.auth",

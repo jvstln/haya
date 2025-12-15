@@ -1,6 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Google } from "iconsax-reactjs";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import { X } from "lucide-react";
+import type { UseFormReturn } from "react-hook-form";
 import { SolanaIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,10 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { api } from "@/lib/api";
 
-import { signUpEmailSchema } from "../auth.schema";
 import type { SignUpEmail, SignUpEmailInput } from "../auth.type";
+import { useSolanaAuth } from "../solana.hook";
 import { PasswordRequirements } from "./password-requirements";
 
 export const SignupEmailForm = ({
@@ -43,11 +42,11 @@ export const SignupEmailForm = ({
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <Field data-invalid={!!errors.name}>
+        {/* <Field data-invalid={!!errors.name}>
           <FieldLabel>Full name</FieldLabel>
           <Input placeholder="John Doe" {...register("name")} />
           <FieldError errors={[errors.name]} />
-        </Field>
+        </Field> */}
         <Field data-invalid={!!errors.email}>
           <FieldLabel>Email address</FieldLabel>
           <Input placeholder="address@gmail.com" {...register("email")} />
@@ -58,7 +57,11 @@ export const SignupEmailForm = ({
           <Input
             type="password"
             placeholder="Password"
-            {...register("password")}
+            {...register("password", {
+              onChange: (e) => {
+                form.setValue("confirmPassword", e.target.value);
+              },
+            })}
           />
           <PasswordRequirements
             control={control}
@@ -66,7 +69,7 @@ export const SignupEmailForm = ({
             isInvalid={!!errors.password}
           />
         </Field>
-        <Field data-invalid={!!errors.confirmPassword}>
+        {/* <Field data-invalid={!!errors.confirmPassword}>
           <FieldLabel>Confirm password</FieldLabel>
           <Input
             type="password"
@@ -74,7 +77,7 @@ export const SignupEmailForm = ({
             {...register("confirmPassword")}
           />
           <FieldError errors={[errors.confirmPassword]} />
-        </Field>
+        </Field> */}
 
         <div className="my-4 flex items-center gap-2 text-sm [&_hr]:grow">
           <hr />
@@ -101,14 +104,19 @@ export const SignupEmailForm = ({
   );
 };
 
-export const SignupWalletForm = () => {
-  const { handleSubmit } = useForm<SignUpEmailInput, unknown, SignUpEmail>({
-    resolver: zodResolver(signUpEmailSchema),
-  });
+export const SignUpWalletForm = () => {
+  const {
+    connected,
+    walletAddress,
+    connect,
+    authenticate,
+    isAuthenticating,
+    disconnect,
+  } = useSolanaAuth();
 
-  const onSubmit = (data: SignUpEmail) => {
-    console.log(data);
-  };
+  const truncatedAddress = walletAddress
+    ? `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`
+    : null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -117,26 +125,53 @@ export const SignupWalletForm = () => {
           Connect your wallet
         </DialogTitle>
         <DialogDescription className="text-sm">
-          A web3 savvy? connect solana wallet here{" "}
+          A web3 savvy? connect solana wallet here
         </DialogDescription>
       </DialogHeader>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <Button size="lg" type="button" variant="outline" className="group">
-          <SolanaIcon className="fill-current" />
-          Solana
-          <ArrowRight className="ml-auto text-primary transition group-hover:translate-x-1" />
-        </Button>
-        <Button
-          size="lg"
-          onClick={async () => {
-            await api.post("https://api.usehaya.io/api/v1/auth/nonce", {
-              walletAddress: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
-            });
-          }}
-        >
-          Connect wallet
-        </Button>
-      </form>
+      <div className="flex flex-col gap-4">
+        {connected && walletAddress ? (
+          <>
+            <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <SolanaIcon className="h-5 w-5 fill-current" />
+                <span className="text-sm text-white/80">
+                  {truncatedAddress}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-primary text-xs">Connected</span>
+                <button
+                  type="button"
+                  onClick={() => disconnect()}
+                  className="text-muted-foreground transition-colors hover:text-white"
+                  aria-label="Disconnect wallet"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+            <Button
+              size="lg"
+              onClick={authenticate}
+              isLoading={isAuthenticating}
+            >
+              Sign in with wallet
+            </Button>
+          </>
+        ) : (
+          <Button
+            size="lg"
+            type="button"
+            variant="outline"
+            className="group"
+            onClick={() => connect()}
+          >
+            <SolanaIcon className="fill-current" />
+            Connect Solana Wallet
+            <ArrowRight className="ml-auto text-primary transition group-hover:translate-x-1" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
