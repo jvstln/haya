@@ -19,7 +19,7 @@ export const AuditPage = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col gap-6 overflow-hidden p-3 md:p-6">
+    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6">
       {/* Gradient background */}
       <div
         className="-z-10 absolute inset-x-0 top-0 h-39.25"

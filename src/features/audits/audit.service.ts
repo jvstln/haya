@@ -2,23 +2,34 @@ import { api } from "@/lib/api";
 import { shuffleArray } from "@/lib/utils";
 import type { Audit, AuditPage, AuditSection, NewAudit } from "./audit.type";
 
+/** Hacky - change v1 to v2 in all analysis endpoint because of backend version change */
+
 async function getAudits() {
-  const response = await api.get<Omit<Audit, "content">[]>("/analyze/analysis");
+  const response = await api.get<Omit<Audit, "content">[]>(
+    `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`
+  );
   return response.data;
 }
 
 async function getAudit(auditId: string) {
-  const response = await api.get<Audit>(`/analyze/analysis/${auditId}`);
+  const response = await api.get<Audit>(
+    `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis/${auditId}`
+  );
   return response.data;
 }
 
 async function createAudit(payload: NewAudit) {
-  const response = await api.post<Audit>("/analyze/analysis", payload);
+  const response = await api.post<Audit>(
+    `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`,
+    payload
+  );
   return response.data;
 }
 
 async function deleteAudits() {
-  const response = await api.delete("/analyze/analysis");
+  const response = await api.delete(
+    `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`
+  );
   return response.data;
 }
 
