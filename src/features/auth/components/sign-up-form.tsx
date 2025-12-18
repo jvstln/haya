@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
 import type { SignUpEmail, SignUpEmailInput } from "../auth.type";
 import { useSolanaAuth } from "../solana.hook";
 import { PasswordRequirements } from "./password-requirements";
@@ -106,9 +105,9 @@ export const SignupEmailForm = ({
 
 export const SignUpWalletForm = () => {
   const {
+    setModalVisibility,
     connected,
     walletAddress,
-    connect,
     authenticate,
     isAuthenticating,
     disconnect,
@@ -164,7 +163,7 @@ export const SignUpWalletForm = () => {
             type="button"
             variant="outline"
             className="group"
-            onClick={() => connect()}
+            onClick={() => setModalVisibility(true)}
           >
             <SolanaIcon className="fill-current" />
             Connect Solana Wallet

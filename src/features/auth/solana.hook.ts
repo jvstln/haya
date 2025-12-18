@@ -2,7 +2,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useMutation } from "@tanstack/react-query";
 import bs58 from "bs58";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useAuthStore } from "./auth.store";
 import { setOnboardingFormDialogView } from "./components/onboarding-dialog";
@@ -56,8 +56,16 @@ function useVerifyWalletSignature() {
  * Handles: connect → request nonce → sign message → verify → store JWT
  */
 function useSolanaAuth() {
-  const { setVisible } = useWalletModal();
-  const { publicKey, signMessage, connected, disconnect } = useWallet();
+  const { setVisible: setModalVisibility, visible: isModalVisible } =
+    useWalletModal();
+  const {
+    publicKey,
+    signMessage,
+    connected,
+    disconnect,
+    disconnecting,
+    connecting,
+  } = useWallet();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const requestNonceMutation = useRequestNonce();
@@ -65,11 +73,7 @@ function useSolanaAuth() {
 
   const walletAddress = publicKey?.toBase58() ?? null;
 
-  const connect = useCallback(() => {
-    setVisible(true);
-  }, [setVisible]);
-
-  const authenticate = useCallback(async () => {
+  const authenticate = async () => {
     if (!publicKey || !signMessage) {
       toast.error("Please connect your wallet first");
       return;
@@ -103,22 +107,26 @@ function useSolanaAuth() {
     } finally {
       setIsAuthenticating(false);
     }
-  }, [publicKey, signMessage, requestNonceMutation, verifySignatureMutation]);
+  };
 
   return {
+    // Modal state
+    isModalVisible,
+    setModalVisibility,
+
     // Wallet state
     connected,
     walletAddress,
     publicKey,
 
     // Actions
-    connect,
     disconnect,
     authenticate,
 
     // Loading states
     isAuthenticating,
-    isConnecting: false,
+    isConnecting: connecting,
+    isDisconnecting: disconnecting,
   };
 }
 

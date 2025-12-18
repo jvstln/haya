@@ -58,6 +58,7 @@ export const OnboardingFormDialog = ({
   const view = useOnboardingFormDialogView();
   const setView = setOnboardingFormDialogView;
 
+  // --- Code to ensure dialog remains visible when wallet modal is opened and closed ---
   const { visible } = useWalletModal();
   const [previousView, setPreviousView] = useState<Views | null>(null);
 
@@ -70,6 +71,7 @@ export const OnboardingFormDialog = ({
       setPreviousView(null);
     }
   }, [visible, view, previousView, setView]);
+  // -----------------------
 
   const signUpEmailForm = useForm<SignUpEmailInput, unknown, SignUpEmail>({
     defaultValues: {
@@ -84,10 +86,6 @@ export const OnboardingFormDialog = ({
   const verifyEmailForm = useForm<VerifyOtp>({
     resolver: zodResolver(verifyOtpSchema),
   });
-
-  // const signUpWalletForm = useForm<SignUpEmail>({
-  //   resolver: zodResolver(signUpEmailSchema),
-  // });
 
   const loginForm = useForm<LoginEmail>({
     defaultValues: {
