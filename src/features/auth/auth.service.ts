@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { api } from "@/lib/api";
 import type {
   ForgotPassword,
@@ -44,6 +45,29 @@ async function resetPassword(payload: ResetPassword) {
     token: payload.code,
   });
   return response.data;
+}
+
+/** Read access token from cookie - works on both client and server */
+export async function getAccessToken(): Promise<string | null> {
+  try {
+    let token: string | undefined;
+
+    if (typeof window === "undefined") {
+      // Server-side: use next/headers
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      token = cookieStore.get("haya.accessToken")?.value;
+    } else {
+      // Client-side: use js-cookie
+      token = Cookies.get("haya.accessToken");
+    }
+
+    if (!token) return null;
+
+    return token;
+  } catch {
+    return null;
+  }
 }
 
 export {

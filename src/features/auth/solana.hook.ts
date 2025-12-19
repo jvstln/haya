@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import bs58 from "bs58";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useAuthStore } from "./auth.store";
+import { useAuth } from "./auth.hook";
 import { setOnboardingFormDialogView } from "./components/onboarding-dialog";
 import * as SolanaService from "./solana.service";
 
@@ -24,7 +24,7 @@ function useRequestNonce() {
  * Hook for verifying wallet signature and getting JWT
  */
 function useVerifyWalletSignature() {
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { setAuth } = useAuth();
 
   return useMutation({
     mutationFn: SolanaService.verifySignature,

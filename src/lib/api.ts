@@ -1,13 +1,13 @@
 import axios from "axios";
-import { useAuthStore } from "@/features/auth/auth.store";
+import { getAccessToken } from "@/features/auth/auth.service";
 
 export const api = axios.create({
   baseURL: "https://api.usehaya.io/api/v1",
 });
 
 // Attach JWT token to all requests
-api.interceptors.request.use((config) => {
-  const accessToken = useAuthStore.getState().accessToken;
+api.interceptors.request.use(async (config) => {
+  const accessToken = await getAccessToken();
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }

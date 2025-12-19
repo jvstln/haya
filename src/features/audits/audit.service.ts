@@ -65,7 +65,7 @@ function parseContent(content: string) {
 
     console.log("Fetched content", jsonContent);
 
-    return jsonContent as { pages: AuditPage[] };
+    return jsonContent as { pages: AuditPage[]; progressPercentage: number };
   } catch (error) {
     console.log("Error parsing analysis content", error, content);
     return null;

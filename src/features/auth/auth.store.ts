@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -26,13 +27,22 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       accessToken: null,
       refreshToken: null,
       user: null,
-      setAuth: (authState: AuthState) => set(authState),
+      setAuth: (authState: AuthState) => {
+        set(authState);
+        // Set token in cookie for serverside functions
+        Cookies.set("haya.accessToken", authState.accessToken ?? "", {
+          expires: authState.accessToken ? 7 : 0,
+          sameSite: "lax",
+        });
+      },
       resetAuth: () => {
         set({ accessToken: null, refreshToken: null, user: null });
         // Disconnect wallet if connected
         if (window.solana?.disconnect) {
           window.solana.disconnect();
         }
+        // Remove token from cookie
+        Cookies.remove("haya.accessToken");
       },
     }),
     {
