@@ -1,4 +1,5 @@
 import type z from "zod";
+import type { QueryParams } from "@/types/type";
 import type { newAuditSchema } from "./audit.schema";
 import type * as AnalysisService from "./audit.service";
 
@@ -6,6 +7,10 @@ export type NewAudit = z.infer<typeof newAuditSchema>;
 export type NewAuditInput = z.input<typeof newAuditSchema>;
 
 export type AuditStatus = "pending" | "completed" | "failed" | "in_progress";
+
+export type AuditQueryParams = QueryParams & {
+  status?: AuditStatus;
+};
 
 export type AuditType = "Website_Analysis" | string; // Allowing string for potential future types
 
@@ -43,10 +48,12 @@ export interface AuditSection {
   };
 }
 
+/** @deprecated use AuditSection */
 export interface DetailedAuditSection extends Omit<AuditSection, "aiAnalysis"> {
   aiAnalysis: DetailedAiAnalysis;
 }
 
+/** @deprecated use AuditSection.aiAnalysis */
 export interface DetailedAiAnalysis {
   visual_hierarchy_and_information_architecture: {
     element_order_by_importance: string;

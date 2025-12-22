@@ -1,13 +1,23 @@
 import { api } from "@/lib/api";
 import { shuffleArray } from "@/lib/utils";
-import type { Audit, AuditPage, AuditSection, NewAudit } from "./audit.type";
+import type { Pagination } from "@/types/type";
+import type {
+  Audit,
+  AuditPage,
+  AuditQueryParams,
+  AuditSection,
+  NewAudit,
+} from "./audit.type";
 
 /** Hacky - change v1 to v2 in all analysis endpoint because of backend version change */
 
-async function getAudits() {
-  const response = await api.get<Omit<Audit, "content">[]>(
-    `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`
-  );
+async function getAudits(params?: AuditQueryParams) {
+  const response = await api.get<{
+    data: Omit<Audit, "content">[];
+    pagination: Pagination;
+  }>(`${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`, {
+    params,
+  });
   return response.data;
 }
 

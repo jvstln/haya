@@ -7,15 +7,19 @@ import { useState } from "react";
 import { FolderIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LogicalPagination } from "@/components/ui/pagination";
+import { HayaSpinner } from "@/components/ui/spinner";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
 import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
+import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
+import type { AuditQueryParams } from "../audit.type";
 import { NewAuditForm } from "./audit-form";
 
 export const AuditPage = () => {
-  const audits = useAudits();
+  const [filters, setFilters] = useFilters<AuditQueryParams>();
+  const audits = useAudits(filters);
   const { isAuthenticated } = useAuth();
 
   return (
@@ -35,16 +39,28 @@ export const AuditPage = () => {
 
       <div className="flex items-center justify-between">
         <p className="text-h3">All audits</p>
-        <div className="relative">
+        <div className="relative w-48 transition-[width] duration-300 focus-within:w-sm">
           <Input
+            type="search"
             className="rounded-full border-secondary pl-12"
             placeholder="Search audits"
+            value={filters.originalSearch}
+            onChange={(e) => {
+              setFilters((f) => ({ ...f, search: e.target.value }));
+            }}
           />
-          <SearchNormal className="-translate-y-1/2 absolute top-1/2 left-4 size-4" />{" "}
+          <SearchNormal className="-translate-y-1/2 absolute top-1/2 left-4 size-4" />
         </div>
       </div>
 
-      {isAuthenticated && audits.data?.length ? (
+      {(!isAuthenticated || (audits.data && audits.data.data.length === 0)) && (
+        <div className="flex grow flex-col items-center justify-center text-sm">
+          <FolderIcon className="size-40" />
+          <p>No audit yet</p>
+        </div>
+      )}
+
+      {isAuthenticated && (
         <div
           className="grid gap-6 [--audit-card-width:175px] md:[--audit-card-width:212px]"
           style={{
@@ -53,10 +69,9 @@ export const AuditPage = () => {
           }}
         >
           {audits.isPending ? (
-            <>
-              <Skeleton className="h-28.5 w-43.75 rounded-2xl md:h-34.5 md:w-53" />
-              <Skeleton className="h-28.5 w-43.75 md:h-34.5 md:w-53rounded-2xl" />
-            </>
+            <div className="flex min-h-32 items-center justify-center">
+              <HayaSpinner />
+            </div>
           ) : audits.isError ? (
             <div className="flex h-28.5 w-43.75 flex-col items-center justify-center gap-2 rounded-2xl border border-destructive p-2 text-center md:h-34.5 md:w-53">
               <p className="text-red-500 text-sm">
@@ -71,7 +86,7 @@ export const AuditPage = () => {
               </Button>
             </div>
           ) : (
-            audits.data.map((analysis) => (
+            audits.data.data.map((analysis) => (
               <AuditCard
                 key={analysis._id}
                 label={analysis.url}
@@ -80,11 +95,14 @@ export const AuditPage = () => {
             ))
           )}
         </div>
-      ) : (
-        <div className="flex grow flex-col items-center justify-center text-sm">
-          <FolderIcon className="size-40" />
-          <p>No audit yet</p>
-        </div>
+      )}
+
+      {audits.data && (
+        <LogicalPagination
+          currentPage={audits.data.pagination.currentPage}
+          totalPages={audits.data.pagination.totalPages}
+          onPageChange={(page) => setFilters((f) => ({ ...f, page }))}
+        />
       )}
     </div>
   );

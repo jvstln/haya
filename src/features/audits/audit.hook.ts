@@ -3,11 +3,12 @@ import { useRef } from "react";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/queryclient";
 import * as AuditService from "./audit.service";
+import type { AuditQueryParams } from "./audit.type";
 
-export const useAudits = () => {
+export const useAudits = (params: AuditQueryParams = {}) => {
   return useQuery({
-    queryKey: ["analyses"],
-    queryFn: AuditService.getAudits,
+    queryKey: ["analyses", params],
+    queryFn: () => AuditService.getAudits(params),
   });
 };
 
@@ -30,6 +31,11 @@ export const useAudit = (auditId: string) => {
         refetchCount.current = 0;
         return false;
       }
+      console.log(
+        "refetching in ",
+        1000 * 2 ** (1 + refetchCount.current),
+        query.state.data
+      );
 
       return 1000 * 2 ** ++refetchCount.current;
     },
