@@ -7,6 +7,7 @@ import type {
   AuditQueryParams,
   AuditSection,
   NewAudit,
+  ParsedAudit,
 } from "./audit.type";
 
 /** Hacky - change v1 to v2 in all analysis endpoint because of backend version change */
@@ -45,7 +46,7 @@ async function deleteAudits() {
 
 function parseContent(content: string) {
   try {
-    let jsonContent = JSON.parse(content);
+    let jsonContent = JSON.parse(content || "null");
     if (!jsonContent || typeof jsonContent !== "object") return null;
 
     const colors: AuditSection["meta"]["accent"][] = shuffleArray([
@@ -82,4 +83,17 @@ function parseContent(content: string) {
   }
 }
 
-export { getAudits, getAudit, createAudit, deleteAudits, parseContent };
+/** Returns true if audit is in progress or pending or NOT YET DEFINED */
+function getIsAuditInProgress(audit?: Audit | ParsedAudit) {
+  if (!audit) return true;
+  return audit.status === "in_progress" || audit.status === "pending";
+}
+
+export {
+  getAudits,
+  getAudit,
+  createAudit,
+  deleteAudits,
+  parseContent,
+  getIsAuditInProgress,
+};

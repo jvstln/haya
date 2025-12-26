@@ -23,9 +23,10 @@ import { HayaSpinner } from "@/components/ui/spinner";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cn } from "@/lib/utils";
 import { useAudit } from "../../audit.hook";
+import { getIsAuditInProgress } from "../../audit.service";
 import type { AuditPage } from "../../audit.type";
-import { CaseImageSection, CaseSection } from "./case-content";
 import { ShareAuditDialog } from "../share-audit-dialog";
+import { CaseImageSection, CaseSection } from "./case-content";
 
 export const CasePage = () => {
   const params = useParams();
@@ -216,7 +217,7 @@ export const CasePage = () => {
               <CaseImageSection key={section.textContent} section={section} />
             ))
           )}
-          {audit.data?.status === "in_progress" && (
+          {getIsAuditInProgress(audit.data) && (
             <div
               className="-mt-20 pointer-events-none flex flex-col items-center gap-2 rounded-xl bg-secondary pt-12"
               style={{
@@ -252,7 +253,7 @@ export const CasePage = () => {
               <CaseSection key={section.meta.sectionNumber} section={section} />
             ))
           )}
-          {audit.data?.status === "in_progress" && (
+          {getIsAuditInProgress(audit.data) && (
             <div
               className="-mt-20 pointer-events-none flex flex-col items-center gap-2 rounded-xl bg-secondary pt-12"
               style={{

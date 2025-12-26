@@ -24,7 +24,7 @@ export interface Audit {
   content: string;
 }
 
-export interface ParsedAnalysis extends Omit<Audit, "content"> {
+export interface ParsedAudit extends Omit<Audit, "content"> {
   content: ReturnType<typeof AnalysisService.parseContent>;
 }
 

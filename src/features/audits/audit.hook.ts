@@ -26,18 +26,15 @@ export const useAudit = (auditId: string) => {
     },
     refetchInterval(query) {
       // Refetch analysis every ^2 seconds (exponentially.. 2 4 8 16s) if status is pending
-      const status = query.state.data?.status;
-      if (status && !["pending", "in_progress"].includes(status)) {
+      if (
+        !query.state.data ||
+        !AuditService.getIsAuditInProgress(query.state.data)
+      ) {
         refetchCount.current = 0;
         return false;
       }
-      console.log(
-        "refetching in ",
-        1000 * 2 ** (1 + refetchCount.current),
-        query.state.data
-      );
 
-      return 1000 * 2 ** ++refetchCount.current;
+      return (10 + ++refetchCount.current) * 1000; // 10 seconds + refetchCount seconds
     },
   });
 
