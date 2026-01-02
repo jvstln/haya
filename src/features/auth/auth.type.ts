@@ -37,3 +37,19 @@ export interface SolanaUser {
   lastLogin: string;
   createdAt?: string;
 }
+interface User {
+  id: string;
+  email: string;
+  authMethod: string;
+  lastLogin: string;
+  walletAddress?: string;
+}
+export interface AuthState {
+  accessToken: string | null;
+  refreshToken: string | null;
+  user: User | null;
+}
+export interface AuthActions {
+  setAuth: (authState: AuthState) => void;
+  resetAuth: () => void;
+}
