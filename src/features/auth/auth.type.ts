@@ -39,6 +39,7 @@ export interface SolanaUser {
 }
 interface User {
   id: string;
+  username: string;
   email: string;
   authMethod: string;
   lastLogin: string;

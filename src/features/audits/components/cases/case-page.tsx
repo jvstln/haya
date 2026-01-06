@@ -91,12 +91,14 @@ export const CasePage = () => {
           </a>
         )}
 
-        <ShareAuditDialog>
-          <Button variant="glass-primary" size="sm" className="ml-auto">
-            <Share />
-            Share Findings
-          </Button>
-        </ShareAuditDialog>
+        {audit.data && (
+          <ShareAuditDialog audit={audit.data}>
+            <Button variant="glass-primary" size="sm" className="ml-auto">
+              <Share />
+              Share Findings
+            </Button>
+          </ShareAuditDialog>
+        )}
       </div>
 
       {/* Control to switch between image view and content view only on mobile */}
