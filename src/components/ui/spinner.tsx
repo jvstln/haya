@@ -1,13 +1,16 @@
 "use client";
-import { Story } from "iconsax-reactjs";
+import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import logo from "@/public/logo-icon.svg";
 
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
+function Spinner({
+  className,
+  ...props
+}: React.ComponentProps<typeof Loader2>) {
   return (
-    <Story
+    <Loader2
       aria-live="polite"
       aria-label="Loading"
       className={cn("pointer-events-none size-4 animate-spin", className)}
