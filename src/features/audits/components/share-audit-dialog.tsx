@@ -89,12 +89,10 @@ export const ShareAuditDialog = ({
               document={<AuditPdfDocument audit={audit} />}
               fileName={`haya-analysis-${audit.url}.pdf`}
             >
-              {({ loading }) => (
-                <Button size="sm" isLoading={loading} loadingText="Downloading">
-                  <DocumentDownload />
-                  Download
-                </Button>
-              )}
+              <Button size="sm">
+                <DocumentDownload />
+                Download
+              </Button>
             </PDFDownloadLink>
           </div>
         </DialogFooter>

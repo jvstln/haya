@@ -19,13 +19,6 @@ export const passwordSchema = z
 
 export const signUpEmailSchema = z
   .object({
-    name: z
-      .preprocess(
-        (val) =>
-          typeof val === "string" && val.trim() === "" ? undefined : val,
-        z.string().min(2, "Name must be at least 2 characters")
-      )
-      .optional(),
     email: z.email(),
     password: passwordSchema,
     confirmPassword: z.string(),

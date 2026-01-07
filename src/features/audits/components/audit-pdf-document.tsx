@@ -10,6 +10,8 @@ import {
 } from "@react-pdf/renderer";
 import { useAuth } from "@/features/auth/auth.hook";
 import type { AuditSection, ParsedAudit } from "../audit.type";
+import { Fragment } from "react";
+import { truncate } from "@/lib/utils";
 
 interface AuditPdfDocumentProps {
   audit: ParsedAudit;
@@ -57,6 +59,47 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
     day: "numeric",
   });
 
+  const sectionCount = pages.reduce(
+    (acc, page) => acc + page.sections.length,
+    0
+  );
+
+  const problemCount = pages.reduce(
+    (acc, page) =>
+      acc +
+      page.sections.reduce(
+        (acc, section) => acc + (section.aiAnalysis?.problems?.length || 0),
+        0
+      ),
+    0
+  );
+
+  const solutionCount = pages.reduce(
+    (acc, page) =>
+      acc +
+      page.sections.reduce(
+        (acc, section) => acc + (section.aiAnalysis?.solutions?.length || 0),
+        0
+      ),
+    0
+  );
+
+  const pageProps = {
+    size: { width: 1058, height: 4650 },
+    style: { padding: 32, backgroundColor: colors.background },
+  };
+
+  const viewSectionProps = {
+    style: {
+      borderRadius: 16,
+      backgroundColor: "#FFFFFF",
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: "32 24",
+      gap: 16,
+    },
+  };
+
   return (
     <Document
       author={auth.user?.username}
@@ -64,71 +107,77 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
       creator={window.location.hostname}
       producer={window.location.hostname}
       style={{
-        backgroundColor: colors.background,
         color: colors.foreground,
-        // fontFamily: "Lato",
+        fontFamily: "Lato",
         fontSize: 14,
         fontWeight: 400,
       }}
     >
-      {pages.map((page) => (
-        <Page
-          key={page.pageUrl}
-          // size="B3"
-          size={{ width: 1058, height: 4868 }}
-          style={{ padding: 32 }}
+      <Page {...pageProps}>
+        {/* Header */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 32,
+          }}
         >
-          {/* Header */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 32,
-            }}
-          >
-            <View style={{ gap: 8 }}>
-              <Text
-                style={{
-                  fontSize: 24,
-                  fontWeight: "semibold",
-                  color: colors.card,
-                }}
-              >
-                UX Audit Report
-              </Text>
-              <Link>{audit.url}</Link>
-            </View>
-            <Text>Date: {generatedDate}</Text>
-          </View>
-
-          {/* Analysed pages */}
-          <View
-            style={{
-              borderRadius: 16,
-              backgroundColor: "#FFFFFF",
-              padding: "32 24",
-            }}
-          >
-            {/* Overview summary */}
-            <Text style={{ fontSize: 16, marginBottom: 12 }}>
-              Overview About Website
-            </Text>
-            <View
+          <View style={{ gap: 8 }}>
+            <Text
               style={{
-                borderRadius: 10,
-                padding: 16,
-                backgroundColor: colors.background,
-                marginBottom: 40,
+                fontSize: 24,
+                fontWeight: "semibold",
+                color: colors.card,
               }}
             >
-              {audit.content?.pages?.map((page) => (
-                <Text key={page.pageUrl}>{page.pageName}</Text>
-              ))}
-            </View>
+              UX Audit Report
+            </Text>
+            <Text>{audit.url}</Text>
+          </View>
+          <Text>Date: {generatedDate}</Text>
+        </View>
 
-            {/* TODO: More summaries coming soon. requires backend update */}
+        <View {...viewSectionProps}>
+          {/* Overview summary */}
+          <Text style={{ fontSize: 16, marginBottom: 12 }}>
+            Overview About Website
+          </Text>
+          <Text style={{ fontSize: 16 }}>Pages and sections</Text>
+          <View
+            style={{
+              borderRadius: 10,
+              padding: 16,
+              backgroundColor: colors.background,
+              marginBottom: 40,
+            }}
+          >
+            {audit.content?.pages?.map((page) => (
+              <Fragment key={page.pageUrl}>
+                <Link src={page.pageUrl} style={{ marginVertical: 8 }}>
+                  {page.pageName}
+                </Link>
 
+                {page.sections.map((section) => (
+                  <Text
+                    key={section.meta.sectionNumber}
+                    style={{ marginLeft: 10 }}
+                  >
+                    {section.meta.sectionNumber}. {section.category}
+                  </Text>
+                ))}
+              </Fragment>
+            ))}
+          </View>
+
+          {/* TODO: More summaries coming soon. requires backend update */}
+        </View>
+      </Page>
+
+      {pages.map((page) => (
+        <Page key={page.pageUrl} {...pageProps}>
+          {/* Analysed pages */}
+          <View {...viewSectionProps}>
             <Text
               style={{ fontSize: 18, fontWeight: "semibold", marginBottom: 40 }}
             >

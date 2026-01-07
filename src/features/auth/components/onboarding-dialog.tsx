@@ -75,7 +75,6 @@ export const OnboardingFormDialog = ({
 
   const signUpEmailForm = useForm<SignUpEmailInput, unknown, SignUpEmail>({
     defaultValues: {
-      name: "",
       email: "",
       password: "",
       confirmPassword: "",

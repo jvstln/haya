@@ -40,15 +40,19 @@ export const SignupEmailForm = ({
           New to web3? we have got you. Sign in manually with your email account
         </DialogDescription>
       </DialogHeader>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        {/* <Field data-invalid={!!errors.name}>
-          <FieldLabel>Full name</FieldLabel>
-          <Input placeholder="John Doe" {...register("name")} />
-          <FieldError errors={[errors.name]} />
-        </Field> */}
+      <form
+        onSubmit={handleSubmit(onSubmit, (error) => {
+          console.log("Signup validation error", error, form.getValues());
+        })}
+        className="flex flex-col gap-2"
+      >
         <Field data-invalid={!!errors.email}>
           <FieldLabel>Email address</FieldLabel>
-          <Input placeholder="address@gmail.com" {...register("email")} />
+          <Input
+            type="email"
+            placeholder="address@gmail.com"
+            {...register("email")}
+          />
           <FieldError errors={[errors.email]} />
         </Field>
         <Field data-invalid={!!errors.password}>

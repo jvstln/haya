@@ -4,16 +4,22 @@ import * as AuditService from "@/features/audits/audit.service";
 export const generateMetadata = async ({
   params,
 }: LayoutProps<"/dashboard/audits/[auditId]">): Promise<Metadata> => {
-  const { auditId } = await params;
-  const audit = await AuditService.getAudit(auditId);
+  try {
+    const { auditId } = await params;
+    const audit = await AuditService.getAudit(auditId);
 
-  return {
-    title: {
-      template: `${audit.url} | %s - Haya`,
-      default: `${audit.url} - Haya`,
-    },
-    description: `Audit description - ${audit.content}`,
-  };
+    return {
+      title: {
+        template: `${audit.url} | %s - Haya`,
+        default: `${audit.url} - Haya`,
+      },
+      description: `Audit description - ${audit.content}`,
+    };
+  } catch (error) {
+    return {
+      title: "Audit analysis",
+    };
+  }
 };
 
 export default function AuditLayout({

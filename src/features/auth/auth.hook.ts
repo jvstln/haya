@@ -89,6 +89,7 @@ function useLogout() {
     onSuccess() {
       resetAuth();
       toast.success("Logout successful", { id: "logout" });
+      window.location.assign("/");
     },
     onError(error) {
       toast.error(`Error: ${error.message}`, {
