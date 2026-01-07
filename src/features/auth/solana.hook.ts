@@ -33,13 +33,7 @@ function useVerifyWalletSignature() {
       setAuth({
         accessToken: data.token,
         refreshToken: null,
-        user: {
-          id: data.user.walletAddress,
-          email: "",
-          authMethod: "solana",
-          lastLogin: data.user.lastLogin,
-          walletAddress: data.user.walletAddress,
-        },
+        user: data.user,
       });
       // Close the onboarding dialog
       setOnboardingFormDialogView(null);

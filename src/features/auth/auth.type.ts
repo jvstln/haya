@@ -33,22 +33,24 @@ export interface SolanaVerifyResponse {
 }
 
 export interface SolanaUser {
+  username: string;
   walletAddress: string;
   lastLogin: string;
-  createdAt?: string;
+  authMethod: "wallet";
 }
+
 interface User {
   id: string;
   username: string;
   email: string;
-  authMethod: string;
+  authMethod: "email";
   lastLogin: string;
   walletAddress?: string;
 }
 export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  user: User | null;
+  user: User | SolanaUser | null;
 }
 export interface AuthActions {
   setAuth: (authState: AuthState) => void;

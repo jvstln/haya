@@ -67,14 +67,14 @@ const UserMenu = () => {
   const { user } = useAuth();
   const logout = useLogout();
 
-  const initials = user?.email?.split("@")[0].slice(0, 2).toUpperCase() ?? "U";
+  const initials = user?.username?.slice(0, 2).toUpperCase() ?? "U";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Avatar className="size-9">
-            <AvatarImage src="" alt={user?.email ?? "User"} />
+            <AvatarImage src="" alt={user?.username ?? "User"} />
             <AvatarFallback className="bg-primary/20 font-medium text-primary text-sm">
               {initials}
             </AvatarFallback>
@@ -86,7 +86,7 @@ const UserMenu = () => {
           <div className="flex flex-col gap-1">
             <p className="font-medium text-sm leading-none">My Account</p>
             <p className="truncate text-muted-foreground text-xs">
-              {user?.email ?? "user@example.com"}
+              {user?.authMethod === "email" ? user.email : user?.walletAddress}
             </p>
           </div>
         </DropdownMenuLabel>
