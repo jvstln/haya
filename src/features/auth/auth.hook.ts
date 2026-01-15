@@ -76,6 +76,28 @@ function useLogin() {
   });
 }
 
+function useExchangeGoogleAuthCode() {
+  const { setAuth } = useAuth();
+
+  return useMutation({
+    mutationFn: AuthService.exchangeGoogleAuthCodeForToken,
+    onMutate: () => {
+      toast.loading("Signing you in...", {
+        id: "googleAuthExchangeCode",
+      });
+    },
+    onSuccess(data) {
+      setAuth(data);
+      toast.success("Login successful", { id: "googleAuthExchangeCode" });
+    },
+    onError(error) {
+      toast.error(`Error: ${error.message}`, {
+        id: "googleAuthExchangeCode",
+      });
+    },
+  });
+}
+
 function useLogout() {
   const { resetAuth } = useAuth();
 
@@ -139,6 +161,7 @@ export {
   useVerifyOtp,
   useResendVerification,
   useLogin,
+  useExchangeGoogleAuthCode,
   useLogout,
   useForgotPassword,
   useResetPassword,

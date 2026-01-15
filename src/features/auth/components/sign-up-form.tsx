@@ -1,4 +1,4 @@
-import { ArrowRight, Google } from "iconsax-reactjs";
+import { ArrowRight } from "iconsax-reactjs";
 import { X } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import { SolanaIcon } from "@/components/icons";
@@ -12,6 +12,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import type { SignUpEmail, SignUpEmailInput } from "../auth.type";
 import { useSolanaAuth } from "../solana.hook";
+import { GoogleAuthButton } from "./google-auth";
 import { PasswordRequirements } from "./password-requirements";
 
 export const SignupEmailForm = ({
@@ -88,17 +89,7 @@ export const SignupEmailForm = ({
           <hr />
         </div>
 
-        <Button
-          size="lg"
-          type="button"
-          variant="outline"
-          className="group"
-          disabled={isLoading}
-        >
-          <Google className="fill-current" />
-          Continue with Google
-          <ArrowRight className="ml-auto text-primary transition group-hover:translate-x-1" />
-        </Button>
+        <GoogleAuthButton disabled={isLoading} />
         <Button size="lg" isLoading={isLoading}>
           Sign up now
         </Button>

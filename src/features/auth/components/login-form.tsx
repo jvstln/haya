@@ -1,4 +1,3 @@
-import { ArrowRight, Google } from "iconsax-reactjs";
 import type { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 import type { LoginEmail } from "../auth.type";
+import { GoogleAuthButton } from "./google-auth";
 
 export const LoginForm = ({
   form,
@@ -57,17 +57,7 @@ export const LoginForm = ({
           <hr />
         </div>
 
-        <Button
-          size="lg"
-          type="button"
-          variant="outline"
-          className="group"
-          disabled={isLoading}
-        >
-          <Google className="fill-current" />
-          Continue with Google
-          <ArrowRight className="ml-auto text-primary transition group-hover:translate-x-1" />
-        </Button>
+        <GoogleAuthButton disabled={isLoading} />
         <Button size="lg" isLoading={isLoading}>
           Login
         </Button>

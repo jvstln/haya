@@ -43,7 +43,7 @@ interface User {
   id: string;
   username: string;
   email: string;
-  authMethod: "email";
+  authMethod: "email" | "google";
   lastLogin: string;
   walletAddress?: string;
 }

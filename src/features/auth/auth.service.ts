@@ -20,6 +20,16 @@ async function login(payload: LoginEmail) {
   return response.data;
 }
 
+function redirectToGoogleAuth() {
+  const baseUrl = api.defaults.baseURL || window.location.host;
+  window.location.href = baseUrl.replace(/\/*$/, "/auth/google");
+}
+
+async function exchangeGoogleAuthCodeForToken(code: string) {
+  const response = await api.post("/auth/google/exchange-code", { code });
+  return response.data;
+}
+
 async function logout() {
   const response = await api.post("/auth/logout");
   return response.data;
@@ -76,6 +86,8 @@ export async function getAuth(): Promise<AuthState | null> {
 export {
   signUpEmail,
   login,
+  redirectToGoogleAuth,
+  exchangeGoogleAuthCodeForToken,
   logout,
   verifyOtp,
   resendVerification,
