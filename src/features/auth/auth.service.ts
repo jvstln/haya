@@ -59,7 +59,7 @@ async function resetPassword(payload: ResetPassword) {
 }
 
 /** Read access token from cookie - works on both client and server */
-export async function getAuth(): Promise<AuthState | null> {
+async function getAuth(): Promise<AuthState | null> {
   try {
     let authString: string | undefined;
 
@@ -93,4 +93,5 @@ export {
   resendVerification,
   forgotPassword,
   resetPassword,
+  getAuth,
 };

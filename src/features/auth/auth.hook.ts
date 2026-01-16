@@ -67,6 +67,7 @@ function useLogin() {
       // Store tokens and user in auth store
       setAuth(data);
       toast.success("Login successful", { id: "login" });
+      window.location.assign("/");
     },
     onError(error) {
       toast.error(`Error: ${error.message}`, {
@@ -89,6 +90,7 @@ function useExchangeGoogleAuthCode() {
     onSuccess(data) {
       setAuth(data);
       toast.success("Login successful", { id: "googleAuthExchangeCode" });
+      window.location.replace("/");
     },
     onError(error) {
       toast.error(`Error: ${error.message}`, {

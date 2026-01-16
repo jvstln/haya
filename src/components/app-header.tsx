@@ -67,16 +67,39 @@ const UserMenu = () => {
   const { user } = useAuth();
   const logout = useLogout();
 
-  const initials = user?.username?.slice(0, 2).toUpperCase() ?? "U";
+  // Get display name based on auth method
+  const getDisplayName = () => {
+    if (!user) return "User";
+
+    if (user.authMethod === "wallet") {
+      // Truncate wallet address for display
+      const addr = user.walletAddress;
+      return addr ? `${addr.slice(0, 4)}...${addr.slice(-4)}` : "Wallet User";
+    }
+
+    return user.username || "User";
+  };
+
+  // Get secondary info (email or wallet address)
+  const getSecondaryInfo = () => {
+    if (!user) return "";
+
+    if (user.authMethod === "wallet") {
+      return user.walletAddress ?? "";
+    }
+
+    // For email/google users, show email
+    return user.email ?? "";
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Avatar className="size-9">
-            <AvatarImage src="" alt={user?.username ?? "User"} />
-            <AvatarFallback className="bg-primary/20 font-medium text-primary text-sm">
-              {initials}
+            <AvatarImage src="" alt={getDisplayName()} />
+            <AvatarFallback className="bg-primary/20 text-primary">
+              <User className="size-5" />
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -84,9 +107,11 @@ const UserMenu = () => {
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col gap-1">
-            <p className="font-medium text-sm leading-none">My Account</p>
+            <p className="font-medium text-sm leading-none">
+              {getDisplayName()}
+            </p>
             <p className="truncate text-muted-foreground text-xs">
-              {user?.authMethod === "email" ? user.email : user?.walletAddress}
+              {getSecondaryInfo()}
             </p>
           </div>
         </DropdownMenuLabel>

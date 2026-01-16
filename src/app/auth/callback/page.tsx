@@ -25,11 +25,7 @@ const AuthCallbackHandler = () => {
     hasCalledRef.current = true;
 
     if (code) {
-      exchangeCode(code, {
-        onSuccess: () => {
-          window.location.replace("/");
-        },
-      });
+      exchangeCode(code);
     } else {
       toast.error("Couldn't sign you in", {
         description: "Authentication code not found. Please try again later",

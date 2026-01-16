@@ -157,7 +157,7 @@ export const CasePage = () => {
             Mobile
           </Button>
           <Select
-            value={currentPage?.pageUrl}
+            value={currentPage?.pageUrl || ""}
             onValueChange={(value) => {
               const page = audit.data?.content?.pages?.find(
                 (p) => p.pageUrl === value

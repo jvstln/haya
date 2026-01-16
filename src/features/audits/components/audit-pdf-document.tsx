@@ -1,26 +1,12 @@
 "use client";
-import {
-  Document,
-  Font,
-  Image,
-  Link,
-  Page,
-  Text,
-  View,
-} from "@react-pdf/renderer";
+import { Document, Image, Link, Page, Text, View } from "@react-pdf/renderer";
+import { Fragment } from "react";
 import { useAuth } from "@/features/auth/auth.hook";
 import type { AuditSection, ParsedAudit } from "../audit.type";
-import { Fragment } from "react";
-import { truncate } from "@/lib/utils";
 
 interface AuditPdfDocumentProps {
   audit: ParsedAudit;
 }
-
-Font.register({
-  family: "Lato",
-  src: "http://fonts.gstatic.com/s/lato/v13/v0SdcGFAl2aezM9Vq_aFTQ.ttf",
-});
 
 export const colors = {
   // Base colors (from globals.css)
@@ -37,7 +23,6 @@ export const colors = {
   border: "#303131",
   card: "#303131",
   muted: "#121212",
-  mutedForeground: "#c9c9ca", // oklab(79.926% 0.00117 -0.0041)
 
   // Status colors
   destructive: "#DC2626", // oklch(60% 0.2 25) ≈ red
@@ -108,7 +93,7 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
       producer={window.location.hostname}
       style={{
         color: colors.foreground,
-        fontFamily: "Lato",
+        // fontFamily: "Lato", // Involves registering of font which may or may not work causing the pdf to not display
         fontSize: 14,
         fontWeight: 400,
       }}
@@ -139,11 +124,118 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
         </View>
 
         <View {...viewSectionProps}>
-          {/* Overview summary */}
-          <Text style={{ fontSize: 16, marginBottom: 12 }}>
-            Overview About Website
+          {/* Analysis Summary */}
+          <Text
+            style={{ fontSize: 18, fontWeight: "semibold", marginBottom: 8 }}
+          >
+            Analysis Summary
           </Text>
-          <Text style={{ fontSize: 16 }}>Pages and sections</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 16,
+              marginBottom: 24,
+            }}
+          >
+            {/* Stat Card - Pages */}
+            <View
+              style={{
+                flex: 1,
+                borderRadius: 10,
+                padding: 16,
+                gap: 8,
+                backgroundColor: colors.background,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  color: colors.primary,
+                }}
+              >
+                {pages.length}
+              </Text>
+              <Text>Pages Analyzed</Text>
+            </View>
+
+            {/* Stat Card - Sections */}
+            <View
+              style={{
+                flex: 1,
+                borderRadius: 10,
+                padding: 16,
+                gap: 8,
+                backgroundColor: colors.background,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  color: colors.primary,
+                }}
+              >
+                {sectionCount}
+              </Text>
+              <Text>Sections Reviewed</Text>
+            </View>
+
+            {/* Stat Card - Problems */}
+            <View
+              style={{
+                flex: 1,
+                borderRadius: 10,
+                padding: 16,
+                gap: 8,
+                backgroundColor: "#FEF2F2",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  color: colors.destructive,
+                }}
+              >
+                {problemCount}
+              </Text>
+              <Text>Problems Found</Text>
+            </View>
+
+            {/* Stat Card - Solutions */}
+            <View
+              style={{
+                flex: 1,
+                borderRadius: 10,
+                padding: 16,
+                gap: 8,
+                backgroundColor: "#ECFDF5",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  color: colors.success,
+                }}
+              >
+                {solutionCount}
+              </Text>
+              <Text>Solutions Proposed</Text>
+            </View>
+          </View>
+
+          {/* Pages and Sections */}
+          <Text
+            style={{ fontSize: 16, fontWeight: "semibold", marginBottom: 8 }}
+          >
+            Pages & Sections Overview
+          </Text>
           <View
             style={{
               borderRadius: 10,
