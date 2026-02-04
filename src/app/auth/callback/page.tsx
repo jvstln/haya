@@ -36,7 +36,7 @@ const AuthCallbackHandler = () => {
   if (isSuccess) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
-        <h2 className="text-xl text-success">Sign in succesful</h2>
+        <h2 className="text-success text-xl">Sign in succesful</h2>
         <p className="text-muted-foreground">Redirecting to dashboard...</p>
       </div>
     );

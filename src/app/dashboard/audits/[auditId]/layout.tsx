@@ -15,7 +15,7 @@ export const generateMetadata = async ({
       },
       description: `Audit description - ${audit.content}`,
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       title: "Audit analysis",
     };

@@ -132,7 +132,7 @@ export const AppSidebar = ({
                     }
 
                     return sidebarItem;
-                  }
+                  },
                 )}
               </SidebarMenu>
             </SidebarGroupContent>

@@ -34,8 +34,8 @@ export const PasswordRequirements = <T extends FieldValues>({
               isValid
                 ? "text-success"
                 : isInvalid
-                ? "text-destructive"
-                : "text-muted-foreground"
+                  ? "text-destructive"
+                  : "text-muted-foreground",
             )}
           >
             {isValid ? <Check className="size-3" /> : <X className="size-3" />}

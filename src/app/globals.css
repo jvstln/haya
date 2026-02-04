@@ -70,14 +70,13 @@
   --muted: var(--background);
   --muted-foreground: var(--color-white);
 
-  --border: oklch(from #303131 l c h);
+  --border: oklch(from #141818 l c h);
   --ring: var(--border);
 
   --accent: var(--border);
   --accent-foreground: var(--primary-foreground);
   --destructive: oklch(60% 0.2 25);
   --success: oklch(60% 0.2 140);
-  --muted-foreground: oklab(79.926% 0.00117 -0.0041);
 
   --card: oklch(from #303131 l c h);
   --card-foreground: var(--foreground);

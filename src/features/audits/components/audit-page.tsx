@@ -122,7 +122,7 @@ const AuditCard = ({
       href={link}
       className={cn(
         "group relative flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl bg-secondary p-4 text-center shadow-primary transition hover:shadow-sm",
-        className
+        className,
       )}
     >
       <FolderIcon className="size-24 shrink-0" />

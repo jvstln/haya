@@ -44,6 +44,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     {
       name: "haya.auth",
       storage: createJSONStorage(() => cookieStorage),
-    }
-  )
+    },
+  ),
 );

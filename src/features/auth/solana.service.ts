@@ -1,16 +1,16 @@
 import { api } from "@/lib/api";
 import type {
   SolanaNonceResponse,
+  SolanaUser,
   SolanaVerifyRequest,
   SolanaVerifyResponse,
-  SolanaUser,
 } from "./auth.type";
 
 /**
  * Request a nonce for wallet authentication
  */
 async function requestNonce(
-  walletAddress: string
+  walletAddress: string,
 ): Promise<SolanaNonceResponse> {
   const response = await api.post<SolanaNonceResponse>("/auth/nonce", {
     walletAddress,
@@ -22,11 +22,11 @@ async function requestNonce(
  * Verify wallet signature and receive JWT token
  */
 async function verifySignature(
-  payload: SolanaVerifyRequest
+  payload: SolanaVerifyRequest,
 ): Promise<SolanaVerifyResponse> {
   const response = await api.post<SolanaVerifyResponse>(
     "/auth/verify",
-    payload
+    payload,
   );
   return response.data;
 }

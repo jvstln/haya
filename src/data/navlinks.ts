@@ -2,11 +2,11 @@ import {
   Archive,
   ClipboardExport,
   CodeCircle,
+  type Icon,
   People,
   Ranking,
   Scan,
   Shop,
-  type Icon,
 } from "iconsax-reactjs";
 import type { Route } from "next";
 

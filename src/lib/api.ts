@@ -23,7 +23,7 @@ api.interceptors.response.use(
       originalMessage: error.message,
       message: getErrorMessage(error),
     };
-  }
+  },
 );
 
 export const getErrorMessage = (error: unknown, fallback?: string) => {

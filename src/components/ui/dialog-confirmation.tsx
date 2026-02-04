@@ -22,11 +22,11 @@ type ConfirmationDialogProps = React.ComponentProps<typeof Dialog> & {
    */
   onConfirm?: (
     e: React.MouseEvent,
-    setOpen: (open: boolean) => void
+    setOpen: (open: boolean) => void,
   ) => Promise<void>;
   onCancel?: (
     e: React.MouseEvent,
-    setOpen: (open: boolean) => void
+    setOpen: (open: boolean) => void,
   ) => Promise<void>;
   accent?: `--color-${string}-${number}`;
 };

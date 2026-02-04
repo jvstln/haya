@@ -62,6 +62,6 @@ export const useDeleteAudits = () => {
 
 function invalidateQueries() {
   ["analysis", "analyses"].map((key) =>
-    queryClient.invalidateQueries({ queryKey: [key] })
+    queryClient.invalidateQueries({ queryKey: [key] }),
   );
 }

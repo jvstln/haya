@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const genericTransform = [
@@ -83,7 +83,7 @@ export const BouncingTextLoader = ({
     const preset = physicsPresets[variant];
     const container = containerRef.current;
     const animatables = container?.querySelectorAll(
-      "[data-slot=animatable-character]"
+      "[data-slot=animatable-character]",
     );
     if (!animatables || !container) return;
 

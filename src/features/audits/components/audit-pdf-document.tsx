@@ -46,7 +46,7 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
 
   const sectionCount = pages.reduce(
     (acc, page) => acc + page.sections.length,
-    0
+    0,
   );
 
   const problemCount = pages.reduce(
@@ -54,9 +54,9 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
       acc +
       page.sections.reduce(
         (acc, section) => acc + (section.aiAnalysis?.problems?.length || 0),
-        0
+        0,
       ),
-    0
+    0,
   );
 
   const solutionCount = pages.reduce(
@@ -64,9 +64,9 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
       acc +
       page.sections.reduce(
         (acc, section) => acc + (section.aiAnalysis?.solutions?.length || 0),
-        0
+        0,
       ),
-    0
+    0,
   );
 
   const pageProps = {

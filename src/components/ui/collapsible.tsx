@@ -30,7 +30,7 @@ function CollapsibleContent({
       data-slot="collapsible-content"
       className={cn(
         "data-[state=close]:animate-collapsible-up data-[state=open]:animate-collapsible-down",
-        className
+        className,
       )}
       {...props}
     />

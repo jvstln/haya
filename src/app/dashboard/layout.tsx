@@ -25,7 +25,7 @@ export default function DashboardLayout({
         <main
           className={cn(
             "md:[[data-sidebar-state=collapsed]_*]:max-w-[calc(100vw-var(--sidebar-width-icon))] md:[[data-sidebar-state=expanded]_*]:max-w-[calc(100vw-var(--sidebar-width))]",
-            "relative flex w-full flex-1 flex-col"
+            "relative flex w-full flex-1 flex-col",
           )}
         >
           {children}

@@ -140,7 +140,7 @@ export const OnboardingFormDialog = ({
               onClick={() => {
                 resendVerification.mutate(
                   { email },
-                  { onSuccess: () => setView("verifyOtp") }
+                  { onSuccess: () => setView("verifyOtp") },
                 );
                 toast.dismiss("login");
               }}

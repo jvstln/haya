@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
-      role="navigation"
       aria-label="pagination"
       data-slot="pagination"
       className={cn("mx-auto flex w-full justify-center", className)}
@@ -57,7 +56,7 @@ function PaginationLink({
           variant: isActive ? "outline" : "ghost",
           size,
         }),
-        className
+        className,
       )}
       {...props}
     />
@@ -137,7 +136,7 @@ type LogicalPaginationProps = {
 function generatePaginationRange(
   currentPage: number,
   totalPages: number,
-  siblingCount: number
+  siblingCount: number,
 ): (number | "ellipsis")[] {
   // Always show first page, last page, current page, and siblings
   const totalPageNumbers = siblingCount * 2 + 5; // siblings + first + last + current + 2 ellipsis slots
@@ -157,7 +156,7 @@ function generatePaginationRange(
     // Show more pages at the start
     const leftRange = Array.from(
       { length: 3 + siblingCount * 2 },
-      (_, i) => i + 1
+      (_, i) => i + 1,
     );
     return [...leftRange, "ellipsis", totalPages];
   }
@@ -166,7 +165,7 @@ function generatePaginationRange(
     // Show more pages at the end
     const rightRange = Array.from(
       { length: 3 + siblingCount * 2 },
-      (_, i) => totalPages - (3 + siblingCount * 2) + i + 1
+      (_, i) => totalPages - (3 + siblingCount * 2) + i + 1,
     );
     return [1, "ellipsis", ...rightRange];
   }
@@ -174,7 +173,7 @@ function generatePaginationRange(
   // Show ellipsis on both sides
   const middleRange = Array.from(
     { length: rightSiblingIndex - leftSiblingIndex + 1 },
-    (_, i) => leftSiblingIndex + i
+    (_, i) => leftSiblingIndex + i,
   );
   return [1, "ellipsis", ...middleRange, "ellipsis", totalPages];
 }
@@ -238,7 +237,7 @@ function LogicalPagination({
                 {page}
               </PaginationButton>
             </PaginationItem>
-          )
+          ),
         )}
 
         <PaginationItem>
@@ -281,7 +280,7 @@ function PaginationButton({
           size,
         }),
         "disabled:pointer-events-none disabled:opacity-50",
-        className
+        className,
       )}
       {...props}
     />

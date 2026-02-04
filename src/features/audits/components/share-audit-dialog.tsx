@@ -32,7 +32,7 @@ const PDFViewer = dynamic(
         <HayaSpinner />
       </div>
     ),
-  }
+  },
 );
 
 export const ShareAuditDialog = ({

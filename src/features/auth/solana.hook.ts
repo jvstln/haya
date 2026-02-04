@@ -79,7 +79,7 @@ function useSolanaAuth() {
     try {
       // Step 1: Request nonce
       const { message } = await requestNonceMutation.mutateAsync(
-        publicKey.toBase58()
+        publicKey.toBase58(),
       );
 
       // Step 2: Sign message with wallet
