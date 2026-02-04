@@ -45,7 +45,9 @@ export const useCreateAudit = () => {
   return useMutation({
     mutationFn: AuditService.createAudit,
     onError: (error) => toast.error(`Error: ${error.message}`),
-    onSuccess: () => toast.success("Case started successfully"),
+    onSuccess: (data) => {
+      toast.success(data.message || "Case started successfully");
+    },
   });
 };
 
@@ -53,8 +55,19 @@ export const useDeleteAudits = () => {
   return useMutation({
     mutationFn: AuditService.deleteAudits,
     onError: (error) => toast.error(`Error: ${error.message}`),
-    onSuccess: () => {
-      toast.success("All analyses deleted successfully");
+    onSuccess: (data) => {
+      toast.success(data.message || "All analyses deleted successfully");
+      invalidateQueries();
+    },
+  });
+};
+
+export const useDeleteAudit = () => {
+  return useMutation({
+    mutationFn: AuditService.deleteAudit,
+    onError: (error) => toast.error(`Error: ${error.message}`),
+    onSuccess: (data) => {
+      toast.success(data.message || "Analysis deleted successfully");
       invalidateQueries();
     },
   });

@@ -30,7 +30,7 @@ async function getAudit(auditId: string) {
 }
 
 async function createAudit(payload: NewAudit) {
-  const response = await api.post<Audit>(
+  const response = await api.post(
     `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`,
     payload,
   );
@@ -40,6 +40,13 @@ async function createAudit(payload: NewAudit) {
 async function deleteAudits() {
   const response = await api.delete(
     `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`,
+  );
+  return response.data;
+}
+
+async function deleteAudit(auditId: string) {
+  const response = await api.delete(
+    `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis/${auditId}`,
   );
   return response.data;
 }
@@ -94,6 +101,7 @@ export {
   getAudit,
   createAudit,
   deleteAudits,
+  deleteAudit,
   parseContent,
   getIsAuditInProgress,
 };

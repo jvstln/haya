@@ -1,11 +1,18 @@
 "use client";
-import { FolderOpen, SearchNormal } from "iconsax-reactjs";
+import { FolderOpen, SearchNormal, Trash } from "iconsax-reactjs";
+import { MoreVertical } from "lucide-react";
 import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FolderIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { LogicalPagination } from "@/components/ui/pagination";
 import { HayaSpinner } from "@/components/ui/spinner";
@@ -14,6 +21,7 @@ import { useAuth } from "@/features/auth/auth.hook";
 import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
+import { useDeleteAudit } from "../audit.hook";
 import type { AuditQueryParams } from "../audit.type";
 import { NewAuditForm } from "./audit-form";
 
@@ -21,6 +29,7 @@ export const AuditPage = () => {
   const [filters, setFilters] = useFilters<AuditQueryParams>();
   const audits = useAudits(filters);
   const { isAuthenticated } = useAuth();
+  const { mutate: deleteAudit } = useDeleteAudit();
 
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6">
@@ -91,6 +100,7 @@ export const AuditPage = () => {
                 key={analysis._id}
                 label={analysis.url}
                 link={`/dashboard/audits/${analysis._id}` as Route}
+                onDelete={() => deleteAudit(analysis._id)}
               />
             ))
           )}
@@ -112,10 +122,12 @@ const AuditCard = ({
   label = "Audit",
   className,
   link,
+  onDelete,
 }: {
   label?: string;
   className?: string;
   link: Route;
+  onDelete: () => void;
 }) => {
   return (
     <Link
@@ -131,10 +143,42 @@ const AuditCard = ({
       </span>
 
       {/* Overlay */}
+
       <span className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-secondary text-white opacity-0 transition-opacity group-hover:opacity-100">
         <FolderOpen className="size-7.5 shrink-0 rounded-md bg-primary p-1" />
         <span className="font-semibold text-sm">Open report</span>
       </span>
+
+      <div className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-white hover:bg-white/20"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              <MoreVertical className="mt-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete();
+              }}
+              className="text-destructive focus:text-destructive"
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </Link>
   );
 };
