@@ -38,15 +38,28 @@ export interface AuditSection {
   category: string;
   screenshotUrl: string;
   textContent: string;
-  aiAnalysis: {
-    problems: string[];
-    solutions: string[];
-  } | null;
+  aiAnalysis: AuditSectionAnalysis | null;
   meta: {
     sectionNumber: number;
     accent: `--color-${string}`;
   };
 }
+
+export type AuditSectionAnalysis = {
+  problems: string[];
+  solutions: string[];
+  issueDetails: Array<{
+    issue: string;
+    userImpact: string;
+    uxLawViolated: string;
+  }>;
+  productClassification: {
+    category: string;
+    primaryUserGoal: string;
+    primaryUserType: string;
+  };
+  uxScore: number;
+};
 
 /** @deprecated use AuditSection */
 export interface DetailedAuditSection extends Omit<AuditSection, "aiAnalysis"> {

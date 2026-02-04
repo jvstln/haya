@@ -26,11 +26,18 @@ import { useAudit } from "../../audit.hook";
 import { getIsAuditInProgress } from "../../audit.service";
 import type { AuditPage } from "../../audit.type";
 import { ShareAuditDialog } from "../share-audit-dialog";
-import { CaseImageSection, CaseSection } from "./case-content";
+import {
+  CaseImageSection,
+  ProblemsAndSolutionsCaseSection,
+  SeoCaseSection,
+} from "./case-content";
 
 export const CasePage = () => {
   const params = useParams();
   const [currentView, setCurrentView] = useState<"image" | "content">("image");
+  const [currentReportView, setCurrentReportView] = useState<
+    "problemsAndSolutions" | "seo"
+  >("problemsAndSolutions");
   const isMobile = useBreakpoint("max-md");
 
   const audit = useAudit(String(params.auditId));
@@ -132,7 +139,7 @@ export const CasePage = () => {
 
       <div
         className={cn(
-          "flex grid-cols-2 flex-col rounded-xl border-transparent bg-secondary max-md:border md:grid"
+          "flex grid-cols-2 flex-col rounded-xl border-transparent bg-secondary max-md:border md:grid",
         )}
         style={{
           background:
@@ -143,7 +150,7 @@ export const CasePage = () => {
         <div
           className={cn(
             "flex items-center gap-1 border-transparent p-4 max-md:rounded-t-xl md:rounded-s-xl md:border-r md:border-b",
-            isMobile && currentView !== "image" && "hidden"
+            isMobile && currentView !== "image" && "hidden",
           )}
           style={{
             background:
@@ -160,7 +167,7 @@ export const CasePage = () => {
             value={currentPage?.pageUrl || ""}
             onValueChange={(value) => {
               const page = audit.data?.content?.pages?.find(
-                (p) => p.pageUrl === value
+                (p) => p.pageUrl === value,
               );
               if (page) setCurrentPage(page);
             }}
@@ -182,7 +189,7 @@ export const CasePage = () => {
         <div
           className={cn(
             "flex items-center gap-1 border-transparent p-4 max-md:rounded-t-xl md:rounded-e-xl md:border-b md:border-l",
-            isMobile && currentView !== "content" && "hidden"
+            isMobile && currentView !== "content" && "hidden",
           )}
           style={{
             background:
@@ -190,11 +197,21 @@ export const CasePage = () => {
           }}
         >
           <div className="mr-4 text-white text-xs">Audit Report</div>
-          <Button variant="ghost" size="sm" data-active>
-            Findings
+          <Button
+            variant="ghost"
+            size="sm"
+            data-active={currentReportView === "problemsAndSolutions"}
+            onClick={() => setCurrentReportView("problemsAndSolutions")}
+          >
+            UX Insight
           </Button>
-          <Button variant="ghost" size="sm">
-            Terminal
+          <Button
+            variant="ghost"
+            size="sm"
+            data-active={currentReportView === "seo"}
+            onClick={() => setCurrentReportView("seo")}
+          >
+            SEO Insight
           </Button>
         </div>
 
@@ -202,7 +219,7 @@ export const CasePage = () => {
         <div
           className={cn(
             "flex flex-col rounded-b-xl border-transparent px-4 py-8 md:border-r",
-            isMobile && currentView !== "image" && "hidden"
+            isMobile && currentView !== "image" && "hidden",
           )}
           style={{
             background:
@@ -238,7 +255,7 @@ export const CasePage = () => {
         <div
           className={cn(
             "flex flex-col gap-2 rounded-b-xl border-transparent px-4 py-8 md:border-l",
-            isMobile && currentView !== "content" && "hidden"
+            isMobile && currentView !== "content" && "hidden",
           )}
           style={{
             background:
@@ -251,9 +268,19 @@ export const CasePage = () => {
               <span className="text-sm">Analysing site details</span>
             </div>
           ) : (
-            currentPage?.sections.map((section) => (
-              <CaseSection key={section.meta.sectionNumber} section={section} />
-            ))
+            currentPage?.sections.map((section) =>
+              currentReportView === "seo" ? (
+                <SeoCaseSection
+                  key={section.meta.sectionNumber}
+                  section={section}
+                />
+              ) : (
+                <ProblemsAndSolutionsCaseSection
+                  key={section.meta.sectionNumber}
+                  section={section}
+                />
+              ),
+            )
           )}
           {getIsAuditInProgress(audit.data) && (
             <div
