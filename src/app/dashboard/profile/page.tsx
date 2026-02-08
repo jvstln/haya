@@ -64,7 +64,7 @@ const ProfilePage = () => {
               </Avatar>
             ))}
           </div>
-          <Button variant="colorful">Add team members</Button>
+          <Button color="colorful">Add team members</Button>
         </div>
       </div>
 

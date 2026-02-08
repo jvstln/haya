@@ -1,12 +1,22 @@
 "use client";
-import { FolderOpen, SearchNormal, Trash } from "iconsax-reactjs";
+import { formatDistanceToNow } from "date-fns";
+import {
+  BoxAdd,
+  FolderOpen,
+  PenAdd,
+  Scan,
+  SearchNormal,
+  Trash,
+} from "iconsax-reactjs";
 import { MoreVertical } from "lucide-react";
 import type { Route } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { DashboardHeader } from "@/components/dashboard-header";
 import { FolderIcon } from "@/components/icons";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,21 +28,30 @@ import { LogicalPagination } from "@/components/ui/pagination";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
-import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
 import { useDeleteAudit } from "../audit.hook";
-import type { AuditQueryParams } from "../audit.type";
+import type { AuditQueryParams, AuditWithoutContent } from "../audit.type";
 import { NewAuditForm } from "./audit-form";
 
+type Action = {
+  type: "delete";
+  audit: AuditWithoutContent;
+};
+
 export const AuditPage = () => {
+  const [view, setView] = useState<"all" | "assigned" | "completed">("all");
+  const [action, setAction] = useState<Action | null>(null);
   const [filters, setFilters] = useFilters<AuditQueryParams>();
+
   const audits = useAudits(filters);
   const { isAuthenticated } = useAuth();
-  const { mutate: deleteAudit } = useDeleteAudit();
+  const deleteAudit = useDeleteAudit();
+
+  console.log(audits.data);
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6">
+    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--audit-card-height:189px] [--audit-card-width:212px] md:p-6">
       {/* Gradient background */}
       <div
         className="-z-10 absolute inset-x-0 top-0 h-39.25"
@@ -44,11 +63,54 @@ export const AuditPage = () => {
         }}
       />
 
-      <NewAuditBanner />
+      <DashboardHeader
+        title="UX intelligence that turns websites into revenue machines"
+        cta={
+          <div className="flex gap-4">
+            <NewAuditForm>
+              <Button color="secondary" className="rounded-full">
+                <Scan className="size-5.5 rounded-sm bg-primary p-1" /> Audit
+              </Button>
+            </NewAuditForm>
+            <Button color="secondary" className="rounded-full">
+              <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
+              Canva
+            </Button>
+            <Button color="secondary" className="rounded-full">
+              <PenAdd className="size-5.5 rounded-sm bg-[#0088FF] p-1" />
+              Editor
+            </Button>
+          </div>
+        }
+      />
 
-      <div className="flex items-center justify-between">
-        <p className="text-h3">All audits</p>
-        <div className="relative w-48 transition-[width] duration-300 focus-within:w-sm">
+      <div className="flex items-center justify-between gap-1">
+        <Button
+          appearance={view === "all" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setView("all")}
+        >
+          All audits
+        </Button>
+        <Button
+          appearance={view === "assigned" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setView("assigned")}
+        >
+          Assigned
+        </Button>
+        <Button
+          appearance={view === "completed" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setView("completed")}
+        >
+          Completed
+        </Button>
+
+        <div className="relative ml-auto w-48 transition-[width] duration-300 ease-in-out focus-within:w-full">
           <Input
             type="search"
             className="rounded-full border-secondary pl-12"
@@ -70,25 +132,19 @@ export const AuditPage = () => {
       )}
 
       {isAuthenticated && (
-        <div
-          className="grid gap-6 [--audit-card-width:175px] md:[--audit-card-width:212px]"
-          style={{
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(var(--audit-card-width), 1fr))",
-          }}
-        >
+        <div className="flex flex-wrap gap-4">
           {audits.isPending ? (
-            <div className="flex min-h-32 items-center justify-center">
+            <div className="mx-auto flex min-h-32 items-center justify-center">
               <HayaSpinner />
             </div>
           ) : audits.isError ? (
-            <div className="flex h-28.5 w-43.75 flex-col items-center justify-center gap-2 rounded-2xl border border-destructive p-2 text-center md:h-34.5 md:w-53">
+            <div className="flex h-(--audit-card-height) w-(--audit-card-width) flex-col items-center justify-center gap-2 rounded-2xl border border-destructive p-2 text-center md:h-34.5 md:w-53">
               <p className="text-red-500 text-sm">
                 Error fetching analyses: {audits.error.message}
               </p>
               <Button
                 size="sm"
-                variant="glass"
+                isLoading={audits.isFetching}
                 onClick={() => audits.refetch()}
               >
                 Retry
@@ -98,9 +154,9 @@ export const AuditPage = () => {
             audits.data.data.map((analysis) => (
               <AuditCard
                 key={analysis._id}
-                label={analysis.url}
-                link={`/dashboard/audits/${analysis._id}` as Route}
-                onDelete={() => deleteAudit(analysis._id)}
+                audit={analysis}
+                action={action}
+                setAction={setAction}
               />
             ))
           )}
@@ -114,136 +170,102 @@ export const AuditPage = () => {
           onPageChange={(page) => setFilters((f) => ({ ...f, page }))}
         />
       )}
+
+      {action?.type === "delete" && (
+        <ConfirmationDialog
+          open={true}
+          onOpenChange={() => setAction(null)}
+          onConfirm={async () => {
+            await deleteAudit.mutateAsync(action.audit._id);
+          }}
+        />
+      )}
     </div>
   );
 };
 
-const AuditCard = ({
-  label = "Audit",
-  className,
-  link,
-  onDelete,
-}: {
-  label?: string;
-  className?: string;
-  link: Route;
-  onDelete: () => void;
-}) => {
+type AuditCardProps = {
+  audit: AuditWithoutContent;
+  action: Action | null;
+  setAction: (action: Action | null) => void;
+};
+
+const AuditCard = ({ audit, setAction }: AuditCardProps) => {
   return (
     <Link
-      href={link}
+      href={`dashboard/audits/${audit._id}` as Route}
       className={cn(
-        "group relative flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl bg-secondary p-4 text-center shadow-primary transition hover:shadow-sm",
-        className,
+        "group relative flex h-(--audit-card-height) w-(--audit-card-width) flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-sm",
       )}
+      style={{
+        // Analysis Image
+        background: `
+        linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 /0.5)),
+        url('/images/default-audit-card-bg.webp') center center/cover no-repeat
+        `,
+
+        // Status border indicator
+        borderColor:
+          audit.status === "failed"
+            ? "var(--color-destructive)"
+            : audit.status === "in_progress"
+              ? "var(--color-blue-500)"
+              : audit.status === "pending"
+                ? "var(--color-amber-500)"
+                : undefined,
+      }}
     >
-      <FolderIcon className="size-24 shrink-0" />
-      <span className="wrap-anywhere flex w-full flex-col items-center justify-center gap-2 rounded-b-2xl font-semibold text-white text-xs">
-        {label}
-      </span>
-
-      {/* Overlay */}
-
-      <span className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-secondary text-white opacity-0 transition-opacity group-hover:opacity-100">
+      {/* Hover Overlay */}
+      <span className="pointer-events-none flex flex-1 flex-col items-center justify-center gap-2 border-b bg-secondary text-white opacity-0 transition-opacity group-hover:opacity-100">
         <FolderOpen className="size-7.5 shrink-0 rounded-md bg-primary p-1" />
         <span className="font-semibold text-sm">Open report</span>
       </span>
 
-      <div className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white hover:bg-white/20"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              <MoreVertical className="mt-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onDelete();
-              }}
-              className="text-destructive focus:text-destructive"
-            >
-              <Trash className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {/* Text Content */}
+      <span className="mt-auto flex items-center gap-4 bg-secondary p-4">
+        <Avatar className="size-6">
+          <AvatarImage src="" />
+          <AvatarFallback>UN</AvatarFallback>
+        </Avatar>
+        <span className="flex min-w-0 flex-col gap-2">
+          <span className="max-w-32 truncate font-semibold text-body-4 text-white">
+            {audit.url}
+          </span>
+          <span className="text-muted-foreground text-xxs">
+            Audited {formatDistanceToNow(audit.createdAt, { addSuffix: true })}
+          </span>
+        </span>
+      </span>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            appearance="ghost"
+            className="absolute top-1 right-1 size-6 rounded-md"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <MoreVertical />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          onClick={(e) => {
+            // Prevent audit from opening
+            e.stopPropagation();
+          }}
+        >
+          <DropdownMenuItem
+            onClick={() => setAction({ type: "delete", audit })}
+            data-variant="destructive"
+          >
+            <Trash />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </Link>
-  );
-};
-
-const NewAuditBanner = () => {
-  const { isAuthenticated } = useAuth();
-  const [isAuditFormOpen, setIsAuditFormOpen] = useState(false);
-
-  const handleNewAudit = () => {
-    if (isAuthenticated) {
-      setIsAuditFormOpen(true);
-    } else {
-      setOnboardingFormDialogView("login");
-    }
-  };
-
-  return (
-    <div
-      className="flex overflow-hidden rounded-xl border border-transparent"
-      style={{
-        background: `
-          linear-gradient(87.5deg, rgba(30, 30, 30, 0.26) 1.42%, oklch(from var(--color-primary) l c h / 0.26) 99.44%),
-          url(/images/noise-texture.png) padding-box,
-          linear-gradient(87.5deg, rgba(30, 30, 30, 0.26) 1.42%, oklch(from var(--color-primary) l c h / 0.26) 99.44%),
-          linear-gradient(to bottom right, var(--color-background), var(--color-background)) padding-box,
-          linear-gradient(to bottom right, var(--color-primary), var(--color-primary-compliment)) border-box`,
-      }}
-    >
-      <div className="flex w-full basis-3/5 flex-col items-start gap-4 px-4 py-5 md:gap-6 md:p-8">
-        <h1 className="text-base text-white lg:text-h1">
-          UX Insights That Improve Conversions, Not Opinion
-        </h1>
-        <p className="text-xs max-md:hidden lg:text-base">
-          Haya gives you a real UX audit with data-driven recommendations so you
-          know what to fix, why it matters, and how it impacts growth.
-        </p>
-        {/* Text for mobile */}
-        <p className="text-xs md:hidden">
-          Haya gives you a real UX audit with data-driven recommendations.
-        </p>
-        <Button
-          className="hidden animate-border-glow rounded-full md:block"
-          size="lg"
-          onClick={handleNewAudit}
-        >
-          Audit website now
-        </Button>
-        {/* Button for mobile */}
-        <Button
-          className="animate-border-glow rounded-full md:hidden"
-          onClick={handleNewAudit}
-        >
-          Audit website now
-        </Button>
-      </div>
-      <div className="relative basis-2/5">
-        <Image
-          src="/images/archive-illustration.svg"
-          alt="New audit"
-          fill
-          className="object-cover object-left-top"
-        />
-      </div>
-
-      <NewAuditForm open={isAuditFormOpen} onOpenChange={setIsAuditFormOpen} />
-    </div>
   );
 };

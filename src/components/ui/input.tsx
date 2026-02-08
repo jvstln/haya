@@ -3,7 +3,7 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 export const inputSizeClassName = cn(
-  "h-11.5 rounded-md px-8 py-4 text-xs data-[size=lg]:h-17.5",
+  "h-8.75 rounded-md px-8 py-4 text-xs data-[size=lg]:h-17.5",
 );
 
 export const inputColorClassName = cn(

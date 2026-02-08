@@ -55,7 +55,7 @@ export const ConfirmationDialog = ({
   return (
     <Dialog {...props} open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader className="sm:text-center">
           {image || (
             <svg
@@ -80,13 +80,12 @@ export const ConfirmationDialog = ({
         </DialogHeader>
         <DialogFooter>
           <Button
-            variant="outline"
+            appearance="outline"
             disabled={isPending}
             onClick={async (e) => {
               await onCancel?.(e, onOpenChange);
               if (!e.defaultPrevented) onOpenChange(false);
             }}
-            size="sm"
           >
             Cancel
           </Button>
@@ -101,9 +100,8 @@ export const ConfirmationDialog = ({
               }
             }}
             isLoading={isPending}
-            size="sm"
-            variant="destructive"
-            style={{ "--destructive": `var(${accent})` } as React.CSSProperties}
+            color="destructive"
+            style={{ "--bg": `var(${accent})` } as React.CSSProperties}
           >
             {buttonText}
           </Button>
