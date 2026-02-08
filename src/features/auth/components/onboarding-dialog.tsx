@@ -136,7 +136,7 @@ export const OnboardingFormDialog = ({
           description: (
             <Button
               size="sm"
-              variant="glass-primary"
+              appearance="soft"
               onClick={() => {
                 resendVerification.mutate(
                   { email },
@@ -171,17 +171,17 @@ export const OnboardingFormDialog = ({
         {view.startsWith("signUp") && (
           <div className="mb-4 flex flex-row items-center gap-1">
             <Button
-              variant="ghost"
+              appearance={view === "signUpEmail" ? "solid" : "ghost"}
+              color="secondary"
               size="sm"
-              data-active={view === "signUpEmail"}
               onClick={() => setView("signUpEmail")}
             >
               Sign-up with email
             </Button>
             <Button
-              variant="ghost"
+              appearance={view === "signUpWallet" ? "solid" : "ghost"}
+              color="secondary"
               size="sm"
-              data-active={view === "signUpWallet"}
               onClick={() => setView("signUpWallet")}
             >
               Connect wallet
@@ -193,7 +193,8 @@ export const OnboardingFormDialog = ({
           <div className="mb-4 flex flex-row items-center gap-1">
             <Button
               size="icon-sm"
-              variant="ghost"
+              appearance="ghost"
+              color="secondary"
               onClick={() => setView("signUpEmail")}
             >
               <ArrowLeft2 />
@@ -212,7 +213,7 @@ export const OnboardingFormDialog = ({
               }
               isLoading={signUpEmail.isPending}
             />
-            <Button variant="link" onClick={() => setView("login")}>
+            <Button appearance="link" onClick={() => setView("login")}>
               Already have an account? Login
             </Button>
           </div>
@@ -247,10 +248,13 @@ export const OnboardingFormDialog = ({
             />
 
             <div className="flex justify-between">
-              <Button variant="link" onClick={() => setView("signUpEmail")}>
+              <Button appearance="link" onClick={() => setView("signUpEmail")}>
                 Don't have an account? Sign up
               </Button>
-              <Button variant="link" onClick={() => setView("forgotPassword")}>
+              <Button
+                appearance="link"
+                onClick={() => setView("forgotPassword")}
+              >
                 Forgot password?
               </Button>
             </div>
@@ -269,7 +273,7 @@ export const OnboardingFormDialog = ({
               isLoading={forgotPassword.isPending}
             />
 
-            <Button variant="link" onClick={() => setView("login")}>
+            <Button appearance="link" onClick={() => setView("login")}>
               Back to login
             </Button>
           </div>
@@ -287,7 +291,7 @@ export const OnboardingFormDialog = ({
               isLoading={resetPassword.isPending}
             />
 
-            <Button variant="link" onClick={() => setView("forgotPassword")}>
+            <Button appearance="link" onClick={() => setView("forgotPassword")}>
               Resend code
             </Button>
           </div>

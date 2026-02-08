@@ -78,7 +78,12 @@ export const AppSidebar = ({
           <Link href="/">
             <Image src={logo} alt="Logo" className="h-6.75" />
           </Link>
-          <Button variant="ghost" size="icon" onClick={() => toggleSidebar()}>
+          <Button
+            appearance="ghost"
+            color="secondary"
+            size="icon"
+            onClick={() => toggleSidebar()}
+          >
             <Add className="size-7 rotate-45" />
           </Button>
         </SidebarHeader>

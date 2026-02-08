@@ -81,7 +81,7 @@ export const ShareAuditDialog = ({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="glass-primary" size="sm" onClick={handleCopy}>
+            <Button appearance="soft" size="sm" onClick={handleCopy}>
               {isCopied ? <TickCircle /> : <Copy />}
               {isCopied ? "Copied" : "Copy Link"}
             </Button>

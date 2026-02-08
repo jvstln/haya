@@ -62,66 +62,71 @@ const subscriptionPlans = [
 export const SubscriptionPlans = () => {
   return (
     <div className="mx-auto flex grid-cols-3 grid-rows-[2rem_auto_2rem] flex-col gap-4 text-white xl:container *:flex-1 max-lg:items-center lg:grid">
-      {subscriptionPlans.map((plan, i) => (
-        <div
-          key={plan.name}
-          className="w-full max-w-110 rounded-xl bg-card pb-5"
-          style={{
-            gridRow: i === 1 ? "1 / -1" : "2 / 3",
-          }}
-        >
+      {subscriptionPlans.map((plan, i) => {
+        const isProPlan = plan.name.match(/pro|max/i);
+
+        return (
           <div
-            className="flex flex-col gap-4 rounded-xl border-transparent border-b p-4"
+            key={plan.name}
+            className="w-full max-w-110 rounded-xl bg-card pb-5"
             style={{
-              background: `linear-gradient(var(--color-card), var(--color-card)) padding-box,
-              var(--colorful-gradient) border-box`,
+              gridRow: i === 1 ? "1 / -1" : "2 / 3",
             }}
           >
-            {/* Price section */}
-            <div className="flex h-43.5 flex-col justify-between rounded-xl bg-background p-6">
-              <Badge
-                style={{
-                  background: `var(${plan.accent})`,
-                  color: `var(${plan.accentForeground})`,
-                }}
-              >
-                {plan.name}
-              </Badge>
-              <div className="flex items-center justify-between gap-1">
-                <div className="flex items-center">
-                  <span className="font-bold text-2xl">${plan.price}</span>
-                  /month
-                </div>
-                <Badge
-                  className="bg-card"
-                  style={{ color: `var(${plan.accent})` }}
-                >
-                  {plan.badge}
-                </Badge>
-              </div>
-            </div>
-
-            <span>{plan.description}</span>
-            <Button
-              variant={plan.name.match(/pro|max/i) ? "colorful" : "outline"}
-              className="h-12"
+            <div
+              className="flex flex-col gap-4 rounded-xl border-transparent border-b p-4"
+              style={{
+                background: `linear-gradient(var(--color-card), var(--color-card)) padding-box,
+              var(--colorful-gradient) border-box`,
+              }}
             >
-              Choose plan
-            </Button>
+              {/* Price section */}
+              <div className="flex h-43.5 flex-col justify-between rounded-xl bg-background p-6">
+                <Badge
+                  style={{
+                    background: `var(${plan.accent})`,
+                    color: `var(${plan.accentForeground})`,
+                  }}
+                >
+                  {plan.name}
+                </Badge>
+                <div className="flex items-center justify-between gap-1">
+                  <div className="flex items-center">
+                    <span className="font-bold text-2xl">${plan.price}</span>
+                    /month
+                  </div>
+                  <Badge
+                    className="bg-card"
+                    style={{ color: `var(${plan.accent})` }}
+                  >
+                    {plan.badge}
+                  </Badge>
+                </div>
+              </div>
+
+              <span>{plan.description}</span>
+              <Button
+                appearance={isProPlan ? undefined : "outline"}
+                color={isProPlan ? "colorful" : undefined}
+                className="h-12"
+              >
+                Choose plan
+              </Button>
+            </div>
+            <ul className="space-y-4 p-4">
+              {plan.features.map((feature) => (
+                <li key={feature} className="flex items-center gap-2">
+                  <TickCircle
+                    color={`var(${plan.accent})`}
+                    className="size-4 shrink-0"
+                  />
+                  {feature}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="space-y-4 p-4">
-            {plan.features.map((feature) => (
-              <li key={feature} className="flex items-center gap-2">
-                <TickCircle
-                  color={`var(${plan.accent})`}
-                  className="size-4 shrink-0"
-                />
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

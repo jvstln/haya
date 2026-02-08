@@ -31,7 +31,8 @@ export const ProblemsAndSolutionsCaseSection = ({
               : section.textContent}
           </h2>
           <Button
-            variant="ghost"
+            appearance="ghost"
+            color="secondary"
             size="icon"
             className="ml-auto in-data-[state=open]:rotate-180"
           >
@@ -92,7 +93,8 @@ export const DetailedCaseSection = ({
               : section.textContent}
           </h2>
           <Button
-            variant="ghost"
+            appearance="ghost"
+            color="secondary"
             size="icon"
             className="ml-auto in-data-[state=open]:rotate-180"
           >
@@ -296,7 +298,8 @@ export const SeoCaseSection = ({ section }: { section: AuditSection }) => {
               </span>
             )}
             <Button
-              variant="ghost"
+              appearance="ghost"
+              color="secondary"
               size="icon"
               className="in-data-[state=open]:rotate-180"
             >

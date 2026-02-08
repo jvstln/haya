@@ -73,16 +73,6 @@ export const SignupEmailForm = ({
             isInvalid={!!errors.password}
           />
         </Field>
-        {/* <Field data-invalid={!!errors.confirmPassword}>
-          <FieldLabel>Confirm password</FieldLabel>
-          <Input
-            type="password"
-            placeholder="Retype password"
-            {...register("confirmPassword")}
-          />
-          <FieldError errors={[errors.confirmPassword]} />
-        </Field> */}
-
         <div className="my-4 flex items-center gap-2 text-sm [&_hr]:grow">
           <hr />
           <span>Or</span>
@@ -156,7 +146,8 @@ export const SignUpWalletForm = () => {
           <Button
             size="lg"
             type="button"
-            variant="outline"
+            appearance="outline"
+            color="secondary"
             className="group"
             onClick={() => setModalVisibility(true)}
           >

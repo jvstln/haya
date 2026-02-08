@@ -30,7 +30,7 @@ export const AppHeader = () => {
   return (
     <header className="sticky top-0 z-40 flex h-(--header-height) w-full shrink-0 items-center gap-4 border-b bg-background px-5 md:px-10">
       {isMobile ? (
-        <Button variant="ghost" size="icon" onClick={() => toggleSidebar()}>
+        <Button appearance="ghost" size="icon" onClick={() => toggleSidebar()}>
           <HamburgerMenu />
         </Button>
       ) : (
@@ -38,26 +38,23 @@ export const AppHeader = () => {
           <Image src={logo} alt="Logo" className="h-9" />
         </Link>
       )}
-      <Button className="ml-auto" variant="glass" size="icon">
+      <Button
+        className="ml-auto"
+        appearance="outline"
+        color="secondary"
+        size="icon"
+      >
         <Notification />
       </Button>
       {isAuthenticated ? (
         <UserMenu />
       ) : (
-        <>
-          <Button
-            className="animate-border-glow rounded-full"
-            onClick={() => setOnboardingFormDialogView("signUpEmail")}
-          >
-            Sign up
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => setOnboardingFormDialogView("login")}
-          >
-            Login
-          </Button>
-        </>
+        <Button
+          className="animate-border-glow rounded-full"
+          onClick={() => setOnboardingFormDialogView("signUpEmail")}
+        >
+          Sign up
+        </Button>
       )}
     </header>
   );
@@ -95,7 +92,12 @@ const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button
+          appearance="ghost"
+          color="secondary"
+          size="icon"
+          className="rounded-full"
+        >
           <Avatar className="size-9">
             <AvatarImage src="" alt={getDisplayName()} />
             <AvatarFallback className="bg-primary/20 text-primary">

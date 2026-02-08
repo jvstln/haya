@@ -14,17 +14,20 @@ export type AuditQueryParams = QueryParams & {
 
 export type AuditType = "Website_Analysis" | string; // Allowing string for potential future types
 
-export interface Audit {
+export interface AuditWithoutContent {
   _id: string;
   url: string;
   status: AuditStatus;
   analysis_type: AuditType;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Audit extends AuditWithoutContent {
   content: string;
 }
 
-export interface ParsedAudit extends Omit<Audit, "content"> {
+export interface ParsedAudit extends AuditWithoutContent {
   content: ReturnType<typeof AnalysisService.parseContent>;
 }
 

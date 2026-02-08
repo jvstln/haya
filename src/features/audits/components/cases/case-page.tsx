@@ -69,7 +69,11 @@ export const CasePage = () => {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button onClick={() => audit.refetch()} variant="outline">
+            <Button
+              onClick={() => audit.refetch()}
+              appearance="outline"
+              color="secondary"
+            >
               Try Again
             </Button>
           </EmptyContent>
@@ -81,7 +85,7 @@ export const CasePage = () => {
   return (
     <div className="flex flex-col gap-4 from-0% from-primary/20 via-transparent p-4 max-md:bg-linear-to-b">
       <div className="flex flex-wrap items-center gap-2 md:gap-5">
-        <Button size="sm" variant="glass-primary" asChild>
+        <Button size="sm" appearance="soft" asChild>
           <Link href="/dashboard/audits">
             <ArrowLeft />
             Back to Audit Dashboard
@@ -100,7 +104,7 @@ export const CasePage = () => {
 
         {audit.data && (
           <ShareAuditDialog audit={audit.data}>
-            <Button variant="glass-primary" size="sm" className="ml-auto">
+            <Button appearance="soft" size="sm" className="ml-auto">
               <Share />
               Share Findings
             </Button>
@@ -119,16 +123,14 @@ export const CasePage = () => {
       >
         <div className="mb-7 flex items-center justify-center gap-2 rounded-full bg-secondary p-2">
           <Button
-            // size="lg"
-            variant={currentView === "image" ? "default" : "ghost"}
+            appearance={currentView === "image" ? "solid" : "ghost"}
             className="rounded-full"
             onClick={() => setCurrentView("image")}
           >
             Image View
           </Button>
           <Button
-            // size="lg"
-            variant={currentView === "content" ? "default" : "ghost"}
+            appearance={currentView === "content" ? "solid" : "ghost"}
             className="rounded-full"
             onClick={() => setCurrentView("content")}
           >
@@ -157,10 +159,10 @@ export const CasePage = () => {
               "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to right, var(--color-primary), var(--color-primary-compliment)) border-box",
           }}
         >
-          <Button variant="ghost" size="sm" data-active>
+          <Button appearance="ghost" color="secondary" size="sm" data-active>
             Desktop
           </Button>
-          <Button variant="ghost" size="sm">
+          <Button appearance="ghost" color="secondary" size="sm">
             Mobile
           </Button>
           <Select
@@ -198,17 +200,19 @@ export const CasePage = () => {
         >
           <div className="mr-4 text-white text-xs">Audit Report</div>
           <Button
-            variant="ghost"
+            appearance={
+              currentReportView === "problemsAndSolutions" ? "solid" : "ghost"
+            }
+            color="secondary"
             size="sm"
-            data-active={currentReportView === "problemsAndSolutions"}
             onClick={() => setCurrentReportView("problemsAndSolutions")}
           >
             UX Insight
           </Button>
           <Button
-            variant="ghost"
+            appearance={currentReportView === "seo" ? "solid" : "ghost"}
+            color="secondary"
             size="sm"
-            data-active={currentReportView === "seo"}
             onClick={() => setCurrentReportView("seo")}
           >
             SEO Insight

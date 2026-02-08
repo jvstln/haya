@@ -39,12 +39,16 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  --text-xxs: 0.625rem;
   --text-h1: var(--text-2xl);
   --text-h1--font-weight: var(--font-weight-semibold);
   --text-h2: var(--text-base);
   --text-h2--font-weight: var(--font-weight-semibold);
   --text-h3: var(--text-lg);
   --text-h3--font-weight: var(--font-weight-semibold);
+
+  --text-body-4: var(--text-xs);
+  --text-body-4--font-weight: var(--font-weight-semibold);
 
   --font-lato: var(--font-lato);
 
@@ -65,10 +69,12 @@
   --primary: oklch(60.795% 0.2218 284.387);
   --primary-foreground: var(--color-white);
   --primary-compliment: oklch(from #ffafa4 l c h);
-  --secondary: oklch(from #1e1e1e l c h);
-  --secondary-foreground: var(--foreground);
+
+  --secondary: oklch(from #333333 l c h);
+  --secondary-foreground: var(--color-white);
+
   --muted: var(--background);
-  --muted-foreground: var(--color-white);
+  --muted-foreground: oklch(from #a3a3a4 l c h);
 
   --border: oklch(from #141818 l c h);
   --ring: var(--border);

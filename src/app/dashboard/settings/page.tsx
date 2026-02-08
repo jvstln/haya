@@ -92,7 +92,11 @@ const SettingsPage = () => {
                     </ItemDescription>
                   </ItemContent>
                   <ItemActions>
-                    <Button variant="destructive-outline" size="icon-sm">
+                    <Button
+                      appearance="outline"
+                      color="destructive"
+                      size="icon-sm"
+                    >
                       <XIcon />
                     </Button>
                   </ItemActions>

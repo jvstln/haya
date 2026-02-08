@@ -18,7 +18,12 @@ const Pricing = () => {
       </div>
 
       <div className="25 relative mt-19 mb-20 flex flex-col items-center gap-2 text-center">
-        <Button size="icon" variant="ghost" className="absolute top-0 left-0">
+        <Button
+          size="icon"
+          appearance="ghost"
+          color="secondary"
+          className="absolute top-0 left-0"
+        >
           <ArrowLeft2 />
         </Button>
         <h1 className="text-3xl text-white">Upgrade your plan</h1>

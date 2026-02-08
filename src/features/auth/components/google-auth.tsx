@@ -11,7 +11,8 @@ export const GoogleAuthButton = ({
     <Button
       size="lg"
       type="button"
-      variant="outline"
+      appearance="outline"
+      color="secondary"
       {...props}
       className={cn("group", className)}
       onClick={() => redirectToGoogleAuth()}

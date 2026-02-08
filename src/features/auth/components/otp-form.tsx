@@ -68,7 +68,7 @@ export const VerifyOtpForm = ({
         <div className="flex items-center gap-4 *:flex-1">
           <Button
             size="lg"
-            variant="glass"
+            color="secondary"
             type="button"
             disabled={isVerifing}
             isLoading={isResending}

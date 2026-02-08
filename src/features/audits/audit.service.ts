@@ -6,6 +6,7 @@ import type {
   AuditPage,
   AuditQueryParams,
   AuditSection,
+  AuditWithoutContent,
   NewAudit,
   ParsedAudit,
 } from "./audit.type";
@@ -14,7 +15,7 @@ import type {
 
 async function getAudits(params?: AuditQueryParams) {
   const response = await api.get<{
-    data: Omit<Audit, "content">[];
+    data: AuditWithoutContent[];
     pagination: Pagination;
   }>(`${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`, {
     params,
