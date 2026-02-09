@@ -12,7 +12,7 @@ import type { Route } from "next";
 
 export type LinkItem = {
   title: string;
-  url: Route | string;
+  url: Route;
   icon: Icon;
   tooltip?: React.ReactNode;
   exact?: boolean; // Default is true
@@ -27,7 +27,7 @@ const sidebarContents = {
     { title: "Overview" },
     {
       title: "Case Dashboard",
-      url: "/dashboard/audits/[auditId]/case",
+      url: "/dashboard/audits/[auditId]/case" as Route,
       icon: Archive,
     },
     {
@@ -48,9 +48,8 @@ const sidebarContents = {
     { title: "Audit Dashboard", url: "/dashboard/audits", icon: Scan },
     {
       title: "Resources",
-      url: "#",
+      url: "/dashboard/resources",
       icon: Shop,
-      tooltip: "Coming Soon",
     },
     {
       title: "Agentic SDK's",

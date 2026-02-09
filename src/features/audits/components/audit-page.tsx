@@ -17,6 +17,7 @@ import {
   GradientBackground,
 } from "@/components/dashboard-header";
 import { FolderIcon } from "@/components/icons";
+import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
@@ -28,7 +29,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { LogicalPagination } from "@/components/ui/pagination";
-import { HayaSpinner } from "@/components/ui/spinner";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
 import { useFilters } from "@/hooks/use-filters";
@@ -126,25 +126,8 @@ export const AuditPage = () => {
 
       {isAuthenticated && (
         <div className="flex flex-wrap gap-4">
-          {audits.isPending ? (
-            <div className="mx-auto flex min-h-32 items-center justify-center">
-              <HayaSpinner />
-            </div>
-          ) : audits.isError ? (
-            <div className="flex h-(--audit-card-height) w-(--audit-card-width) flex-col items-center justify-center gap-2 rounded-2xl border border-destructive p-2 text-center md:h-34.5 md:w-53">
-              <p className="text-red-500 text-sm">
-                Error fetching analyses: {audits.error.message}
-              </p>
-              <Button
-                size="sm"
-                appearance="outline"
-                color="secondary"
-                isLoading={audits.isFetching}
-                onClick={() => audits.refetch()}
-              >
-                Retry
-              </Button>
-            </div>
+          {audits.isPending || audits.isError ? (
+            <QueryState query={audits} errorPrefix="Error fetching analyses:" />
           ) : (
             audits.data.data.map((audit) => (
               <AuditCard
