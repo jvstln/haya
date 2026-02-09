@@ -19,7 +19,7 @@ export const DashboardHeader = ({ title, cta }: DashboardHeaderProps) => {
     >
       {/* Decorative Background */}
       <div
-        className="pointer-events-none absolute size-44"
+        className="pointer-events-none max-md:hidden absolute size-44"
         style={{
           left: "calc(50% - 176px/2 - 0.5px)",
           top: "91px",
@@ -29,16 +29,16 @@ export const DashboardHeader = ({ title, cta }: DashboardHeaderProps) => {
         }}
       />
 
-      <div className="z-10 flex w-full basis-3/5 flex-col items-start gap-6 p-6">
+      <div className="z-10 flex basis-full md:basis-3/5 flex-col items-start gap-6 p-6">
         <h1 className="text-base text-white lg:text-h3">{title}</h1>
         {cta}
       </div>
-      <div className="relative basis-2/5">
+      <div className="relative basis-2/5 max-md:hidden">
         <Image
           src="/images/archive-illustration.svg"
           alt="New audit"
           fill
-          className="object-cover object-left-center"
+          className="object-contain object-left-center"
         />
       </div>
     </div>

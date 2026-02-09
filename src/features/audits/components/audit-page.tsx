@@ -51,8 +51,6 @@ export const AuditPage = () => {
   const { isAuthenticated } = useAuth();
   const deleteAudit = useDeleteAudit();
 
-  console.log(audits.data);
-
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--audit-card-height:189px] [--audit-card-width:212px] md:p-6">
       <GradientBackground />
@@ -173,7 +171,7 @@ const AuditCard = ({ audit, setAction }: AuditCardProps) => {
     <Link
       href={`dashboard/audits/${audit._id}` as Route}
       className={cn(
-        "group relative flex h-(--audit-card-height) w-(--audit-card-width) flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-sm",
+        "group relative flex h-(--audit-card-height) w-(--audit-card-width) flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-md",
       )}
       style={{
         // Analysis Image
@@ -193,12 +191,6 @@ const AuditCard = ({ audit, setAction }: AuditCardProps) => {
                 : undefined,
       }}
     >
-      {/* Hover Overlay */}
-      <span className="pointer-events-none flex flex-1 flex-col items-center justify-center gap-2 border-b bg-secondary text-white opacity-0 transition-opacity group-hover:opacity-100">
-        <FolderOpen className="size-7.5 shrink-0 rounded-md bg-primary p-1" />
-        <span className="font-semibold text-sm">Open report</span>
-      </span>
-
       {/* Text Content */}
       <span className="mt-auto flex items-center gap-4 bg-secondary p-4">
         <Avatar className="size-6">

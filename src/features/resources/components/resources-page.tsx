@@ -137,7 +137,7 @@ const ResourceCard = ({ resource }: ResourceCardProps) => {
   return (
     <div
       className={cn(
-        "group relative flex h-(--resource-card-height) w-(--resource-card-width) flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-sm",
+        "group relative flex h-(--resource-card-height) w-(--resource-card-width) flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-md",
       )}
       style={{
         // Resources Image
@@ -147,12 +147,6 @@ const ResourceCard = ({ resource }: ResourceCardProps) => {
         `,
       }}
     >
-      {/* Hover Overlay */}
-      <span className="pointer-events-none flex flex-1 flex-col items-center justify-center gap-2 border-b bg-secondary text-white opacity-0 transition-opacity group-hover:opacity-100">
-        <DocumentDownload className="size-7.5 shrink-0 rounded-md bg-primary p-1" />
-        <span className="font-semibold text-sm">Download resource</span>
-      </span>
-
       {/* Text Content */}
       <span className="mt-auto flex min-w-0 flex-col gap-2 bg-secondary p-4">
         <span className="max-w-32 truncate font-semibold text-body-4 text-white">

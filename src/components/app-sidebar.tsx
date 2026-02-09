@@ -37,7 +37,7 @@ export const AppSidebar = ({
 }) => {
   const pathname = usePathname();
   const params = useParams();
-  const { isMobile, toggleSidebar } = useSidebar();
+  const { isMobile, toggleSidebar, setOpenMobile } = useSidebar();
 
   const parsedSidebaItems = useMemo(() => {
     const newSidebarItems: LinkGroup[] = [];
@@ -107,6 +107,7 @@ export const AppSidebar = ({
                           className="relative pl-6"
                           isActive={isActive}
                           asChild
+                          onClick={() => isMobile && setOpenMobile(false)}
                         >
                           <Link href={url as Route}>
                             {/* Highlighter */}
