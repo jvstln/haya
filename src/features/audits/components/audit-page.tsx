@@ -1,17 +1,9 @@
 "use client";
 import { formatDistanceToNow } from "date-fns";
-import {
-  BoxAdd,
-  FolderOpen,
-  PenAdd,
-  Scan,
-  SearchNormal,
-  Trash,
-} from "iconsax-reactjs";
-import { MoreVertical } from "lucide-react";
+import { BoxAdd, PenAdd, Scan, SearchNormal, Trash } from "iconsax-reactjs";
 import type { Route } from "next";
-import Link from "next/link";
 import { useState } from "react";
+import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import {
   DashboardHeader,
   GradientBackground,
@@ -21,12 +13,6 @@ import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { LogicalPagination } from "@/components/ui/pagination";
 import { useAudits } from "@/features/audits/audit.hook";
@@ -127,14 +113,60 @@ export const AuditPage = () => {
           {audits.isPending || audits.isError ? (
             <QueryState query={audits} errorPrefix="Error fetching analyses:" />
           ) : (
-            audits.data.data.map((audit) => (
-              <AuditCard
-                key={audit._id}
-                audit={audit}
-                action={action}
-                setAction={setAction}
-              />
-            ))
+            audits.data.data.map((audit) => {
+              // <AuditCard
+              //   key={audit._id}
+              //   audit={audit}
+              //   action={action}
+              //   setAction={setAction}
+              // />
+
+              return (
+                <DashboardCard
+                  key={audit._id}
+                  href={`dashboard/audits/${audit._id}` as Route}
+                  image="/images/default-audit-card-bg.webp"
+                  classNames={{
+                    root: cn(
+                      audit.status === "failed"
+                        ? "border-destructive"
+                        : audit.status === "in_progress"
+                          ? "border-blue-500"
+                          : audit.status === "pending"
+                            ? "border-amber-500"
+                            : undefined,
+                    ),
+                  }}
+                  content={
+                    <>
+                      <Avatar className="size-6">
+                        <AvatarImage src="" />
+                        <AvatarFallback className="text-sm">UN</AvatarFallback>
+                      </Avatar>
+                      <span className="flex min-w-0 flex-col gap-2">
+                        <span className="max-w-32 truncate font-semibold text-body-4 text-white">
+                          {audit.url}
+                        </span>
+                        <span className="text-muted-foreground text-xxs">
+                          Audited{" "}
+                          {formatDistanceToNow(audit.createdAt, {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </span>
+                    </>
+                  }
+                  actions={[
+                    {
+                      label: "Delete",
+                      icon: <Trash />,
+                      onClick: () => setAction({ type: "delete", audit }),
+                      variant: "destructive",
+                    },
+                  ]}
+                />
+              );
+            })
           )}
         </div>
       )}
@@ -157,85 +189,5 @@ export const AuditPage = () => {
         />
       )}
     </div>
-  );
-};
-
-type AuditCardProps = {
-  audit: AuditWithoutContent;
-  action: Action | null;
-  setAction: (action: Action | null) => void;
-};
-
-const AuditCard = ({ audit, setAction }: AuditCardProps) => {
-  return (
-    <Link
-      href={`dashboard/audits/${audit._id}` as Route}
-      className={cn(
-        "group relative flex h-(--audit-card-height) w-(--audit-card-width) flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-md",
-      )}
-      style={{
-        // Analysis Image
-        background: `
-        linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 /0.5)),
-        url('/images/default-audit-card-bg.webp') center center/cover no-repeat
-        `,
-
-        // Status border indicator
-        borderColor:
-          audit.status === "failed"
-            ? "var(--color-destructive)"
-            : audit.status === "in_progress"
-              ? "var(--color-blue-500)"
-              : audit.status === "pending"
-                ? "var(--color-amber-500)"
-                : undefined,
-      }}
-    >
-      {/* Text Content */}
-      <span className="mt-auto flex items-center gap-4 bg-secondary p-4">
-        <Avatar className="size-6">
-          <AvatarImage src="" />
-          <AvatarFallback>UN</AvatarFallback>
-        </Avatar>
-        <span className="flex min-w-0 flex-col gap-2">
-          <span className="max-w-32 truncate font-semibold text-body-4 text-white">
-            {audit.url}
-          </span>
-          <span className="text-muted-foreground text-xxs">
-            Audited {formatDistanceToNow(audit.createdAt, { addSuffix: true })}
-          </span>
-        </span>
-      </span>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            appearance="ghost"
-            className="absolute top-1 right-1 size-6 rounded-md"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <MoreVertical />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="end"
-          onClick={(e) => {
-            // Prevent audit from opening
-            e.stopPropagation();
-          }}
-        >
-          <DropdownMenuItem
-            onClick={() => setAction({ type: "delete", audit })}
-            data-variant="destructive"
-          >
-            <Trash />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </Link>
   );
 };
