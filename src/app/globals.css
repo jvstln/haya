@@ -65,7 +65,7 @@
 
 :root {
   --background: oklch(from #121212 l c h);
-  --foreground: oklch(from #a3a3a4 l c h);
+  --foreground: oklch(from var(--color-white) l c h);
   --primary: oklch(60.795% 0.2218 284.387);
   --primary-foreground: var(--color-white);
   --primary-compliment: oklch(from #ffafa4 l c h);

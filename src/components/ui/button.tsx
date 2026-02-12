@@ -27,26 +27,9 @@ const buttonVariants = cva(
         colorful:
           "bg-(image:--bg) [--bg:var(--colorful-gradient)] [--fg:var(--color-white)]",
       },
-      // variant: {
-      //   default: "bg-primary text-primary-foreground hover:bg-primary/90",
-      //   glass: "bg-border text-foreground hover:bg-border/90",
-      //   "glass-primary": "bg-primary/15 text-primary hover:bg-primary/25",
-      //   ghost:
-      //     "hover:bg-border data-[active=true]:bg-border dark:data-[active=true]:bg-border/50 dark:hover:bg-border/50",
-      //   colorful: "bg-(image:--colorful-gradient) text-background",
-      //   destructive:
-      //     "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20",
-      //   "destructive-outline":
-      //     "border border-destructive bg-transparent text-destructive hover:bg-destructive/10 focus-visible:ring-destructive/20",
-      //   outline:
-      //     "border bg-background shadow-xs hover:bg-border dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-      //   secondary:
-      //     "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-      //   link: "text-primary underline-offset-4 hover:underline",
-      // },
       size: {
-        default: "h-8.75 px-6 py-2 text-sm has-[>svg]:px-3",
-        sm: "h-7 gap-1.5 px-3 text-body-4 has-[>svg]:px-2.5",
+        default: "h-8.75 px-6 py-2 has-[>svg]:px-3",
+        sm: "h-7 gap-1.5 px-3 font-semibold text-xs has-[>svg]:px-2.5",
         lg: "h-12.75 px-6 has-[>svg]:px-4",
         icon: "size-8.75",
         "icon-sm": "size-8",

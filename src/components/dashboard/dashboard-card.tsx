@@ -58,7 +58,7 @@ export const DashboardCard = ({
       </span>
 
       {/* Actions */}
-      {actions && (
+      {actions && actions.length > 0 && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

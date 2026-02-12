@@ -18,7 +18,10 @@ async function getAudits(params?: AuditQueryParams) {
     data: AuditWithoutContent[];
     pagination: Pagination;
   }>(`${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`, {
-    params,
+    params: {
+      ...params,
+      page: params?.page ?? 1, // Without this, the backend directly returns an array without pagination. Remove when issue is resolved
+    },
   });
   return response.data;
 }

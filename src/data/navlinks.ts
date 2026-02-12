@@ -42,7 +42,11 @@ const sidebarContents = {
       icon: Ranking,
       tooltip: "Coming Soon",
     },
-    { title: "Team", url: "#", icon: People, tooltip: "Coming Soon" },
+    {
+      title: "Team",
+      url: "#",
+      icon: People,
+    },
   ],
   "/dashboard/*": [
     { title: "Audit Dashboard", url: "/dashboard/audits", icon: Scan },
@@ -52,15 +56,14 @@ const sidebarContents = {
       icon: Shop,
     },
     {
+      title: "Team",
+      url: "/dashboard/teams",
+      icon: People,
+    },
+    {
       title: "Agentic SDK's",
       url: "#",
       icon: CodeCircle,
-      tooltip: "Coming Soon",
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: People,
       tooltip: "Coming Soon",
     },
   ],

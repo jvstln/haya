@@ -19,7 +19,7 @@ export const DashboardHeader = ({ title, cta }: DashboardHeaderProps) => {
     >
       {/* Decorative Background */}
       <div
-        className="pointer-events-none max-md:hidden absolute size-44"
+        className="pointer-events-none absolute size-44 max-md:hidden"
         style={{
           left: "calc(50% - 176px/2 - 0.5px)",
           top: "91px",
@@ -29,7 +29,7 @@ export const DashboardHeader = ({ title, cta }: DashboardHeaderProps) => {
         }}
       />
 
-      <div className="z-10 flex basis-full md:basis-3/5 flex-col items-start gap-6 p-6">
+      <div className="z-10 flex basis-full flex-col items-start gap-6 p-6 md:basis-3/5">
         <h1 className="text-base text-white lg:text-h3">{title}</h1>
         {cta}
       </div>

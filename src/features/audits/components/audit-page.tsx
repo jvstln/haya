@@ -1,16 +1,12 @@
 "use client";
-import { formatDistanceToNow } from "date-fns";
-import { BoxAdd, PenAdd, Scan, SearchNormal, Trash } from "iconsax-reactjs";
-import type { Route } from "next";
+import { BoxAdd, PenAdd, Scan, SearchNormal } from "iconsax-reactjs";
 import { useState } from "react";
-import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import {
   DashboardHeader,
   GradientBackground,
 } from "@/components/dashboard-header";
 import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import { Input } from "@/components/ui/input";
@@ -18,9 +14,9 @@ import { LogicalPagination } from "@/components/ui/pagination";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
 import { useFilters } from "@/hooks/use-filters";
-import { cn } from "@/lib/utils";
 import { useDeleteAudit } from "../audit.hook";
 import type { AuditQueryParams, AuditWithoutContent } from "../audit.type";
+import { AuditCard } from "./audit-card";
 import { NewAuditForm } from "./audit-form";
 
 type Action = {
@@ -113,60 +109,13 @@ export const AuditPage = () => {
           {audits.isPending || audits.isError ? (
             <QueryState query={audits} errorPrefix="Error fetching analyses:" />
           ) : (
-            audits.data.data.map((audit) => {
-              // <AuditCard
-              //   key={audit._id}
-              //   audit={audit}
-              //   action={action}
-              //   setAction={setAction}
-              // />
-
-              return (
-                <DashboardCard
-                  key={audit._id}
-                  href={`dashboard/audits/${audit._id}` as Route}
-                  image="/images/default-audit-card-bg.webp"
-                  classNames={{
-                    root: cn(
-                      audit.status === "failed"
-                        ? "border-destructive"
-                        : audit.status === "in_progress"
-                          ? "border-blue-500"
-                          : audit.status === "pending"
-                            ? "border-amber-500"
-                            : undefined,
-                    ),
-                  }}
-                  content={
-                    <>
-                      <Avatar className="size-6">
-                        <AvatarImage src="" />
-                        <AvatarFallback className="text-sm">UN</AvatarFallback>
-                      </Avatar>
-                      <span className="flex min-w-0 flex-col gap-2">
-                        <span className="max-w-32 truncate font-semibold text-body-4 text-white">
-                          {audit.url}
-                        </span>
-                        <span className="text-muted-foreground text-xxs">
-                          Audited{" "}
-                          {formatDistanceToNow(audit.createdAt, {
-                            addSuffix: true,
-                          })}
-                        </span>
-                      </span>
-                    </>
-                  }
-                  actions={[
-                    {
-                      label: "Delete",
-                      icon: <Trash />,
-                      onClick: () => setAction({ type: "delete", audit }),
-                      variant: "destructive",
-                    },
-                  ]}
-                />
-              );
-            })
+            audits.data.data.map((audit) => (
+              <AuditCard
+                key={audit._id}
+                audit={audit}
+                onDelete={(a) => setAction({ type: "delete", audit: a })}
+              />
+            ))
           )}
         </div>
       )}

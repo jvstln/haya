@@ -42,7 +42,7 @@ export const ErrorState = ({
       )}
     >
       <p className={cn("text-red-500 text-sm", classNames?.error)}>
-        {errorMessage ?? `${errorPrefix ?? "Error:"} ${query?.error?.message}`}
+        {errorMessage ?? `${errorPrefix ?? "Error"}: ${query?.error?.message}`}
       </p>
       {query?.refetch && (
         <Button

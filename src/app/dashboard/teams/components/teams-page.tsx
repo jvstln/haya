@@ -1,0 +1,172 @@
+"use client";
+import { formatDistanceToNow } from "date-fns";
+import { SearchNormal } from "iconsax-reactjs";
+import { useState } from "react";
+import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import {
+  DashboardHeader,
+  GradientBackground,
+} from "@/components/dashboard-header";
+import { FolderIcon } from "@/components/icons";
+import { QueryState } from "@/components/query-states";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { LogicalPagination } from "@/components/ui/pagination";
+import { useFilters } from "@/hooks/use-filters";
+import { cn } from "@/lib/utils";
+import { useTeams } from "../team.hook";
+import type { Team } from "../team.type";
+import { TeamsSheet } from "./teams-sheet";
+
+type Action = {
+  type: "view";
+  team: Team;
+};
+
+export const TeamsPage = () => {
+  const [view, setView] = useState<"all" | "assigned" | "notAssigned">("all");
+  const [filters, setFilters] = useFilters();
+  const [action, setAction] = useState<Action | null>(null);
+
+  const teams = useTeams();
+
+  return (
+    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--resource-card-height:189px] [--resource-card-width:212px] md:p-6">
+      <GradientBackground />
+      <DashboardHeader
+        title="Unlock Premium Growth Resources for Smarter Conversions"
+        cta={
+          <Button className="animate-border-glow rounded-full">
+            Create team
+          </Button>
+        }
+      />
+
+      <div className="flex items-center justify-between gap-1">
+        <Button
+          appearance={view === "all" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setView("all")}
+        >
+          All resources
+        </Button>
+        <Button
+          appearance={view === "assigned" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setView("assigned")}
+        >
+          Assigned
+        </Button>
+        <Button
+          appearance={view === "notAssigned" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setView("notAssigned")}
+        >
+          Not assigned
+        </Button>
+
+        <div className="relative ml-auto w-50 transition-[width] duration-300 ease-in-out focus-within:w-full">
+          <Input
+            type="search"
+            className="rounded-full border-secondary pl-12"
+            placeholder="Search teams"
+            value={filters.originalSearch}
+            onChange={(e) => {
+              setFilters((f) => ({ ...f, search: e.target.value }));
+            }}
+          />
+          <SearchNormal className="-translate-y-1/2 absolute top-1/2 left-4 size-4" />
+        </div>
+      </div>
+
+      {teams.data && teams.data.data.length === 0 && (
+        <div className="flex grow flex-col items-center justify-center text-sm">
+          <FolderIcon className="size-40" />
+          <p>No team created yet</p>
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-4">
+        {teams.isPending || teams.isError ? (
+          <QueryState query={teams} errorPrefix="Error fetching resources" />
+        ) : (
+          teams.data.data.map((team) => {
+            return (
+              // biome-ignore lint/a11y/useSemanticElements: Child elements are divs
+              <div
+                key={team._id}
+                role="button"
+                tabIndex={0}
+                onClick={() => setAction({ type: "view", team })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    setAction({ type: "view", team });
+                  }
+                }}
+                className="cursor-pointer"
+              >
+                <DashboardCard
+                  classNames={{
+                    content: "w-full justify-between items-center",
+                  }}
+                  content={
+                    <>
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-body-4 text-white">
+                          {team.name}
+                        </span>
+                        <span className="text-muted-foreground text-xxs">
+                          Created{" "}
+                          {formatDistanceToNow(new Date(team.createdAt), {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </div>
+                      <div className="-space-x-2 flex">
+                        {team.members?.map((member) => (
+                          <Avatar
+                            key={member._id}
+                            className="size-6 border-2 border-secondary"
+                          >
+                            <AvatarFallback
+                              className={cn(
+                                "text-[9px] text-white",
+                                member.color,
+                              )}
+                            >
+                              {member.fallback}
+                            </AvatarFallback>
+                          </Avatar>
+                        ))}
+                      </div>
+                    </>
+                  }
+                />
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {teams.data && (
+        <LogicalPagination
+          currentPage={teams.data.pagination.currentPage}
+          totalPages={teams.data.pagination.totalPages}
+          onPageChange={(page) => setFilters((f) => ({ ...f, page }))}
+        />
+      )}
+
+      {action?.type === "view" && (
+        <TeamsSheet
+          open={true}
+          onOpenChange={() => setAction(null)}
+          team={action.team}
+        />
+      )}
+    </div>
+  );
+};
