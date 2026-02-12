@@ -11,6 +11,7 @@ type ErrorStateProps = {
     error?: Error | null;
     refetch?: () => void;
     isFetching?: boolean;
+    isPending?: boolean;
     isError?: boolean;
   };
   /** Optional custom class names for styling specific parts of the component */
@@ -95,8 +96,9 @@ export const QueryState = ({
   query,
   classNames,
   errorPrefix,
-}: ErrorStateProps & LoadingStateProps) => {
-  if (query?.isFetching) {
+  children,
+}: ErrorStateProps & LoadingStateProps & { children?: React.ReactNode }) => {
+  if (query?.isPending) {
     return <LoadingState classNames={classNames} />;
   }
 
@@ -110,5 +112,5 @@ export const QueryState = ({
     );
   }
 
-  return null;
+  return children;
 };

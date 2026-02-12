@@ -1,4 +1,4 @@
-import { TeamsPage } from "./components/teams-page";
+import { TeamsPage } from "@/features/teams/components/teams-page";
 
 const Teams = () => {
   return <TeamsPage />;

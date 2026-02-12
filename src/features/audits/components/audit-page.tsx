@@ -1,5 +1,5 @@
 "use client";
-import { BoxAdd, PenAdd, Scan, SearchNormal } from "iconsax-reactjs";
+import { BoxAdd, PenAdd, Scan } from "iconsax-reactjs";
 import { useState } from "react";
 import {
   DashboardHeader,
@@ -9,7 +9,7 @@ import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
-import { Input } from "@/components/ui/input";
+import { InputSearch } from "@/components/ui/input-search";
 import { LogicalPagination } from "@/components/ui/pagination";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
@@ -83,18 +83,13 @@ export const AuditPage = () => {
           Completed
         </Button>
 
-        <div className="relative ml-auto w-50 transition-[width] duration-300 ease-in-out focus-within:w-full">
-          <Input
-            type="search"
-            className="rounded-full border-secondary pl-12"
-            placeholder="Search audits"
-            value={filters.originalSearch}
-            onChange={(e) => {
-              setFilters((f) => ({ ...f, search: e.target.value }));
-            }}
-          />
-          <SearchNormal className="-translate-y-1/2 absolute top-1/2 left-4 size-4" />
-        </div>
+        <InputSearch
+          placeholder="Search audits"
+          value={filters.originalSearch}
+          onChange={(e) => {
+            setFilters((f) => ({ ...f, search: e.target.value }));
+          }}
+        />
       </div>
 
       {(!isAuthenticated || (audits.data && audits.data.data.length === 0)) && (

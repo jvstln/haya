@@ -1,14 +1,15 @@
-import { ArrowDown2, Blend, SearchNormal } from "iconsax-reactjs";
+import { ArrowDown2, Blend } from "iconsax-reactjs";
 import { MoreVertical, Plus, X } from "lucide-react";
+import { useState } from "react";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
+import { InputSearch } from "@/components/ui/input-search";
 import {
   Sheet,
   SheetClose,
@@ -17,6 +18,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useAudits } from "@/features/audits/audit.hook";
+import { AssignAuditsDialog } from "@/features/audits/components/assign-audits-dialog";
 import { AuditCard } from "@/features/audits/components/audit-card";
 import { cn } from "@/lib/utils";
 import type { Team } from "../team.type";
@@ -29,6 +31,7 @@ type TeamsSheetProps = {
 
 export const TeamsSheet = ({ open, onOpenChange, team }: TeamsSheetProps) => {
   const audits = useAudits();
+  const [showAssignDialog, setShowAssignDialog] = useState(false);
 
   if (!team) return null;
 
@@ -125,19 +128,25 @@ export const TeamsSheet = ({ open, onOpenChange, team }: TeamsSheetProps) => {
           <div className="my-6 flex flex-col gap-4">
             <div className="justify- flex items-center gap-2">
               <h3 className="font-semibold">Assigned</h3>
-              <div className="relative ml-auto w-50 transition-[width] duration-300 ease-in-out focus-within:w-full">
-                <Input
-                  type="search"
-                  className="rounded-full border-secondary pl-12"
-                  placeholder="Search..."
-                />
-                <SearchNormal className="-translate-y-1/2 absolute top-1/2 left-4 size-4" />
-              </div>
-              <Button className="rounded-full" color="secondary">
+              <InputSearch placeholder="Search..." />
+              <Button
+                className="rounded-full"
+                color="secondary"
+                onClick={() => setShowAssignDialog(true)}
+              >
                 <Blend />
                 Assign
               </Button>
             </div>
+
+            <AssignAuditsDialog
+              open={showAssignDialog}
+              onOpenChange={setShowAssignDialog}
+              onAssign={(ids) => {
+                console.log("Assigning audits:", ids);
+                // TODO: Implement actual assignment logic
+              }}
+            />
 
             <div className="flex flex-wrap gap-4">
               {audits.isPending || audits.isError ? (

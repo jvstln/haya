@@ -1,6 +1,5 @@
 "use client";
 import { formatDistanceToNow } from "date-fns";
-import { SearchNormal } from "iconsax-reactjs";
 import { useState } from "react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import {
@@ -11,8 +10,9 @@ import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { InputSearch } from "@/components/ui/input-search";
 import { LogicalPagination } from "@/components/ui/pagination";
+import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
 import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
 import { useTeams } from "../team.hook";
@@ -37,9 +37,11 @@ export const TeamsPage = () => {
       <DashboardHeader
         title="Unlock Premium Growth Resources for Smarter Conversions"
         cta={
-          <Button className="animate-border-glow rounded-full">
-            Create team
-          </Button>
+          <CreateTeamDialog>
+            <Button className="animate-border-glow rounded-full">
+              Create team
+            </Button>
+          </CreateTeamDialog>
         }
       />
 
@@ -69,18 +71,13 @@ export const TeamsPage = () => {
           Not assigned
         </Button>
 
-        <div className="relative ml-auto w-50 transition-[width] duration-300 ease-in-out focus-within:w-full">
-          <Input
-            type="search"
-            className="rounded-full border-secondary pl-12"
-            placeholder="Search teams"
-            value={filters.originalSearch}
-            onChange={(e) => {
-              setFilters((f) => ({ ...f, search: e.target.value }));
-            }}
-          />
-          <SearchNormal className="-translate-y-1/2 absolute top-1/2 left-4 size-4" />
-        </div>
+        <InputSearch
+          placeholder="Search teams"
+          value={filters.originalSearch}
+          onChange={(e) => {
+            setFilters((f) => ({ ...f, search: e.target.value }));
+          }}
+        />
       </div>
 
       {teams.data && teams.data.data.length === 0 && (
