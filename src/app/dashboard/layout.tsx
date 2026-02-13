@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -12,6 +12,7 @@ export default function DashboardLayout({
   children,
 }: LayoutProps<"/dashboard">) {
   const pathname = usePathname();
+  const params = useParams();
 
   return (
     <SidebarProvider
@@ -21,7 +22,7 @@ export default function DashboardLayout({
       <AppHeader />
 
       <div className="flex min-h-[calc(100vh-var(--header-height))] w-full flex-1">
-        <AppSidebar sidebarItems={getSidebarContent(pathname)} />
+        <AppSidebar sidebarItems={getSidebarContent(pathname, params)} />
         <main
           className={cn(
             "md:[[data-sidebar-state=collapsed]_*]:max-w-[calc(100vw-var(--sidebar-width-icon))] md:[[data-sidebar-state=expanded]_*]:max-w-[calc(100vw-var(--sidebar-width))]",

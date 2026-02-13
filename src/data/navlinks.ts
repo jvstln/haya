@@ -10,72 +10,105 @@ import {
 } from "iconsax-reactjs";
 import type { Route } from "next";
 
-export type LinkItem = {
+type Params = Record<string, string | string[] | undefined>;
+
+export type SidebarLinkItem = {
   title: string;
-  url: Route;
+  url: Route | ((params: Params) => Route);
   icon: Icon;
   tooltip?: React.ReactNode;
   exact?: boolean; // Default is true
 };
-export type LinkGroupLabel = { title: string };
-export type SidebarItemable = LinkGroupLabel | LinkItem;
-export type LinkGroup = { title: string; items: LinkItem[] };
+export type SidebarLabel = { title: string };
+export type SidebarItem = SidebarLabel | SidebarLinkItem;
 
-const sidebarContents = {
-  "/dashboard/audits/*": [
-    { title: "Audit Dashboard", url: "/dashboard/audits", icon: Scan },
-    { title: "Overview" },
-    {
-      title: "Case Dashboard",
-      url: "/dashboard/audits/[auditId]/case" as Route,
-      icon: Archive,
-    },
-    {
-      title: "Campaign",
-      url: "#",
-      icon: ClipboardExport,
-      tooltip: "Coming Soon",
-    },
-    {
-      title: "Perfomance Metrics",
-      url: "#",
-      icon: Ranking,
-      tooltip: "Coming Soon",
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: People,
-    },
-  ],
-  "/dashboard/*": [
-    { title: "Audit Dashboard", url: "/dashboard/audits", icon: Scan },
-    {
-      title: "Resources",
-      url: "/dashboard/resources",
-      icon: Shop,
-    },
-    {
-      title: "Team",
-      url: "/dashboard/teams",
-      icon: People,
-    },
-    {
-      title: "Agentic SDK's",
-      url: "#",
-      icon: CodeCircle,
-      tooltip: "Coming Soon",
-    },
-  ],
-} as const satisfies Record<string, SidebarItemable[]>;
+type SidebarConfig = {
+  include: string[];
+  exclude?: string[];
+  content: SidebarItem[];
+};
 
-export const getSidebarContent = (pathname: string) => {
-  for (const pattern in sidebarContents) {
-    const regex = new RegExp(`^${pattern.replaceAll("*", ".*")}$`);
-    if (regex.test(pathname)) {
-      return sidebarContents[pattern as keyof typeof sidebarContents];
-    }
-  }
+const sidebarConfig: SidebarConfig[] = [
+  {
+    include: ["^/dashboard/audits/.*$"],
+    content: [
+      { title: "Audit Dashboard", url: "/dashboard/audits", icon: Scan },
+      { title: "Overview" },
+      {
+        title: "Case Dashboard",
+        url: (params) => `/dashboard/audits/${params.auditId}/case` as Route,
+        icon: Archive,
+      },
+      {
+        title: "Campaign",
+        url: "#",
+        icon: ClipboardExport,
+        tooltip: "Coming Soon",
+      },
+      {
+        title: "Perfomance Metrics",
+        url: "#",
+        icon: Ranking,
+        tooltip: "Coming Soon",
+      },
+      {
+        title: "Team",
+        url: "#",
+        icon: People,
+      },
+    ],
+  },
+  {
+    include: ["^/dashboard/.*$"],
+    content: [
+      { title: "Audit Dashboard", url: "/dashboard/audits", icon: Scan },
+      {
+        title: "Resources",
+        url: "/dashboard/resources",
+        icon: Shop,
+      },
+      {
+        title: "Team",
+        url: "/dashboard/teams",
+        icon: People,
+      },
+      {
+        title: "Agentic SDK's",
+        url: "#",
+        icon: CodeCircle,
+        tooltip: "Coming Soon",
+      },
+    ],
+  },
+];
 
-  return sidebarContents["/dashboard/*"];
+/**
+ * Returns the sidebar content for the matched pathname or pattern
+ * @param pathname A regex pattern or the pathname to match
+ * @returns Sidebar content for the matched pathname or pattern
+ */
+export const getSidebarContent = (pathname: string, params: Params) => {
+  const matchedConfig = sidebarConfig.find((config) => {
+    const defaultExcludeRegex = /a^/; // This will never match anything
+
+    const includeRegExp = new RegExp(config.include.join("|"));
+    const excludeRegExp = config.exclude
+      ? new RegExp(config.exclude?.join("|"))
+      : defaultExcludeRegex;
+
+    return includeRegExp.test(pathname) && !excludeRegExp.test(pathname);
+  });
+
+  if (!matchedConfig) return null;
+
+  // Inject params to urls
+  const injectedContent = matchedConfig.content.map((item) => {
+    if (!("url" in item)) return item;
+    return {
+      ...item,
+      url: typeof item.url === "function" ? item.url(params) : item.url,
+    };
+  });
+
+  return injectedContent;
 };

@@ -1,11 +1,9 @@
 "use client";
 import { Add } from "iconsax-reactjs";
-import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-import { useMemo } from "react";
-import type { LinkGroup, LinkItem, SidebarItemable } from "@/data/navlinks";
+import { usePathname } from "next/navigation";
+import type { getSidebarContent } from "@/data/navlinks";
 import { cn } from "@/lib/utils";
 import logo from "@/public/logo.svg";
 import { Button } from "./ui/button";
@@ -13,60 +11,24 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
   useSidebar,
 } from "./ui/sidebar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const AppSidebar = ({
   sidebarItems,
 }: {
-  sidebarItems: SidebarItemable[];
+  sidebarItems: ReturnType<typeof getSidebarContent>;
 }) => {
   const pathname = usePathname();
-  const params = useParams();
   const { isMobile, toggleSidebar, setOpenMobile } = useSidebar();
 
-  const parsedSidebaItems = useMemo(() => {
-    const newSidebarItems: LinkGroup[] = [];
-    const normalizeUrl = (url: string) => {
-      return url.replace(/\[(.*?)\]/g, (match, param) => {
-        return Array.isArray(params[param])
-          ? params[param][0]
-          : params[param] || match;
-      });
-    };
-
-    if ("url" in sidebarItems[0]) {
-      newSidebarItems.push({ title: "", items: [] });
-    }
-
-    sidebarItems.forEach((item) => {
-      const currentGroup = newSidebarItems.at(-1);
-      if ("url" in item && currentGroup) {
-        currentGroup.items.push({
-          ...item,
-          url: normalizeUrl(item.url) as LinkItem["url"],
-        });
-        return;
-      }
-      newSidebarItems.push({ title: item.title, items: [] });
-    });
-
-    return newSidebarItems;
-  }, [sidebarItems, params]);
+  if (!sidebarItems) return null;
 
   return (
     <Sidebar
@@ -89,62 +51,61 @@ export const AppSidebar = ({
         </SidebarHeader>
       )}
 
+      {/* This sidebar content follows a flat structure rather than nested one defined in shadcn for simplicity */}
       <SidebarContent className={cn(!isMobile && "mt-6")}>
-        {parsedSidebaItems.map((link, index) => (
-          <SidebarGroup key={`${index}-${link.title}`}>
-            {link.title && <SidebarGroupLabel>{link.title}</SidebarGroupLabel>}
-            <SidebarGroupContent>
-              <SidebarMenu className="gap-4.5">
-                {link.items.map(
-                  ({ title, url, exact = true, icon: Icon, tooltip }) => {
-                    const isActive = exact
-                      ? pathname === url
-                      : pathname.startsWith(url);
+        {sidebarItems.map((item) => {
+          const isLink = "url" in item;
+          const isGroupLabel = !isLink;
 
-                    const sidebarItem = (
-                      <SidebarMenuItem key={title + url}>
-                        <SidebarMenuButton
-                          className="relative pl-6"
-                          isActive={isActive}
-                          asChild
-                          onClick={() => isMobile && setOpenMobile(false)}
-                        >
-                          <Link href={url as Route}>
-                            {/* Highlighter */}
-                            <span
-                              className="pointer-events-none absolute top-0 left-0 h-full w-1 [[data-active=true]_*]:bg-primary"
-                              aria-hidden="true"
-                            />
-                            <Icon />
-                            {title}
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
+          if (isLink) {
+            const isActive = item.exact
+              ? pathname === item.url
+              : pathname.startsWith(item.url);
 
-                    if (tooltip) {
-                      return (
-                        <TooltipProvider key={title + url}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              {sidebarItem}
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                              {tooltip}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      );
-                    }
+            const sidebarLink = (
+              <SidebarMenuItem key={item.title + item.url}>
+                <SidebarMenuButton
+                  className="relative pl-6"
+                  isActive={isActive}
+                  asChild
+                  onClick={() => isMobile && setOpenMobile(false)}
+                >
+                  <Link href={item.url}>
+                    {/* Highlighter */}
+                    <span
+                      className="pointer-events-none absolute top-0 left-0 h-full w-1 [[data-active=true]_*]:bg-primary"
+                      aria-hidden="true"
+                    />
+                    <item.icon />
+                    {item.title}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
 
-                    return sidebarItem;
-                  },
-                )}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+            if (item.tooltip) {
+              return (
+                <Tooltip key={item.title + item.url}>
+                  <TooltipTrigger asChild>{sidebarLink}</TooltipTrigger>
+                  <TooltipContent side="right">{item.tooltip}</TooltipContent>
+                </Tooltip>
+              );
+            }
+            return sidebarLink;
+          }
+
+          if (isGroupLabel) {
+            return (
+              <SidebarGroupLabel key={item.title} className="px-4">
+                {item.title}
+              </SidebarGroupLabel>
+            );
+          }
+
+          return null;
+        })}
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarTrigger />
       </SidebarFooter>
