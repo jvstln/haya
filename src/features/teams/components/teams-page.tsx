@@ -108,7 +108,7 @@ export const TeamsPage = () => {
               >
                 <DashboardCard
                   classNames={{
-                    content: "w-full justify-between items-center",
+                    content: "w-full items-center justify-between",
                   }}
                   content={
                     <>

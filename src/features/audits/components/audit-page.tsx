@@ -1,5 +1,7 @@
 "use client";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { BoxAdd, PenAdd, Scan } from "iconsax-reactjs";
+import Link from "next/link";
 import { useState } from "react";
 import {
   DashboardHeader,
@@ -11,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import { InputSearch } from "@/components/ui/input-search";
 import { LogicalPagination } from "@/components/ui/pagination";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
 import { useFilters } from "@/hooks/use-filters";
@@ -45,14 +48,21 @@ export const AuditPage = () => {
                 <Scan className="size-5.5 rounded-sm bg-primary p-1" /> Audit
               </Button>
             </NewAuditForm>
-            <Button color="secondary" className="rounded-full">
-              <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
-              Canva
+            <Button color="secondary" className="rounded-full" asChild>
+              <Link href="/dashboard/canva">
+                <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
+                Canva
+              </Link>
             </Button>
-            <Button color="secondary" className="rounded-full">
-              <PenAdd className="size-5.5 rounded-sm bg-[#0088FF] p-1" />
-              Editor
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button color="secondary" className="rounded-full">
+                  <PenAdd className="size-5.5 rounded-sm bg-[#0088FF] p-1" />
+                  Editor
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Coming soon</TooltipContent>
+            </Tooltip>
           </div>
         }
       />

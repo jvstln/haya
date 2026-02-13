@@ -157,8 +157,7 @@
   * {
     @apply border-border outline-ring/50;
   }
-  button,
-  [data-slot="dropdown-menu-item"] {
+  :is(button, [role="button"], [role="menuitem"]):not(:disabled) {
     @apply cursor-pointer;
   }
 }
