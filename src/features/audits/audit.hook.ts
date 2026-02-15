@@ -7,7 +7,7 @@ import type { AuditQueryParams } from "./audit.type";
 
 export const useAudits = (params: AuditQueryParams = {}) => {
   return useQuery({
-    queryKey: ["analyses", params],
+    queryKey: ["audits", params],
     queryFn: () => AuditService.getAudits(params),
   });
 };
@@ -36,6 +36,7 @@ export const useAudit = (auditId: string) => {
 
       return (10 + ++refetchCount.current) * 1000; // 10 seconds + refetchCount seconds
     },
+    enabled: !!auditId,
   });
 
   return { ...query, refetchCount: refetchCount.current };
@@ -56,7 +57,7 @@ export const useDeleteAudits = () => {
     mutationFn: AuditService.deleteAudits,
     onError: (error) => toast.error(`Error: ${error.message}`),
     onSuccess: (data) => {
-      toast.success(data.message || "All analyses deleted successfully");
+      toast.success(data.message || "All audits deleted successfully");
       invalidateQueries();
     },
   });
@@ -67,14 +68,14 @@ export const useDeleteAudit = () => {
     mutationFn: AuditService.deleteAudit,
     onError: (error) => toast.error(`Error: ${error.message}`),
     onSuccess: (data) => {
-      toast.success(data.message || "Analysis deleted successfully");
+      toast.success(data.message || "Audit deleted successfully");
       invalidateQueries();
     },
   });
 };
 
 function invalidateQueries() {
-  ["analysis", "analyses"].map((key) =>
+  ["audits", "audit"].map((key) =>
     queryClient.invalidateQueries({ queryKey: [key] }),
   );
 }

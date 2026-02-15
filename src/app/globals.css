@@ -73,7 +73,7 @@
   --secondary: oklch(from #333333 l c h);
   --secondary-foreground: var(--color-white);
 
-  --muted: var(--background);
+  --muted: oklch(from #1e1e1e l c h);
   --muted-foreground: oklch(from #a3a3a4 l c h);
 
   --border: oklch(from #141818 l c h);
