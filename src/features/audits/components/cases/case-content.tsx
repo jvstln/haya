@@ -8,11 +8,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn, random, toTitleCase } from "@/lib/utils";
-import type {
-  AuditSection,
-  AuditSectionAnalysis,
-  DetailedAuditSection,
-} from "../../audit.type";
+import type { AuditSection } from "../../audit.type";
 
 export const ProblemsAndSolutionsCaseSection = ({
   section,

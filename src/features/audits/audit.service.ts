@@ -2,13 +2,13 @@ import { api } from "@/lib/api";
 import { shuffleArray } from "@/lib/utils";
 import type { Pagination } from "@/types/type";
 import type {
-  Audit,
   AuditPage,
   AuditQueryParams,
   AuditSection,
   AuditWithoutContent,
   NewAudit,
   ParsedAudit,
+  RawAudit,
 } from "./audit.type";
 
 /** Hacky - change v1 to v2 in all analysis endpoint because of backend version change */
@@ -27,7 +27,7 @@ async function getAudits(params?: AuditQueryParams) {
 }
 
 async function getAudit(auditId: string) {
-  const response = await api.get<Audit>(
+  const response = await api.get<RawAudit>(
     `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis/${auditId}`,
   );
   return response.data;
@@ -95,7 +95,7 @@ function parseContent(content: string) {
 }
 
 /** Returns true if audit is in progress or pending or NOT YET DEFINED */
-function getIsAuditInProgress(audit?: Audit | ParsedAudit) {
+function getIsAuditInProgress(audit?: RawAudit | ParsedAudit) {
   if (!audit) return true;
   return audit.status === "in_progress" || audit.status === "pending";
 }

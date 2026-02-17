@@ -1,50 +1,89 @@
 "use client";
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
-import { QueryState } from "@/components/query-states";
-import { useCanvaEdits } from "../canva.hook";
-import { CanvaSection } from "./canva-section";
+import { ArrowLeft, Blend, BoxAdd, Scan, Share } from "iconsax-reactjs";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
+import { ShareAuditDialog } from "@/features/audits/components/share-audit-dialog";
+import { useCanvaEditor } from "../canva.hook";
+import { CanvaEditor } from "./canva-editor";
+import { Suspense } from "react";
+import { HayaSpinner } from "@/components/ui/spinner";
 
-export const CanvaPage = () => {
-  const edits = useCanvaEdits();
+type CanvaPageProps = {
+  auditId?: string;
+};
+
+const CanvaPage = ({ auditId }: CanvaPageProps) => {
+  const canvaEditor = useCanvaEditor(auditId);
+  const pathname = usePathname();
 
   return (
-    <TransformWrapper>
-      <TransformComponent
-        wrapperClass="flex-1 !w-full"
-        contentClass="!w-full flex items-start"
-        wrapperStyle={
-          {
-            background: `
-          linear-gradient(to right, oklch(from var(--color-secondary) l c h / 0.5) 1px, transparent 1px) center / 10px 100%,
-          linear-gradient(to bottom, oklch(from var(--color-secondary) l c h / 0.5) 1px, transparent 1px) center / 100% 10px`,
-            "--slot-height": "200px",
-            "--slot-width": "268px",
-          } as React.CSSProperties
-        }
-      >
-        {/* Customizable horizontal dashed border that comes after the first image using SVG */}
-        <svg
-          className="pointer-events-none absolute top-[calc(var(--slot-height))] w-full overflow-visible"
-          fill="none"
-          aria-hidden="true"
-          height={2}
-        >
-          <line
-            x1="0%"
-            y1="100%"
-            x2="100%"
-            y2="100%"
-            strokeWidth="2"
-            strokeDasharray="10,10"
-            className="stroke-secondary"
-          />
-        </svg>
-        <QueryState query={edits}>
-          {edits.data?.map((section) => (
-            <CanvaSection key={section.category} section={section} />
-          ))}
-        </QueryState>
-      </TransformComponent>
-    </TransformWrapper>
+    <div className="relative flex size-full flex-col">
+      {/* Navigation and controls */}
+      <div className="flex items-center gap-4 p-3 md:px-6">
+        <Button appearance="soft" size="sm" asChild>
+          <Link href="/dashboard">
+            <ArrowLeft />
+            Back to Dashboard
+          </Link>
+        </Button>
+
+        <Button color="secondary" className="ml-auto rounded-full">
+          <Scan className="size-5.5 rounded-sm bg-primary p-1" />
+          Audit
+        </Button>
+
+        {/* Only show if not a new canva */}
+        {!pathname.endsWith("new") && (
+          <Button color="secondary" className="rounded-full" asChild>
+            <Link href="/dashboard/canva">
+              <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
+              Canva
+            </Link>
+          </Button>
+        )}
+
+        <Button color="secondary" className="rounded-full">
+          <Blend className="size-5.5 rounded-sm bg-[#00C0E8] p-1" />
+          Assign
+        </Button>
+
+        {canvaEditor.auditQuery.data ? (
+          <ShareAuditDialog audit={canvaEditor.auditQuery.data}>
+            <Button appearance="soft" size="sm">
+              <Share />
+              Share Findings
+            </Button>
+          </ShareAuditDialog>
+        ) : (
+          <Button appearance="soft" size="sm" disabled>
+            <Share />
+            Share Findings
+          </Button>
+        )}
+      </div>
+
+      <CanvaEditor canvaEditor={canvaEditor} />
+    </div>
   );
 };
+
+export const SuspendedCanvaPage = (props: CanvaPageProps) => {
+  return (
+    <Suspense
+      fallback={
+        <div className="size-full grid place-content-center p-4">
+          <HayaSpinner />
+        </div>
+      }
+    >
+      <CanvaPage {...props} />
+    </Suspense>
+  );
+};
+
+export { SuspendedCanvaPage as CanvaPage };

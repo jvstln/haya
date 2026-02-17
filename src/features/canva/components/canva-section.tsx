@@ -1,7 +1,12 @@
-import { DocumentUpload } from "iconsax-reactjs";
+import { DocumentUpload, MaximizeCircle } from "iconsax-reactjs";
 import Image from "next/image";
+import { useState } from "react";
+import { useControls } from "react-zoom-pan-pinch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { InputGroupTextarea } from "@/components/ui/input-group";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { CanvaSection as CanvaSectionType } from "../canva.type";
 
@@ -10,6 +15,7 @@ type SlotProps = {
 };
 
 export const CanvaSection = ({ section }: SlotProps) => {
+  console.log(section);
   return (
     <div
       className="relative flex w-(--slot-width) flex-col items-center justify-center"
@@ -37,7 +43,6 @@ export const CanvaSection = ({ section }: SlotProps) => {
       <div className="flex w-full flex-col gap-4 p-4">
         {/* Haya analysis  */}
         <CanvaSectionAnalysisResult section={section} />
-
         {/* Section Comments */}
         {section.comments.map((comment) => (
           <CanvaSectionComment key={comment.comment} comment={comment} />
@@ -80,6 +85,9 @@ const CanvaSectionComment = ({
   comment: CanvaSectionType["comments"][number];
   disabled?: boolean;
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState(comment.comment);
+
   return (
     <div className="flex w-full flex-col gap-2 text-xs">
       <div className="flex items-center gap-2">
@@ -90,18 +98,51 @@ const CanvaSectionComment = ({
         <span className="text-muted-foreground">{comment.author.name}</span>
       </div>
 
-      <ScrollArea
-        type="always"
+      <div
         className={cn(
-          "h-(--slot-height) overflow-y-auto rounded-md border border-secondary p-4 text-muted-foreground",
+          "no-panning overflow-y-auto rounded-md border border-secondary p-4 text-muted-foreground **:size-full",
           disabled ? "cursor-not-allowed bg-secondary" : "bg-muted",
         )}
       >
-        <div className="" contentEditable>
-          {comment.comment}
-        </div>
-        <ScrollBar className="bg-muted" thumbClassName="bg-secondary" />
-      </ScrollArea>
+        <ScrollArea type="always" className={cn("h-(--slot-height)")}>
+          {isEditing ? (
+            <InputGroupTextarea
+              className="w-full border border-green-500 p-0"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onBlur={() => setIsEditing(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  setIsEditing(false);
+                }
+              }}
+              autoFocus
+            />
+          ) : (
+            // biome-ignore lint/a11y/useSemanticElements: A div is used to provide a focusable, interactive container for multi-line comment text that triggers editing, which avoids the layout and nesting constraints of a semantic button.
+            <div
+              role="button"
+              tabIndex={0}
+              className=""
+              onDoubleClick={() => {
+                setIsEditing(true);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setIsEditing(true);
+                }
+              }}
+            >
+              {comment.comment}
+            </div>
+          )}
+          <ScrollBar className="bg-muted" thumbClassName="bg-secondary" />
+        </ScrollArea>
+      </div>
+      <Button color="secondary" className="">
+        <MaximizeCircle />
+        <span className="sr-only">Maximize comment</span>
+      </Button>
     </div>
   );
 };
@@ -127,6 +168,9 @@ const CanvaSectionAnalysisResult = ({
           "h-(--slot-height) overflow-y-auto rounded-md border border-secondary p-4 text-muted-foreground",
           "cursor-not-allowed bg-secondary",
         )}
+        onWheel={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
       >
         <div className="[&_h3]:mb-4 [&_h3]:font-semibold [&_h3~:not(ul,li)]:ml-3 [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_section]:mb-4 [&_ul]:list-disc [&_ul]:pl-4">
           <section>
