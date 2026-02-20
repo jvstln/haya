@@ -17,6 +17,10 @@ export type CanvaEditorState = {
   sections: CanvaSection[];
   actions: {
     addSection: () => void;
+    updateSectionScreenshot: (
+      sectionId: string | number,
+      screenshotUrl: string,
+    ) => void;
     hydrate: ({
       audit,
       pageUrl,

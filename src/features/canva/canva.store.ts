@@ -54,6 +54,12 @@ export const createCanvaStore = () => {
             },
           ],
         })),
+      updateSectionScreenshot: (sectionId, screenshotUrl) =>
+        set((state) => ({
+          sections: state.sections.map((section) =>
+            section._id === sectionId ? { ...section, screenshotUrl } : section,
+          ),
+        })),
       hydrate: ({
         audit,
         pageUrl,
