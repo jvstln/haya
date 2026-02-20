@@ -1,9 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAudit, useAudits } from "../audits/audit.hook";
+import { useAudit } from "../audits/audit.hook";
 import { createCanvaStore } from "./canva.store";
-import type { CanvaSection } from "./canva.type";
 
 export const useCanvaEditor = (auditId?: string) => {
   // Fetch the specific audit content

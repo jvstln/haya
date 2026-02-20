@@ -28,14 +28,13 @@ export const CanvaSectionImage = ({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith("image/") && onImageChange) {
+    if (file?.type.startsWith("image/") && onImageChange) {
       const url = URL.createObjectURL(file);
       onImageChange(url);
     }
   };
 
   const placeholder = (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: We use a hidden input for accessibility
     // biome-ignore lint/a11y/useSemanticElements: false positive
     <div
       role="button"

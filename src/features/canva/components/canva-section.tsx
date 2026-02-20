@@ -1,12 +1,9 @@
-import { MaximizeCircle } from "iconsax-reactjs";
 import { useState } from "react";
-import { useControls } from "react-zoom-pan-pinch";
 import { AiIcon } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { InputGroupTextarea } from "@/components/ui/input-group";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { CanvaSection as CanvaSectionType } from "../canva.type";
 import { CanvaSectionImage } from "./canva-section-image";

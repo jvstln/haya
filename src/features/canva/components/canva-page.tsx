@@ -2,16 +2,12 @@
 import { ArrowLeft, Blend, BoxAdd, Scan, Share } from "iconsax-reactjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
+import { HayaSpinner } from "@/components/ui/spinner";
 import { ShareAuditDialog } from "@/features/audits/components/share-audit-dialog";
 import { useCanvaEditor } from "../canva.hook";
 import { CanvaEditor } from "./canva-editor";
-import { Suspense } from "react";
-import { HayaSpinner } from "@/components/ui/spinner";
 
 type CanvaPageProps = {
   auditId?: string;
@@ -22,7 +18,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
   const pathname = usePathname();
 
   return (
-    <div className="relative flex size-full flex-col">
+    <div className="relative flex size-full grow flex-col">
       {/* Navigation and controls */}
       <div className="flex items-center gap-4 p-3 md:px-6">
         <Button appearance="soft" size="sm" asChild>
@@ -76,7 +72,7 @@ export const SuspendedCanvaPage = (props: CanvaPageProps) => {
   return (
     <Suspense
       fallback={
-        <div className="size-full grid place-content-center p-4">
+        <div className="grid size-full place-content-center p-4">
           <HayaSpinner />
         </div>
       }

@@ -7,7 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { cn, random, toTitleCase } from "@/lib/utils";
+import { random } from "@/lib/utils";
 import type { AuditSection } from "../../audit.type";
 
 export const ProblemsAndSolutionsCaseSection = ({

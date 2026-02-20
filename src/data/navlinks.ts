@@ -28,6 +28,11 @@ type SidebarConfig = {
   content: SidebarItem[];
 };
 
+const globalExclude = [
+  "a^", // This will never match anything
+  "^/dashboard/canva/.*$",
+];
+
 const sidebarConfig: SidebarConfig[] = [
   {
     include: ["^/dashboard/audits/.*$"],
@@ -89,12 +94,10 @@ const sidebarConfig: SidebarConfig[] = [
  */
 export const getSidebarContent = (pathname: string, params: Params) => {
   const matchedConfig = sidebarConfig.find((config) => {
-    const defaultExcludeRegex = /a^/; // This will never match anything
-
     const includeRegExp = new RegExp(config.include.join("|"));
-    const excludeRegExp = config.exclude
-      ? new RegExp(config.exclude?.join("|"))
-      : defaultExcludeRegex;
+    const excludeRegExp = new RegExp(
+      [...globalExclude, ...(config.exclude || [])].join("|"),
+    );
 
     return includeRegExp.test(pathname) && !excludeRegExp.test(pathname);
   });

@@ -23,12 +23,7 @@ export default function DashboardLayout({
 
       <div className="flex min-h-[calc(100vh-var(--header-height))] w-full flex-1">
         <AppSidebar sidebarItems={getSidebarContent(pathname, params)} />
-        <main
-          className={cn(
-            "md:[[data-sidebar-state=collapsed]_*]:max-w-[calc(100vw-var(--sidebar-width-icon))] md:[[data-sidebar-state=expanded]_*]:max-w-[calc(100vw-var(--sidebar-width))]",
-            "relative flex w-full flex-1 flex-col",
-          )}
-        >
+        <main className={cn("relative flex w-full flex-1 flex-col")}>
           {children}
         </main>
       </div>

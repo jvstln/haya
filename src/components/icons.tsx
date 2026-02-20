@@ -333,7 +333,7 @@ export const FolderIcon = (props: SVGProps) => (
   </svg>
 );
 
-export const AiIcon = (props: SVGProps) => {
+export const AiIcon = (_props: SVGProps) => {
   return (
     <svg
       width="12"

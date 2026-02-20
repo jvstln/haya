@@ -1,11 +1,6 @@
-import { Add, ArrowDown2, DocumentUpload } from "iconsax-reactjs";
-import { ScanSearch, ZoomIn, ZoomOut } from "lucide-react";
+import { Add } from "iconsax-reactjs";
 import type React from "react";
-import {
-  TransformComponent,
-  TransformWrapper,
-  useControls,
-} from "react-zoom-pan-pinch";
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { useStore } from "zustand";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
