@@ -18,7 +18,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
   const pathname = usePathname();
 
   return (
-    <div className="relative flex size-full grow flex-col">
+    <div className="relative flex size-full max-h-[calc(100vh-var(--header-height))] grow flex-col">
       {/* Navigation and controls */}
       <div className="flex items-center gap-4 p-3 md:px-6">
         <Button appearance="soft" size="sm" asChild>
@@ -44,7 +44,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
         )}
 
         <Button color="secondary" className="rounded-full">
-          <Blend className="size-5.5 rounded-sm bg-[#00C0E8] p-1" />
+          <Blend className="size-5.5 rounded-sm bg-cyan p-1" />
           Assign
         </Button>
 

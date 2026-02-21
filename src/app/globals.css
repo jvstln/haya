@@ -17,6 +17,7 @@
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --color-success: var(--success);
+  --color-cyan: var(--cyan);
 
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
@@ -83,6 +84,7 @@
   --accent-foreground: var(--primary-foreground);
   --destructive: oklch(60% 0.2 25);
   --success: oklch(60% 0.2 140);
+  --cyan: oklch(from #00c0e8 l c h);
 
   --card: oklch(from #303131 l c h);
   --card-foreground: var(--foreground);

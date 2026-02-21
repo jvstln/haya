@@ -1,5 +1,12 @@
 "use client";
-import { ArrowLeft, Share, Warning2 } from "iconsax-reactjs";
+import {
+  ArrowLeft,
+  Blend,
+  BoxAdd,
+  Clipboard,
+  Share,
+  Warning2,
+} from "iconsax-reactjs";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -20,6 +27,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HayaSpinner } from "@/components/ui/spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cn } from "@/lib/utils";
 import { useAudit } from "../../audit.hook";
@@ -84,7 +96,7 @@ export const CasePage = () => {
 
   return (
     <div className="flex flex-col gap-4 from-0% from-primary/20 via-transparent p-4 max-md:bg-linear-to-b">
-      <div className="flex flex-wrap items-center gap-2 md:gap-5">
+      <div className="flex flex-wrap items-center gap-2 md:gap-4">
         <Button size="sm" appearance="soft" asChild>
           <Link href="/dashboard/audits">
             <ArrowLeft />
@@ -102,14 +114,40 @@ export const CasePage = () => {
           </a>
         )}
 
-        {audit.data && (
-          <ShareAuditDialog audit={audit.data}>
-            <Button appearance="soft" size="sm" className="ml-auto">
-              <Share />
-              Share Findings
-            </Button>
-          </ShareAuditDialog>
-        )}
+        <div className="ml-auto flex items-center gap-2 md:gap-5">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button color="secondary" className="rounded-full">
+                <Clipboard className="size-5.5 rounded-sm bg-primary p-1" />
+                List
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Coming soon</TooltipContent>
+          </Tooltip>
+          <Button
+            color="secondary"
+            className="rounded-full"
+            disabled={!audit.data}
+            asChild
+          >
+            <Link href={`/dashboard/canva/${audit.data?._id}`}>
+              <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
+              Canva
+            </Link>
+          </Button>
+          <Button color="secondary" className="rounded-full">
+            <Blend className="size-5.5 rounded-sm bg-cyan p-1" />
+            Assign
+          </Button>
+          {audit.data && (
+            <ShareAuditDialog audit={audit.data}>
+              <Button appearance="soft" size="sm" className="ml-auto">
+                <Share />
+                Share Findings
+              </Button>
+            </ShareAuditDialog>
+          )}
+        </div>
       </div>
 
       {/* Control to switch between image view and content view only on mobile */}

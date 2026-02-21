@@ -78,7 +78,7 @@ export const CanvaSectionImage = ({
             <Button
               color="secondary"
               size="icon"
-              className="absolute top-6 right-6 size-6 opacity-0 transition-opacity group-hover:opacity-100"
+              className="absolute top-6 right-6 size-6"
               onClick={() => onImageChange("")}
             >
               <X className="size-4" />

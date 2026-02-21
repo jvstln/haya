@@ -16,7 +16,7 @@ export const CanvaDock = ({
 }: {
   canvaEditor: ReturnType<typeof useCanvaEditor>;
 }) => {
-  const { resetTransform, zoomIn, zoomOut } = useControls();
+  const { setTransform, centerView, zoomIn, zoomOut, instance } = useControls();
 
   return (
     <div className="-translate-1/2 fixed bottom-5 left-1/2 flex h-14 w-fit items-center gap-4 rounded-full border border-secondary bg-muted px-5 py-2.5">
@@ -55,7 +55,26 @@ export const CanvaDock = ({
             <ZoomOut />
             Zoom Out
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => resetTransform()}>
+          <DropdownMenuItem
+            onClick={() => {
+              const wrapper = instance.wrapperComponent;
+              const content = instance.contentComponent;
+              if (wrapper && content) {
+                const padding = 80;
+                const scaleX =
+                  wrapper.offsetWidth / (content.scrollWidth + padding);
+                const scaleY =
+                  wrapper.offsetHeight / (content.scrollHeight + padding);
+                // Max scale of 1 means we don't zoom in automatically if the content is small
+                const scale = Math.min(scaleX, scaleY, 1);
+                centerView(scale);
+              }
+            }}
+          >
+            <ScanSearch />
+            Fit to Screen
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTransform(0, 0, 1)}>
             <ScanSearch />
             Reset
           </DropdownMenuItem>
