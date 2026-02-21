@@ -44,7 +44,7 @@ const SubscribeToResourcesForm = () => {
 
 export const ResourcesPage = () => {
   const [view, setView] = useState<"all" | "pdf" | "media">("all");
-  const [filters, setFilters] = useFilters();
+  const { filters, setFilters, originalFilters } = useFilters();
 
   const resources = useResources();
 
@@ -84,7 +84,7 @@ export const ResourcesPage = () => {
 
         <InputSearch
           placeholder="Search resources"
-          value={filters.originalSearch}
+          value={originalFilters.search}
           onChange={(e) => {
             setFilters((f) => ({ ...f, search: e.target.value }));
           }}

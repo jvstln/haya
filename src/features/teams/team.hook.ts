@@ -1,81 +1,59 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { queryClient } from "@/lib/queryclient";
+import {
+  createTeam,
+  getTeam,
+  getTeams,
+  inviteUserToTeam,
+} from "./team.service";
+import type { TeamFilters } from "./team.type";
 
-export const useTeams = () => {
+export function useTeams(filters: TeamFilters = {}) {
   return useQuery({
-    queryKey: ["teams"],
-    queryFn: () => {
-      return {
-        data: [
-          {
-            _id: "1",
-            name: "Dlab Team",
-            createdAt: new Date(
-              Date.now() - 2 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-            members: [
-              {
-                _id: "u1",
-                name: "User 1",
-                fallback: "U1",
-                color: "bg-emerald-500",
-              },
-              {
-                _id: "u2",
-                name: "User 2",
-                fallback: "U2",
-                color: "bg-amber-500",
-              },
-              {
-                _id: "u3",
-                name: "User 3",
-                fallback: "U3",
-                color: "bg-green-200",
-              },
-            ],
-          },
-          {
-            _id: "2",
-            name: "Design Team",
-            createdAt: new Date(
-              Date.now() - 5 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-            members: [
-              {
-                _id: "u4",
-                name: "User 4",
-                fallback: "U4",
-                color: "bg-blue-500",
-              },
-              {
-                _id: "u5",
-                name: "User 5",
-                fallback: "U5",
-                color: "bg-indigo-500",
-              },
-            ],
-          },
-          {
-            _id: "3",
-            name: "Dev Team",
-            createdAt: new Date(
-              Date.now() - 10 * 24 * 60 * 60 * 1000,
-            ).toISOString(),
-            members: [
-              {
-                _id: "u6",
-                name: "User 6",
-                fallback: "U6",
-                color: "bg-rose-500",
-              },
-            ],
-          },
-        ],
-        pagination: {
-          currentPage: 1,
-          totalPages: 1,
-          totalItems: 3,
-        },
-      };
+    queryKey: ["teams", filters],
+    queryFn: async () => getTeams(filters),
+  });
+}
+
+export function useTeam(teamId = "") {
+  return useQuery({
+    queryKey: ["teams", teamId],
+    queryFn: async () => getTeam(teamId),
+    enabled: !!teamId,
+  });
+}
+
+export function useCreateTeam() {
+  return useMutation({
+    mutationFn: createTeam,
+    onSuccess: () => {
+      toast.success("Team created successfully");
+      invalidateTeamQueries();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to create team");
     },
   });
-};
+}
+
+export function invalidateTeamQueries() {
+  ["teams"].map((key) =>
+    queryClient.invalidateQueries({
+      queryKey: [key],
+    }),
+  );
+}
+
+export function useInviteUserToTeam() {
+  return useMutation({
+    mutationFn: inviteUserToTeam,
+    onSuccess: () => {
+      toast.success("User invited successfully");
+      invalidateTeamQueries();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to invite user");
+    },
+  });
+}

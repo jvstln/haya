@@ -3,9 +3,9 @@ import { useRef } from "react";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/queryclient";
 import * as AuditService from "./audit.service";
-import type { AuditQueryParams } from "./audit.type";
+import type { AuditFilters } from "./audit.type";
 
-export const useAudits = (params: AuditQueryParams = {}) => {
+export const useAudits = (params: AuditFilters = {}) => {
   return useQuery({
     queryKey: ["audits", params],
     queryFn: () => AuditService.getAudits(params),

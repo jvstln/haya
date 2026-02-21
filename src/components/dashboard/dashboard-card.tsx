@@ -1,5 +1,6 @@
 import { MoreVertical } from "lucide-react";
 import type { Route } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -12,7 +13,7 @@ import {
 
 type DashboardCardProps = {
   href?: Route;
-  image?: string;
+  image?: string | React.ReactNode;
   classNames?: Partial<Record<"root" | "content", string>>;
   content?: React.ReactNode;
   actions?: Array<
@@ -26,7 +27,7 @@ type DashboardCardProps = {
 export const DashboardCard = ({
   href,
   classNames,
-  image,
+  image = "/images/default-audit-card-bg.webp",
   content,
   actions,
 }: DashboardCardProps) => {
@@ -39,14 +40,22 @@ export const DashboardCard = ({
         "group relative flex h-47.25 w-55.5 flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-md",
         classNames?.root,
       )}
-      style={{
-        // Analysis Image
-        background: `
-          linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 /0.5)),
-          url(${image || "/images/default-audit-card-bg.webp"}) center center/cover no-repeat
-          `,
-      }}
+      style={
+        {
+          // Analysis Image
+          // background: `
+          //   linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 /0.5)),
+          //   url(${image || "/images/default-audit-card-bg.webp"}) center center/cover no-repeat
+          //   `,
+        }
+      }
     >
+      {typeof image === "string" ? (
+        <Image src={image} alt="" className="-z-10" fill />
+      ) : (
+        image
+      )}
+
       {/* Text Content */}
       <span
         className={cn(

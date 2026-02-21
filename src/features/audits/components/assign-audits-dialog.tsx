@@ -30,7 +30,7 @@ export const AssignAuditsDialog = ({
   onAssign,
   assignedAuditIds = [],
 }: AssignAuditsDialogProps) => {
-  const [filters, setFilters] = useFilters({ limit: 10 }); // Limit to 10 for now, maybe add logic for more
+  const { filters, setFilters, originalFilters } = useFilters({ limit: 10 }); // Limit to 10 for now, maybe add logic for more
   const [selectedAudits, setSelectedAudits] = useState<Set<string>>(
     new Set(assignedAuditIds),
   );
@@ -61,7 +61,7 @@ export const AssignAuditsDialog = ({
           </DialogTitle>
           <InputSearch
             placeholder="search"
-            value={filters.originalSearch}
+            value={originalFilters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           />
         </DialogHeader>
