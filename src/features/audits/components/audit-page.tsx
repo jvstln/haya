@@ -18,7 +18,7 @@ import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
 import { useFilters } from "@/hooks/use-filters";
 import { useDeleteAudit } from "../audit.hook";
-import type { AuditQueryParams, AuditWithoutContent } from "../audit.type";
+import type { AuditFilters, AuditWithoutContent } from "../audit.type";
 import { AuditCard } from "./audit-card";
 import { NewAuditForm } from "./audit-form";
 
@@ -30,7 +30,7 @@ type Action = {
 export const AuditPage = () => {
   const [view, setView] = useState<"all" | "assigned" | "completed">("all");
   const [action, setAction] = useState<Action | null>(null);
-  const [filters, setFilters] = useFilters<AuditQueryParams>();
+  const { filters, setFilters, originalFilters } = useFilters<AuditFilters>();
 
   const audits = useAudits(filters);
   const { isAuthenticated } = useAuth();
@@ -95,7 +95,7 @@ export const AuditPage = () => {
 
         <InputSearch
           placeholder="Search audits"
-          value={filters.originalSearch}
+          value={originalFilters.search}
           onChange={(e) => {
             setFilters((f) => ({ ...f, search: e.target.value }));
           }}

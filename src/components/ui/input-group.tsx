@@ -103,6 +103,10 @@ function InputGroupInput({
         className,
       )}
       {...props}
+      style={{
+        background: "none",
+        ...props.style,
+      }}
     />
   );
 }

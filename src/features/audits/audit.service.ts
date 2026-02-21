@@ -2,8 +2,8 @@ import { api } from "@/lib/api";
 import { shuffleArray } from "@/lib/utils";
 import type { Pagination } from "@/types/type";
 import type {
+  AuditFilters,
   AuditPage,
-  AuditQueryParams,
   AuditSection,
   AuditWithoutContent,
   NewAudit,
@@ -13,7 +13,7 @@ import type {
 
 /** Hacky - change v1 to v2 in all analysis endpoint because of backend version change */
 
-async function getAudits(params?: AuditQueryParams) {
+async function getAudits(params?: AuditFilters) {
   const response = await api.get<{
     data: AuditWithoutContent[];
     pagination: Pagination;

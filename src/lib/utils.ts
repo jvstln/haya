@@ -6,11 +6,19 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getInitials(name: string) {
-  return name
+  let initials = name
     .split(" ")
     .map((n) => n[0])
     .join("")
-    .toUpperCase();
+    .toUpperCase()
+    .slice(0, 2);
+
+  // If initials doesnt contains only one character
+  if (initials.length === 1 && name.length > 1) {
+    initials += name[1].toUpperCase();
+  }
+
+  return initials;
 }
 
 export function truncate(string: string, startLength: number, endLength = 0) {

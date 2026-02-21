@@ -8,7 +8,7 @@ export type NewAuditInput = z.input<typeof newAuditSchema>;
 
 export type AuditStatus = "pending" | "completed" | "failed" | "in_progress";
 
-export type AuditQueryParams = QueryParams & {
+export type AuditFilters = QueryParams & {
   status?: AuditStatus;
 };
 

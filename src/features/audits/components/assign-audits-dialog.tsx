@@ -1,9 +1,8 @@
 import { formatDistanceToNow } from "date-fns";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Button, IconToggleButton } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +14,6 @@ import { InputSearch } from "@/components/ui/input-search";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useFilters } from "@/hooks/use-filters";
-import { cn } from "@/lib/utils";
 
 type AssignAuditsDialogProps = {
   open: boolean;
@@ -30,7 +28,7 @@ export const AssignAuditsDialog = ({
   onAssign,
   assignedAuditIds = [],
 }: AssignAuditsDialogProps) => {
-  const [filters, setFilters] = useFilters({ limit: 10 }); // Limit to 10 for now, maybe add logic for more
+  const { filters, setFilters, originalFilters } = useFilters({ limit: 10 }); // Limit to 10 for now, maybe add logic for more
   const [selectedAudits, setSelectedAudits] = useState<Set<string>>(
     new Set(assignedAuditIds),
   );
@@ -61,7 +59,7 @@ export const AssignAuditsDialog = ({
           </DialogTitle>
           <InputSearch
             placeholder="search"
-            value={filters.originalSearch}
+            value={originalFilters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           />
         </DialogHeader>
@@ -77,7 +75,7 @@ export const AssignAuditsDialog = ({
                     className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
                   >
                     <div className="flex items-center gap-3">
-                      <Avatar className="size-8">
+                      <Avatar>
                         <AvatarImage src="" />
                         <AvatarFallback>Ox</AvatarFallback>
                       </Avatar>
@@ -91,19 +89,10 @@ export const AssignAuditsDialog = ({
                         </span>
                       </div>
                     </div>
-                    <Button
-                      size="icon"
-                      appearance={isSelected ? "solid" : "outline"}
-                      color={isSelected ? "primary" : "secondary"}
+                    <IconToggleButton
+                      isSelected={isSelected}
                       onClick={() => toggleSelect(audit._id)}
-                    >
-                      <Plus
-                        className={cn(
-                          "transition-transform",
-                          isSelected && "rotate-45",
-                        )}
-                      />
-                    </Button>
+                    />
                   </div>
                 );
               })}
