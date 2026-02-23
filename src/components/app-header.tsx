@@ -20,6 +20,7 @@ import {
 import { useSidebar } from "@/components/ui/sidebar";
 import { useAuth, useLogout } from "@/features/auth/auth.hook";
 import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
+import { NotificationButton } from "@/features/notifications/components/notification-button";
 import logo from "@/public/logo.svg";
 import { Button } from "./ui/button";
 
@@ -38,14 +39,7 @@ export const AppHeader = () => {
           <Image src={logo} alt="Logo" className="h-9" />
         </Link>
       )}
-      <Button
-        className="ml-auto"
-        appearance="outline"
-        color="secondary"
-        size="icon"
-      >
-        <Notification />
-      </Button>
+      <NotificationButton className="ml-auto" />
       {isAuthenticated ? (
         <UserMenu />
       ) : (

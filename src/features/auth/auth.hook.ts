@@ -45,10 +45,16 @@ function useResendVerification() {
       });
     },
     onSuccess(data) {
-      toast.success(data.message, { id: "resendVerification" });
+      const toastFunction = data.message.match(/(?=.*already)(?=.*verified)/gi)
+        ? toast.info
+        : toast.success;
+      toastFunction(data.message, { id: "resendVerification" });
     },
     onError(error) {
-      toast.error(`Error: ${error.message}`, { id: "resendVerification" });
+      toast.error(
+        `Error: ${error.message || "Failed to resend verification email"}`,
+        { id: "resendVerification" },
+      );
     },
   });
 }
