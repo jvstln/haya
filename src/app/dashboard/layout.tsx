@@ -1,9 +1,10 @@
 "use client";
-import { useParams, usePathname } from "next/navigation";
+import { redirect, useParams, usePathname } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getSidebarContent } from "@/data/navlinks";
+import { useAuth } from "@/features/auth/auth.hook";
 import { cn } from "@/lib/utils";
 
 const HEADER_HEIGHT = "70px";
@@ -13,6 +14,11 @@ export default function DashboardLayout({
 }: LayoutProps<"/dashboard">) {
   const pathname = usePathname();
   const params = useParams();
+  const auth = useAuth();
+
+  if (!auth.isAuthenticated) {
+    redirect("/");
+  }
 
   return (
     <SidebarProvider
