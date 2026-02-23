@@ -1,11 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { invalidateNotificationQueries } from "@/features/notifications/notification.hook";
 import { queryClient } from "@/lib/queryclient";
 import {
   createTeam,
   getTeam,
   getTeams,
   inviteUserToTeam,
+  respondToTeamInvite,
 } from "./team.service";
 import type { TeamFilters } from "./team.type";
 
@@ -54,6 +56,21 @@ export function useInviteUserToTeam() {
     },
     onError: (error) => {
       toast.error(error.message || "Failed to invite user");
+    },
+  });
+}
+
+export function useRespondToTeamInvite() {
+  return useMutation({
+    mutationFn: respondToTeamInvite,
+    onSuccess: (_data, variables) => {
+      const action = variables.action === "accept" ? "accepted" : "declined";
+      toast.success(_data.message || `Team invite ${action}`);
+      invalidateTeamQueries();
+      invalidateNotificationQueries();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to respond to invite");
     },
   });
 }

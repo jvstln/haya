@@ -1,5 +1,5 @@
 "use client";
-import { formatDistanceToNow } from "date-fns";
+import { useState } from "react";
 import {
   DashboardHeader,
   GradientBackground,
@@ -9,73 +9,19 @@ import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
 import { InputSearch } from "@/components/ui/input-search";
 import { useFilters } from "@/hooks/use-filters";
-import { cn } from "@/lib/utils";
 import {
   useMarkAllNotificationsAsRead,
   useMarkNotificationAsRead,
   useNotifications,
 } from "../notification.hook";
 import type { Notification } from "../notification.type";
-
-const NotificationItem = ({
-  notification,
-  onMarkAsRead,
-}: {
-  notification: Notification;
-  onMarkAsRead: (id: string) => void;
-}) => {
-  return (
-    // biome-ignore lint/a11y/useSemanticElements: Using button might cause hydration error
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={() => {
-        if (!notification.read) {
-          onMarkAsRead(notification._id);
-        }
-      }}
-      onKeyDown={(e) => {
-        if ((e.key === "Enter" || e.key === " ") && !notification.read) {
-          onMarkAsRead(notification._id);
-        }
-      }}
-      className={cn(
-        "flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors",
-        notification.read
-          ? "border-border bg-card"
-          : "border-primary/30 bg-primary/5",
-      )}
-    >
-      <div
-        className={cn(
-          "mt-1.5 size-2.5 shrink-0 rounded-full",
-          notification.read ? "bg-muted" : "bg-primary",
-        )}
-      />
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <span
-          className={cn(
-            "text-body-4",
-            notification.read
-              ? "text-muted-foreground"
-              : "font-semibold text-white",
-          )}
-        >
-          {notification.title}
-        </span>
-        <p className="text-muted-foreground text-xs">{notification.message}</p>
-        <span className="text-muted-foreground text-xxs">
-          {formatDistanceToNow(new Date(notification.createdAt), {
-            addSuffix: true,
-          })}
-        </span>
-      </div>
-    </div>
-  );
-};
+import { NotificationItem } from "./notification-item";
+import { RespondToTeamInviteDialog } from "./respond-to-team-invite-dialog";
 
 export const NotificationsPage = () => {
   const { filters, setFilters, originalFilters } = useFilters();
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification | null>(null);
 
   const notifications = useNotifications(filters);
   const markAllAsRead = useMarkAllNotificationsAsRead();
@@ -123,11 +69,24 @@ export const NotificationsPage = () => {
             <NotificationItem
               key={notification._id}
               notification={notification}
-              onMarkAsRead={(id) => markAsRead.mutate(id)}
+              onSelect={(notification) => {
+                setSelectedNotification(notification);
+                if (!notification.read) {
+                  markAsRead.mutate(notification._id);
+                }
+              }}
             />
           ))}
         </div>
       </QueryState>
+
+      <RespondToTeamInviteDialog
+        notification={selectedNotification}
+        open={selectedNotification?.type === "team_invite"}
+        onOpenChange={(open) => {
+          if (!open) setSelectedNotification(null);
+        }}
+      />
     </div>
   );
 };
