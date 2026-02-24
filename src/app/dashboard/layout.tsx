@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { getSidebarContent } from "@/data/navlinks";
 import { useAuth } from "@/features/auth/auth.hook";
 import { cn } from "@/lib/utils";
+import { HayaSpinner } from "@/components/ui/spinner";
 
 const HEADER_HEIGHT = "70px";
 
@@ -15,6 +16,14 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const params = useParams();
   const auth = useAuth();
+
+  if (auth.isPending) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center">
+        <HayaSpinner />
+      </div>
+    );
+  }
 
   if (!auth.isAuthenticated) {
     redirect("/");

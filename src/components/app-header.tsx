@@ -8,10 +8,11 @@ import { NotificationButton } from "@/features/notifications/components/notifica
 import { UserMenu } from "@/features/users/components/user-menu";
 import logo from "@/public/logo.svg";
 import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 export const AppHeader = () => {
   const { isMobile, toggleSidebar } = useSidebar();
-  const { isAuthenticated } = useAuth();
+  const auth = useAuth();
 
   return (
     <header className="sticky top-0 z-40 flex h-(--header-height) w-full shrink-0 items-center gap-4 border-b bg-background px-5 md:px-10">
@@ -25,7 +26,9 @@ export const AppHeader = () => {
         </Link>
       )}
       <NotificationButton className="ml-auto" />
-      {isAuthenticated ? (
+      {auth.isPending ? (
+        <Skeleton className="h-9 w-24" />
+      ) : auth.isAuthenticated ? (
         <UserMenu />
       ) : (
         <Button

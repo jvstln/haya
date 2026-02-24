@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={cn(
           lato.variable,
-          "bg-background font-lato text-foreground antialiased",
+          "bg-background min-h-screen size-full font-lato text-foreground antialiased",
         )}
       >
         <Providers>{children}</Providers>

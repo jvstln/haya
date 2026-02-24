@@ -9,6 +9,7 @@ function useAuth() {
   return {
     ...authStore,
     isAuthenticated: !!authStore.accessToken,
+    isPending: !authStore.hasHydrated,
   };
 }
 

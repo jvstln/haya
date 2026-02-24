@@ -23,12 +23,19 @@ export const cookieStorage: StateStorage = {
   },
 };
 
-export const useAuthStore = create<AuthState & AuthActions>()(
+export const useAuthStore = create<
+  AuthState &
+    AuthActions & {
+      hasHydrated: boolean;
+      setHasHydrated: (hasHydrated: boolean) => void;
+    }
+>()(
   persist(
     (set) => ({
       accessToken: null,
       refreshToken: null,
       user: null,
+      hasHydrated: false,
 
       setAuth: (authState: AuthState) => {
         set(authState);
@@ -40,10 +47,18 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           window.solana.disconnect();
         }
       },
+      setHasHydrated: (state: boolean) => {
+        set({ hasHydrated: state });
+      },
     }),
     {
       name: "haya.auth",
       storage: createJSONStorage(() => cookieStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
+      // Prevent hydrated state from being stored in storage
+      partialize: ({ hasHydrated, ...state }) => state,
     },
   ),
 );
