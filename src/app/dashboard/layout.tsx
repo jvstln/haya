@@ -3,10 +3,10 @@ import { redirect, useParams, usePathname } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { HayaSpinner } from "@/components/ui/spinner";
 import { getSidebarContent } from "@/data/navlinks";
 import { useAuth } from "@/features/auth/auth.hook";
 import { cn } from "@/lib/utils";
-import { HayaSpinner } from "@/components/ui/spinner";
 
 const HEADER_HEIGHT = "70px";
 
