@@ -155,7 +155,7 @@ export const TeamsPage = () => {
         <TeamsSheet
           open={true}
           onOpenChange={() => setAction(null)}
-          team={action.team}
+          teamId={action.team._id}
         />
       )}
     </div>

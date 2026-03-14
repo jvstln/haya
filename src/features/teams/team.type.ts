@@ -20,3 +20,9 @@ export type NewTeamInput = z.input<typeof newTeamSchema>;
 
 export type MessageTeamMembers = z.infer<typeof messageTeamMembersSchema>;
 export type MessageTeamMembersInput = z.input<typeof messageTeamMembersSchema>;
+
+export type AssignAuditToTeam = {
+  teamId: string;
+  auditIds: string[];
+  dueDate?: Date;
+};

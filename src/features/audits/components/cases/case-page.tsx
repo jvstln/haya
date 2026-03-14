@@ -179,17 +179,17 @@ export const CasePage = () => {
 
       <div
         className={cn(
-          "flex grid-cols-2 flex-col rounded-xl border-transparent bg-secondary max-md:border md:grid",
+          "flex grid-cols-2 flex-col rounded-xl border-transparent max-md:border md:grid",
         )}
-        style={{
-          background:
-            "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top right, var(--color-primary), var(--color-primary-compliment)) border-box",
-        }}
+        // style={{
+        //   background:
+        //     "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top right, var(--color-primary), var(--color-primary-compliment)) border-box",
+        // }}
       >
         {/* top left image control */}
         <div
           className={cn(
-            "flex items-center gap-1 border-transparent p-4 max-md:rounded-t-xl md:rounded-s-xl md:border-r md:border-b",
+            "flex items-center gap-1 border-transparent p-4 max-md:rounded-t-xl md:rounded-tl-xl md:border-r md:border-b",
             isMobile && currentView !== "image" && "hidden",
           )}
           style={{
@@ -228,7 +228,7 @@ export const CasePage = () => {
         {/* top right content control */}
         <div
           className={cn(
-            "flex items-center gap-1 border-transparent p-4 max-md:rounded-t-xl md:rounded-e-xl md:border-b md:border-l",
+            "flex items-center gap-1 border-transparent p-4 max-md:rounded-t-xl md:rounded-tr-xl md:border-b md:border-l",
             isMobile && currentView !== "content" && "hidden",
           )}
           style={{

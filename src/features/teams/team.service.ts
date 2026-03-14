@@ -1,24 +1,29 @@
 import { api } from "@/lib/api";
-import type { NewTeam, Team, TeamFilters } from "./team.type";
+import type {
+  AssignAuditToTeam,
+  NewTeam,
+  Team,
+  TeamFilters,
+} from "./team.type";
 
-async function getTeams(params: TeamFilters) {
+export async function getTeams(params: TeamFilters) {
   const response = await api.get<{ data: { teams: Team[] } }>("/teams", {
     params,
   });
   return response.data.data;
 }
 
-async function getTeam(teamId: string) {
-  const response = await api.get(`/teams/${teamId}`);
-  return response.data;
+export async function getTeam(teamId: string) {
+  const response = await api.get<{ data: { team: Team } }>(`/teams/${teamId}`);
+  return response.data.data.team;
 }
 
-async function createTeam(data: NewTeam) {
+export async function createTeam(data: NewTeam) {
   const response = await api.post("/teams", data);
   return response.data;
 }
 
-async function inviteUserToTeam({
+export async function inviteUserToTeam({
   teamId,
   username,
 }: {
@@ -29,7 +34,7 @@ async function inviteUserToTeam({
   return response.data;
 }
 
-async function respondToTeamInvite({
+export async function respondToTeamInvite({
   teamId,
   action,
 }: {
@@ -42,12 +47,12 @@ async function respondToTeamInvite({
   return response.data;
 }
 
-async function leaveTeam(teamId: string) {
+export async function leaveTeam(teamId: string) {
   const response = await api.post(`/teams/${teamId}/leave`);
   return response.data;
 }
 
-async function deleteMemberFromTeam({
+export async function deleteMemberFromTeam({
   teamId,
   userId,
 }: {
@@ -58,12 +63,13 @@ async function deleteMemberFromTeam({
   return response.data;
 }
 
-export {
-  getTeams,
-  getTeam,
-  createTeam,
-  inviteUserToTeam,
-  respondToTeamInvite,
-  leaveTeam,
-  deleteMemberFromTeam,
-};
+export async function assignAuditsToTeam(payload: AssignAuditToTeam) {
+  const response = await api.post("/tasks", {
+    ...payload,
+    // Rewrite properties to the ones the backend understands.
+    // TODO: Remove when backend updates them
+    analysisIds: payload.auditIds,
+    assignedToTeamId: payload.teamId,
+  });
+  return response;
+}

@@ -67,12 +67,16 @@ export const ErrorState = ({
 type LoadingStateProps = {
   /** Optional custom class names for styling */
   classNames?: Partial<Record<"loadingRoot" | "root", string>>;
+  loadingText?: string;
 };
 
 /**
  * Displays a loading spinner centered in a container.
  */
-export const LoadingState = ({ classNames }: LoadingStateProps) => {
+export const LoadingState = ({
+  classNames,
+  loadingText,
+}: LoadingStateProps) => {
   return (
     <div
       className={cn(
@@ -82,6 +86,7 @@ export const LoadingState = ({ classNames }: LoadingStateProps) => {
       )}
     >
       <HayaSpinner />
+      {loadingText && <p className="text-sm">{loadingText}</p>}
     </div>
   );
 };

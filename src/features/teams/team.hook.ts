@@ -2,33 +2,27 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { invalidateNotificationQueries } from "@/features/notifications/notification.hook";
 import { queryClient } from "@/lib/queryclient";
-import {
-  createTeam,
-  getTeam,
-  getTeams,
-  inviteUserToTeam,
-  respondToTeamInvite,
-} from "./team.service";
+import * as TeamService from "./team.service";
 import type { TeamFilters } from "./team.type";
 
 export function useTeams(filters: TeamFilters = {}) {
   return useQuery({
     queryKey: ["teams", filters],
-    queryFn: async () => getTeams(filters),
+    queryFn: async () => TeamService.getTeams(filters),
   });
 }
 
 export function useTeam(teamId = "") {
   return useQuery({
     queryKey: ["teams", teamId],
-    queryFn: async () => getTeam(teamId),
+    queryFn: async () => TeamService.getTeam(teamId),
     enabled: !!teamId,
   });
 }
 
 export function useCreateTeam() {
   return useMutation({
-    mutationFn: createTeam,
+    mutationFn: TeamService.createTeam,
     onSuccess: () => {
       toast.success("Team created successfully");
       invalidateTeamQueries();
@@ -49,7 +43,7 @@ export function invalidateTeamQueries() {
 
 export function useInviteUserToTeam() {
   return useMutation({
-    mutationFn: inviteUserToTeam,
+    mutationFn: TeamService.inviteUserToTeam,
     onSuccess: () => {
       toast.success("User invited successfully");
       invalidateTeamQueries();
@@ -62,7 +56,7 @@ export function useInviteUserToTeam() {
 
 export function useRespondToTeamInvite() {
   return useMutation({
-    mutationFn: respondToTeamInvite,
+    mutationFn: TeamService.respondToTeamInvite,
     onSuccess: (_data, variables) => {
       const action = variables.action === "accept" ? "accepted" : "declined";
       toast.success(_data.message || `Team invite ${action}`);
@@ -71,6 +65,19 @@ export function useRespondToTeamInvite() {
     },
     onError: (error) => {
       toast.error(error.message || "Failed to respond to invite");
+    },
+  });
+}
+
+export function useAssignAuditsToTeam() {
+  return useMutation({
+    mutationFn: TeamService.assignAuditsToTeam,
+    onSuccess: () => {
+      toast.success("Audits assigned successfully");
+      invalidateTeamQueries();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to assign audits");
     },
   });
 }

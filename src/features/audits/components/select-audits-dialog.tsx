@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import { useState } from "react";
+import React, { useState } from "react";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, IconToggleButton } from "@/components/ui/button";
@@ -9,49 +9,75 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { InputSearch } from "@/components/ui/input-search";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useFilters } from "@/hooks/use-filters";
 
-type AssignAuditsDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAssign: (auditIds: string[]) => void;
-  assignedAuditIds?: string[];
+type SelectableAudit = NonNullable<
+  ReturnType<typeof useAudits>["data"]
+>["data"][number];
+
+type SelectAuditsDialogProps = React.ComponentProps<typeof Dialog> & {
+  onSelect: (audits: SelectableAudit[]) => void | Promise<void>;
+  defaultSelectedAudits?: SelectableAudit[];
+  buttonText?: string;
+  loadingText?: string;
 };
 
-export const AssignAuditsDialog = ({
-  open,
-  onOpenChange,
-  onAssign,
-  assignedAuditIds = [],
-}: AssignAuditsDialogProps) => {
-  const { filters, setFilters, originalFilters } = useFilters({ limit: 10 }); // Limit to 10 for now, maybe add logic for more
-  const [selectedAudits, setSelectedAudits] = useState<Set<string>>(
-    new Set(assignedAuditIds),
+export const SelectAuditsDialog = ({
+  onSelect,
+  defaultSelectedAudits,
+  buttonText = "Select",
+  loadingText,
+  ...props
+}: SelectAuditsDialogProps) => {
+  // Controlled and uncontrolled open states
+  const [_open, _setOpen] = useState(props.defaultOpen);
+  const open = props.open ?? _open;
+  const setOpen = (open: boolean) => {
+    props.onOpenChange?.(open);
+    _setOpen(open);
+    if (!open) {
+      setSelectedAudits(defaultSelectedAudits ?? []);
+    }
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+  const { filters, setFilters, originalFilters } = useFilters({ limit: 10 });
+  const [selectedAudits, setSelectedAudits] = useState<SelectableAudit[]>(
+    defaultSelectedAudits ?? [],
   );
 
   const audits = useAudits(filters);
 
-  const toggleSelect = (id: string) => {
-    const newSelected = new Set(selectedAudits);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
-    setSelectedAudits(newSelected);
+  const toggleSelect = (audit: SelectableAudit) => {
+    setSelectedAudits((sa) => {
+      const exisitingAudit = sa.find((a) => a._id === audit._id);
+
+      if (exisitingAudit) {
+        return sa.filter((a) => a._id !== audit._id);
+      } else {
+        return [...sa, audit];
+      }
+    });
   };
 
-  const handleAssign = () => {
-    onAssign(Array.from(selectedAudits));
-    onOpenChange(false);
+  const handleSelect = async () => {
+    try {
+      setIsLoading(true);
+      await onSelect(selectedAudits);
+      setOpen(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog {...props} open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent closeButton={false}>
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle className="font-semibold text-xl">
@@ -65,10 +91,17 @@ export const AssignAuditsDialog = ({
         </DialogHeader>
 
         <ScrollArea className="h-100 px-6 py-4">
-          <QueryState query={audits} errorPrefix="Error fetching audits">
+          <QueryState
+            query={{ ...audits, isPending: audits.isPending || isLoading }}
+            errorPrefix="Error fetching audits"
+            loadingText={loadingText}
+          >
             <div className="flex flex-col gap-4">
               {audits.data?.data.map((audit) => {
-                const isSelected = selectedAudits.has(audit._id);
+                const isSelected = selectedAudits.some(
+                  (a) => a._id === audit._id,
+                );
+
                 return (
                   <div
                     key={audit._id}
@@ -91,7 +124,7 @@ export const AssignAuditsDialog = ({
                     </div>
                     <IconToggleButton
                       isSelected={isSelected}
-                      onClick={() => toggleSelect(audit._id)}
+                      onClick={() => toggleSelect(audit)}
                     />
                   </div>
                 );
@@ -104,12 +137,13 @@ export const AssignAuditsDialog = ({
           <Button
             color="secondary"
             size="lg"
-            onClick={() => onOpenChange(false)}
+            onClick={() => setOpen(false)}
+            disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button size="lg" onClick={handleAssign}>
-            Assign
+          <Button size="lg" onClick={handleSelect} isLoading={isLoading}>
+            {buttonText}
           </Button>
         </DialogFooter>
       </DialogContent>

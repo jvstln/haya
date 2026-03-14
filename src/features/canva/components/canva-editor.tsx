@@ -80,9 +80,7 @@ export const CanvaEditor = ({
               contentProps={{ id: "canva-content" }}
               wrapperStyle={
                 {
-                  background: `
-              linear-gradient(to right, oklch(from var(--color-secondary) l c h / 0.5) 1px, transparent 1px) center / 10px 100%,
-              linear-gradient(to bottom, oklch(from var(--color-secondary) l c h / 0.5) 1px, transparent 1px) center / 100% 10px`,
+                  background: `radial-gradient(circle, oklch(from var(--color-foreground) l c h / 0.1) 1px, transparent 1px) center / 20px 20px`,
                   "--slot-height": "200px",
                   "--slot-width": "268px",
                 } as React.CSSProperties
@@ -96,9 +94,9 @@ export const CanvaEditor = ({
                 height={2}
               >
                 <line
-                  x1="0%"
+                  x1="-50000"
                   y1="100%"
-                  x2="100%"
+                  x2="50000"
                   y2="100%"
                   strokeWidth="2"
                   strokeDasharray="10,10"
