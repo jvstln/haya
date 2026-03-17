@@ -4,9 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { HayaSpinner } from "@/components/ui/spinner";
+import { useAudit } from "@/features/audits/audit.hook";
 import { ShareAuditDialog } from "@/features/audits/components/share-audit-dialog";
-import { useCanvaEditor } from "../canva.hook";
+import { useCanvaStore } from "../canva.store";
 import { CanvaEditor } from "./canva-editor";
 
 type CanvaPageProps = {
@@ -14,8 +22,16 @@ type CanvaPageProps = {
 };
 
 const CanvaPage = ({ auditId }: CanvaPageProps) => {
-  const canvaEditor = useCanvaEditor(auditId);
+  const audit = useAudit(auditId ?? "");
   const pathname = usePathname();
+
+  const storeAuditId = useCanvaStore((state) => state.auditId);
+  const pageIndex = useCanvaStore((state) => state.pageIndex);
+
+  // Meant to run only once. Used to track other persistent settings
+  if (auditId !== storeAuditId) {
+    useCanvaStore.setState({ auditId });
+  }
 
   return (
     <div className="relative flex size-full max-h-[calc(100vh-var(--header-height))] grow flex-col">
@@ -27,6 +43,24 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
             Back to Dashboard
           </Link>
         </Button>
+
+        <Select
+          value={String(pageIndex)}
+          onValueChange={(value) => {
+            useCanvaStore.setState({ pageIndex: Number(value) });
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a page" />
+          </SelectTrigger>
+          <SelectContent>
+            {audit.data?.content?.pages.map((page, index) => (
+              <SelectItem key={page.pageUrl} value={String(index)}>
+                {page.pageUrl}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         <Button color="secondary" className="ml-auto rounded-full">
           <Scan className="size-5.5 rounded-sm bg-primary p-1" />
@@ -48,8 +82,8 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
           Assign
         </Button>
 
-        {canvaEditor.auditQuery.data ? (
-          <ShareAuditDialog audit={canvaEditor.auditQuery.data}>
+        {audit.data ? (
+          <ShareAuditDialog audit={audit.data}>
             <Button appearance="soft" size="sm">
               <Share />
               Share Findings
@@ -63,7 +97,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
         )}
       </div>
 
-      <CanvaEditor canvaEditor={canvaEditor} />
+      <CanvaEditor audit={audit} />
     </div>
   );
 };

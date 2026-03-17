@@ -1,23 +1,23 @@
 import { Add } from "iconsax-reactjs";
 import type React from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
-import { useStore } from "zustand";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
+import type { useAudit } from "@/features/audits/audit.hook";
 import { cn } from "@/lib/utils";
-import type { useCanvaEditor } from "../canva.hook";
+import { useCanvaStore } from "../canva.store";
 import { CanvaDock } from "./canva-dock";
 import { CanvaSection } from "./canva-section";
 
 export const CanvaEditor = ({
-  canvaEditor,
+  audit,
 }: {
-  canvaEditor: ReturnType<typeof useCanvaEditor>;
+  audit: ReturnType<typeof useAudit>;
 }) => {
-  const sections = useStore(canvaEditor.editor, (state) => state.sections);
-  const actions = useStore(canvaEditor.editor, (state) => state.actions);
+  const pageIndex = useCanvaStore((state) => state.pageIndex);
+  const currentPage = audit.data?.content?.pages[pageIndex];
 
-  if (sections.length === 0) {
+  if (currentPage?.sections.length === 0) {
     return (
       <div className="flex size-full items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4 rounded-md border border-secondary border-dashed p-10 text-muted-foreground [:has(button:hover)]:border-white">
@@ -27,7 +27,7 @@ export const CanvaEditor = ({
             color="secondary"
             appearance="outline"
             onClick={() => {
-              actions.addSection();
+              // actions.addSection();
             }}
           >
             <Add className="size-8" />
@@ -38,85 +38,86 @@ export const CanvaEditor = ({
     );
   }
 
-  return canvaEditor.isPending ? (
-    <QueryState query={canvaEditor} />
-  ) : (
-    <TransformWrapper
-      initialScale={1}
-      minScale={0.2}
-      maxScale={8}
-      limitToBounds={false}
-      wheel={{
-        excluded: ["no-scrolling"],
-        activationKeys: ["Control", "Meta"],
-      }}
-      panning={{
-        excluded: ["no-panning"],
-      }}
-      doubleClick={{
-        disabled: true,
-      }}
-      onTransformed={(e) => {
-        console.log(e);
-      }}
-    >
-      {({ setTransform, instance }) => {
-        return (
-          <div
-            className="size-full overflow-hidden"
-            onWheel={(e) => {
-              // If activation key is pressed, let the library handle zoom
-              if (e.ctrlKey || e.metaKey) return;
-              // Otherwise, handle panning manually on scroll
-              const { scale, positionX, positionY } = instance.transformState;
-              const newX = positionX - e.deltaX;
-              const newY = positionY - e.deltaY;
-              setTransform(newX, newY, scale, 0);
-            }}
-          >
-            <TransformComponent
-              wrapperClass={cn("size-full! flex-1 overflow-hidden")}
-              contentClass={cn("flex h-full! w-auto! flex-nowrap! items-start")}
-              contentProps={{ id: "canva-content" }}
-              wrapperStyle={
-                {
-                  background: `radial-gradient(circle, oklch(from var(--color-foreground) l c h / 0.1) 1px, transparent 1px) center / 20px 20px`,
-                  "--slot-height": "200px",
-                  "--slot-width": "268px",
-                } as React.CSSProperties
-              }
+  return (
+    <QueryState query={audit}>
+      <TransformWrapper
+        initialScale={1}
+        minScale={0.2}
+        maxScale={8}
+        limitToBounds={false}
+        wheel={{
+          excluded: ["no-scrolling"],
+          activationKeys: ["Control", "Meta"],
+        }}
+        panning={{
+          excluded: ["no-panning"],
+        }}
+        doubleClick={{
+          disabled: true,
+        }}
+        // onTransformed={(e) => {
+        // console.log(e);
+        // }}
+      >
+        {({ setTransform, instance }) => {
+          return (
+            <div
+              className="size-full overflow-hidden"
+              onWheel={(e) => {
+                // If activation key is pressed, let the library handle zoom
+                if (e.ctrlKey || e.metaKey) return;
+                // Otherwise, handle panning manually on scroll
+                const { scale, positionX, positionY } = instance.transformState;
+                const newX = positionX - e.deltaX;
+                const newY = positionY - e.deltaY;
+                setTransform(newX, newY, scale, 0);
+              }}
             >
-              {/* Customizable horizontal dashed border that comes after the first image using SVG */}
-              <svg
-                className="pointer-events-none absolute top-[calc(var(--slot-height))] w-full overflow-visible"
-                fill="none"
-                aria-hidden="true"
-                height={2}
+              <TransformComponent
+                wrapperClass={cn("size-full! flex-1 overflow-hidden")}
+                contentClass={cn(
+                  "flex h-full! w-auto! flex-nowrap! items-start",
+                )}
+                contentProps={{ id: "canva-content" }}
+                wrapperStyle={
+                  {
+                    background:
+                      "radial-gradient(circle, oklch(from var(--color-foreground) l c h / 0.1) 1px, transparent 1px) center / 20px 20px",
+                    "--slot-height": "200px",
+                    "--slot-width": "268px",
+                  } as React.CSSProperties
+                }
               >
-                <line
-                  x1="-50000"
-                  y1="100%"
-                  x2="50000"
-                  y2="100%"
-                  strokeWidth="2"
-                  strokeDasharray="10,10"
-                  className="stroke-secondary"
-                />
-              </svg>
-              {sections?.map((section) => (
-                <CanvaSection
-                  key={section._id}
-                  section={section}
-                  onImageChange={(url) =>
-                    actions.updateSectionScreenshot(section._id, url)
-                  }
-                />
-              ))}
-            </TransformComponent>
-            <CanvaDock canvaEditor={canvaEditor} />
-          </div>
-        );
-      }}
-    </TransformWrapper>
+                {/* Customizable horizontal dashed border that comes after the first image using SVG */}
+                <svg
+                  className="pointer-events-none absolute top-[calc(var(--slot-height))] w-full overflow-visible"
+                  fill="none"
+                  aria-hidden="true"
+                  height={2}
+                >
+                  <line
+                    x1="-50000"
+                    y1="100%"
+                    x2="50000"
+                    y2="100%"
+                    strokeWidth="2"
+                    strokeDasharray="10,10"
+                    className="stroke-secondary"
+                  />
+                </svg>
+                {currentPage?.sections?.map((section, index) => (
+                  <CanvaSection
+                    key={`${currentPage.pageUrl}-${index}`}
+                    section={section}
+                    sectionIndex={index}
+                  />
+                ))}
+              </TransformComponent>
+              <CanvaDock />
+            </div>
+          );
+        }}
+      </TransformWrapper>
+    </QueryState>
   );
 };

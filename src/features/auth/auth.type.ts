@@ -33,14 +33,15 @@ export interface SolanaVerifyResponse {
 }
 
 export interface SolanaUser {
+  _id: string; // TODO: Verify that this property exists
   username: string;
   walletAddress: string;
   lastLogin: string;
   authMethod: "wallet";
 }
 
-interface User {
-  id: string;
+interface AuthUser {
+  _id: string; // TODO: Verify that this property exists and is named correctly
   username: string;
   email: string;
   authMethod: "email" | "google";
@@ -50,7 +51,7 @@ interface User {
 export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  user: User | SolanaUser | null;
+  user: AuthUser | SolanaUser | null;
 }
 export interface AuthActions {
   setAuth: (authState: AuthState) => void;

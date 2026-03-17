@@ -24,6 +24,7 @@ const buttonVariants = cva(
           "[--bg:var(--color-secondary)] [--fg:var(--color-secondary-foreground)]",
         destructive:
           "[--bg:var(--color-destructive)] [--fg:var(--color-white)]",
+        success: "[--bg:var(--color-success)] [--fg:var(--color-white)]",
         colorful:
           "bg-(image:--bg) [--bg:var(--colorful-gradient)] [--fg:var(--color-white)]",
       },

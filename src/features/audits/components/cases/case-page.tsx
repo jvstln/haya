@@ -40,8 +40,8 @@ import type { AuditPage } from "../../audit.type";
 import { ShareAuditDialog } from "../share-audit-dialog";
 import {
   CaseImageSection,
-  ProblemsAndSolutionsCaseSection,
-  SeoCaseSection,
+  ProblemsAndSolutionsCaseCollapsibleSection,
+  SeoCaseCollapsibleSection,
 } from "./case-content";
 
 export const CasePage = () => {
@@ -312,12 +312,12 @@ export const CasePage = () => {
           ) : (
             currentPage?.sections.map((section) =>
               currentReportView === "seo" ? (
-                <SeoCaseSection
+                <SeoCaseCollapsibleSection
                   key={section.meta.sectionNumber}
                   section={section}
                 />
               ) : (
-                <ProblemsAndSolutionsCaseSection
+                <ProblemsAndSolutionsCaseCollapsibleSection
                   key={section.meta.sectionNumber}
                   section={section}
                 />

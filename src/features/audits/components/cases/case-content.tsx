@@ -7,14 +7,54 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { random } from "@/lib/utils";
+import { cn, random } from "@/lib/utils";
 import type { AuditSection } from "../../audit.type";
+
+type CaseSectionProps = {
+  section: AuditSection;
+};
 
 export const ProblemsAndSolutionsCaseSection = ({
   section,
-}: {
-  section: AuditSection;
-}) => {
+}: CaseSectionProps) => {
+  return (
+    <div
+      className={cn(
+        "text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h3~:not(ul,li)]:ml-3 [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_section]:mb-4 [&_ul]:list-disc [&_ul]:pl-4",
+      )}
+    >
+      <section>
+        <h3>Problems</h3>
+        {section.aiAnalysis?.problems ? (
+          <ul>
+            {section.aiAnalysis.problems.map((problem) => (
+              <li key={problem}>{problem}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="italic">No problems found</p>
+        )}
+      </section>
+
+      <section>
+        <h3>Solutions</h3>
+        {section.aiAnalysis?.solutions ? (
+          <ul className="marker:content-[✔️✅☑️]">
+            {section.aiAnalysis.solutions.map((solution) => (
+              <li key={solution}>{solution}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="italic">No solutions found</p>
+        )}
+      </section>
+    </div>
+  );
+};
+
+export const ProblemsAndSolutionsCaseCollapsibleSection = ({
+  section,
+}: CaseSectionProps) => {
   return (
     <Collapsible className="rounded-md border text-white">
       <CollapsibleTrigger asChild>
@@ -40,34 +80,8 @@ export const ProblemsAndSolutionsCaseSection = ({
           </Button>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="px-6 pb-4.5 text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h3~:not(ul,li)]:ml-3 [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_section]:mb-4 [&_ul]:list-disc [&_ul]:pl-4">
-          <section>
-            <h3>Problems</h3>
-            {section.aiAnalysis?.problems ? (
-              <ul>
-                {section.aiAnalysis.problems.map((problem) => (
-                  <li key={problem}>{problem}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="italic">No problems found</p>
-            )}
-          </section>
-
-          <section>
-            <h3>Solutions</h3>
-            {section.aiAnalysis?.solutions ? (
-              <ul className="marker:content-[✔️✅☑️]">
-                {section.aiAnalysis.solutions.map((solution) => (
-                  <li key={solution}>{solution}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="italic">No solutions found</p>
-            )}
-          </section>
-        </div>
+      <CollapsibleContent className="px-6 pb-4.5">
+        <ProblemsAndSolutionsCaseSection section={section} />
       </CollapsibleContent>
     </Collapsible>
   );
@@ -110,7 +124,66 @@ export const CaseImageSection = ({ section }: { section: AuditSection }) => {
   );
 };
 
-export const SeoCaseSection = ({ section }: { section: AuditSection }) => {
+export const SeoCaseSection = ({ section }: CaseSectionProps) => {
+  return (
+    <div
+      className={cn(
+        "text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h3~:not(ul,li)]:ml-3 [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_section]:mb-4 [&_ul]:list-disc [&_ul]:pl-4",
+      )}
+    >
+      {section.aiAnalysis?.productClassification && (
+        <section>
+          <h3>Product Classification</h3>
+          <ul className="list-none pl-0!">
+            <li>
+              <strong>Category: </strong>
+              {section.aiAnalysis.productClassification.category}
+            </li>
+            <li>
+              <strong>Primary User Goal: </strong>
+              {section.aiAnalysis.productClassification.primaryUserGoal}
+            </li>
+            <li>
+              <strong>Primary User Type: </strong>
+              {section.aiAnalysis.productClassification.primaryUserType}
+            </li>
+          </ul>
+        </section>
+      )}
+
+      {section.aiAnalysis?.issueDetails && (
+        <section>
+          <h3>Issue Details</h3>
+          {section.aiAnalysis.issueDetails.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {section.aiAnalysis.issueDetails.map((detail, index) => (
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: no unique id available
+                  key={index}
+                  className="rounded-md bg-white/5 p-3"
+                >
+                  <div className="mb-2 font-medium">{detail.issue}</div>
+                  <div className="mb-1 text-xs opacity-80">
+                    <strong>Impact: </strong>
+                    {detail.userImpact}
+                  </div>
+                  <div className="text-xs opacity-80">
+                    <strong>Violated Law: </strong>
+                    {detail.uxLawViolated}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="italic">No issues found</p>
+          )}
+        </section>
+      )}
+    </div>
+  );
+};
+
+export const SeoCaseCollapsibleSection = ({ section }: CaseSectionProps) => {
   return (
     <Collapsible className="rounded-md border text-white">
       <CollapsibleTrigger asChild>
@@ -143,55 +216,8 @@ export const SeoCaseSection = ({ section }: { section: AuditSection }) => {
           </div>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent className="px-6 pb-4.5 text-sm [&_h3]:mb-4 [&_h3]:font-semibold [&_h3~:not(ul,li)]:ml-3 [&_h4]:mb-2 [&_h4]:font-medium [&_li]:mb-2 [&_section]:mb-4 [&_ul]:list-disc [&_ul]:pl-4">
-        {section.aiAnalysis?.productClassification && (
-          <section>
-            <h3>Product Classification</h3>
-            <ul className="list-none pl-0!">
-              <li>
-                <strong>Category: </strong>
-                {section.aiAnalysis.productClassification.category}
-              </li>
-              <li>
-                <strong>Primary User Goal: </strong>
-                {section.aiAnalysis.productClassification.primaryUserGoal}
-              </li>
-              <li>
-                <strong>Primary User Type: </strong>
-                {section.aiAnalysis.productClassification.primaryUserType}
-              </li>
-            </ul>
-          </section>
-        )}
-
-        {section.aiAnalysis?.issueDetails && (
-          <section>
-            <h3>Issue Details</h3>
-            {section.aiAnalysis.issueDetails.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                {section.aiAnalysis.issueDetails.map((detail, index) => (
-                  <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: no unique id available
-                    key={index}
-                    className="rounded-md bg-white/5 p-3"
-                  >
-                    <div className="mb-2 font-medium">{detail.issue}</div>
-                    <div className="mb-1 text-xs opacity-80">
-                      <strong>Impact: </strong>
-                      {detail.userImpact}
-                    </div>
-                    <div className="text-xs opacity-80">
-                      <strong>Violated Law: </strong>
-                      {detail.uxLawViolated}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="italic">No issues found</p>
-            )}
-          </section>
-        )}
+      <CollapsibleContent className="px-6 pb-4.5">
+        <SeoCaseSection section={section} />
       </CollapsibleContent>
     </Collapsible>
   );
