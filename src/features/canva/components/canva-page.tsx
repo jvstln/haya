@@ -72,7 +72,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
           <Button color="secondary" className="rounded-full" asChild>
             <Link href="/dashboard/canva">
               <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
-              Canva
+              New Canva
             </Link>
           </Button>
         )}

@@ -1,6 +1,6 @@
 "use client";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import { BoxAdd, PenAdd, Scan } from "iconsax-reactjs";
+import { BoxAdd, Clipboard, Scan } from "iconsax-reactjs";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -57,8 +57,8 @@ export const AuditPage = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button color="secondary" className="rounded-full">
-                  <PenAdd className="size-5.5 rounded-sm bg-[#0088FF] p-1" />
-                  Editor
+                  <Clipboard className="size-5.5 rounded-sm bg-primary p-1" />
+                  List
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Coming soon</TooltipContent>

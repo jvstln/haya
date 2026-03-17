@@ -55,9 +55,9 @@ export const CanvaEditor = ({
         doubleClick={{
           disabled: true,
         }}
-        // onTransformed={(e) => {
-        // console.log(e);
-        // }}
+        onTransformed={(e) => {
+          // console.log(e);
+        }}
       >
         {({ setTransform, instance }) => {
           return (
@@ -75,9 +75,7 @@ export const CanvaEditor = ({
             >
               <TransformComponent
                 wrapperClass={cn("size-full! flex-1 overflow-hidden")}
-                contentClass={cn(
-                  "flex h-full! w-auto! flex-nowrap! items-start",
-                )}
+                contentClass={cn("flex flex-nowrap! items-start")}
                 contentProps={{ id: "canva-content" }}
                 wrapperStyle={
                   {

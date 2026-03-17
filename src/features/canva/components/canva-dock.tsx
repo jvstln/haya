@@ -1,5 +1,10 @@
 import { ArrowDown2, DocumentUpload } from "iconsax-reactjs";
-import { ScanSearch, ZoomIn, ZoomOut } from "lucide-react";
+import {
+  CircleQuestionMarkIcon,
+  ScanSearch,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import { useControls } from "react-zoom-pan-pinch";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -78,6 +83,10 @@ export const CanvaDock = () => {
             Reset
           </DropdownMenuItem>
         </DropdownMenuContent>
+
+        <Button color="secondary" className="rounded-full">
+          <CircleQuestionMarkIcon />
+        </Button>
       </DropdownMenu>
     </div>
   );

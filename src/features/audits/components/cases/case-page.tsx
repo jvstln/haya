@@ -181,10 +181,6 @@ export const CasePage = () => {
         className={cn(
           "flex grid-cols-2 flex-col rounded-xl border-transparent max-md:border md:grid",
         )}
-        // style={{
-        //   background:
-        //     "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top right, var(--color-primary), var(--color-primary-compliment)) border-box",
-        // }}
       >
         {/* top left image control */}
         <div
@@ -194,14 +190,11 @@ export const CasePage = () => {
           )}
           style={{
             background:
-              "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to right, var(--color-primary), var(--color-primary-compliment)) border-box",
+              "linear-gradient(var(--color-muted), var(--color-muted)) padding-box, linear-gradient(to right, var(--color-primary), var(--color-primary-compliment)) border-box",
           }}
         >
-          <Button appearance="ghost" color="secondary" size="sm" data-active>
+          <Button color="secondary" size="sm">
             Desktop
-          </Button>
-          <Button appearance="ghost" color="secondary" size="sm">
-            Mobile
           </Button>
           <Select
             value={currentPage?.pageUrl || ""}
@@ -233,7 +226,7 @@ export const CasePage = () => {
           )}
           style={{
             background:
-              "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to left, var(--color-primary), var(--color-primary-compliment)) border-box",
+              "linear-gradient(var(--color-muted), var(--color-muted)) padding-box, linear-gradient(to left, var(--color-primary), var(--color-primary-compliment)) border-box",
           }}
         >
           <div className="mr-4 text-white text-xs">Audit Report</div>
@@ -265,7 +258,7 @@ export const CasePage = () => {
           )}
           style={{
             background:
-              "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top, var(--color-primary), var(--color-primary-compliment)) border-box",
+              "linear-gradient(var(--color-muted), var(--color-muted)) padding-box, linear-gradient(to top, var(--color-primary), var(--color-primary-compliment)) border-box",
           }}
         >
           {audit.isPending ? (
@@ -301,7 +294,7 @@ export const CasePage = () => {
           )}
           style={{
             background:
-              "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, linear-gradient(to top, var(--color-primary), var(--color-primary-compliment))",
+              "linear-gradient(var(--color-muted), var(--color-muted)) padding-box, linear-gradient(to top, var(--color-primary), var(--color-primary-compliment))",
           }}
         >
           {audit.isPending ? (
