@@ -55,7 +55,7 @@ export const CanvaEditor = ({
         doubleClick={{
           disabled: true,
         }}
-        onTransformed={(e) => {
+        onTransformed={(_e) => {
           // console.log(e);
         }}
       >

@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, IconToggleButton } from "@/components/ui/button";
@@ -59,9 +60,8 @@ export const SelectAuditsDialog = ({
 
       if (exisitingAudit) {
         return sa.filter((a) => a._id !== audit._id);
-      } else {
-        return [...sa, audit];
       }
+      return [...sa, audit];
     });
   };
 

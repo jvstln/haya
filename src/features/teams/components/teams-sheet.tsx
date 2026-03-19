@@ -1,6 +1,5 @@
 import { Blend } from "iconsax-reactjs";
 import { MoreVertical, Plus, X } from "lucide-react";
-import { useState } from "react";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -14,11 +13,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useAudits } from "@/features/audits/audit.hook";
-import { SelectAuditsDialog } from "@/features/audits/components/select-audits-dialog";
 import { AuditCard } from "@/features/audits/components/audit-card";
+import { SelectAuditsDialog } from "@/features/audits/components/select-audits-dialog";
 import { getInitials } from "@/lib/utils";
 import { useAssignAuditsToTeam, useTeam } from "../team.hook";
-import type { Team } from "../team.type";
 import { AddTeamMemberDialog } from "./add-team-member-dialog";
 import { MessageTeamMembersForm } from "./message-team-members-form";
 
