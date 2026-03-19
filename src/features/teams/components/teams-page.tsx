@@ -24,7 +24,7 @@ type Action = {
 };
 
 export const TeamsPage = () => {
-  const [view, setView] = useState<"all" | "assigned" | "notAssigned">("all");
+  const [view, setView] = useState<"all">("all");
   const { filters, setFilters, originalFilters } = useFilters();
   const [action, setAction] = useState<Action | null>(null);
 
@@ -52,22 +52,6 @@ export const TeamsPage = () => {
           onClick={() => setView("all")}
         >
           All Team
-        </Button>
-        <Button
-          appearance={view === "assigned" ? "solid" : "ghost"}
-          color="secondary"
-          size="sm"
-          onClick={() => setView("assigned")}
-        >
-          Assigned
-        </Button>
-        <Button
-          appearance={view === "notAssigned" ? "solid" : "ghost"}
-          color="secondary"
-          size="sm"
-          onClick={() => setView("notAssigned")}
-        >
-          Not-Assigned
         </Button>
 
         <InputSearch
