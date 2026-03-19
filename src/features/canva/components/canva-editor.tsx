@@ -1,3 +1,5 @@
+"use client";
+
 import { Add } from "iconsax-reactjs";
 import type React from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
@@ -7,6 +9,7 @@ import type { useAudit } from "@/features/audits/audit.hook";
 import { cn } from "@/lib/utils";
 import { useCanvaStore } from "../canva.store";
 import { CanvaDock } from "./canva-dock";
+import { CanvaHotkeys } from "./canva-hotkeys";
 import { CanvaSection } from "./canva-section";
 
 export const CanvaEditor = ({
@@ -45,6 +48,7 @@ export const CanvaEditor = ({
         minScale={0.2}
         maxScale={8}
         limitToBounds={false}
+        centerZoomedOut
         wheel={{
           excluded: ["no-scrolling"],
           activationKeys: ["Control", "Meta"],
@@ -55,8 +59,8 @@ export const CanvaEditor = ({
         doubleClick={{
           disabled: true,
         }}
-        onTransformed={(_e) => {
-          // console.log(e);
+        onTransformed={(e) => {
+          console.log(e, e.instance.transformState);
         }}
       >
         {({ setTransform, instance }) => {
@@ -74,8 +78,10 @@ export const CanvaEditor = ({
               }}
             >
               <TransformComponent
-                wrapperClass={cn("size-full! flex-1 overflow-hidden")}
-                contentClass={cn("flex flex-nowrap! items-start")}
+                wrapperClass={cn(
+                  "items-start! justify-center! flex-1 origin-center! overflow-hidden",
+                )}
+                contentClass={cn("flex-nowrap! origin-center! items-start")}
                 contentProps={{ id: "canva-content" }}
                 wrapperStyle={
                   {
@@ -112,6 +118,7 @@ export const CanvaEditor = ({
                 ))}
               </TransformComponent>
               <CanvaDock />
+              <CanvaHotkeys />
             </div>
           );
         }}

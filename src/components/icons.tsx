@@ -33,8 +33,8 @@ export const GiftIcon = (props: SVGProps) => {
           y2="8.48133"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FFAFA4" />
-          <stop offset="1" stop-color="#7A63FF" />
+          <stop stopColor="#FFAFA4" />
+          <stop offset="1" stopColor="#7A63FF" />
         </linearGradient>
       </defs>
     </svg>
@@ -343,7 +343,7 @@ export const AiIcon = (_props: SVGProps) => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <title>AI icon</title>
-      <g clip-path="url(#clip0_890_9117)">
+      <g clipPath="url(#clip0_890_9117)">
         <path
           d="M4.87501 11.9997C4.7565 12.0003 4.64063 11.9647 4.54288 11.8977C4.44512 11.8307 4.37015 11.7355 4.32798 11.6247L3.39423 9.19658C3.37532 9.14765 3.34639 9.10321 3.30929 9.06612C3.2722 9.02903 3.22777 9.0001 3.17884 8.98119L0.75001 8.04673C0.639371 8.00427 0.544209 7.92926 0.477084 7.8316C0.409958 7.73393 0.374023 7.61821 0.374023 7.4997C0.374023 7.3812 0.409958 7.26548 0.477084 7.16781C0.544209 7.07015 0.639371 6.99514 0.75001 6.95267L3.17813 6.01892C3.22706 6.00001 3.2715 5.97108 3.30859 5.93399C3.34568 5.8969 3.37461 5.85246 3.39352 5.80353L4.32798 3.3747C4.37044 3.26407 4.44545 3.1689 4.54312 3.10178C4.64078 3.03465 4.7565 2.99872 4.87501 2.99872C4.99352 2.99872 5.10924 3.03465 5.2069 3.10178C5.30456 3.1689 5.37958 3.26407 5.42204 3.3747L6.35579 5.80283C6.3747 5.85176 6.40363 5.89619 6.44072 5.93329C6.47782 5.97038 6.52225 5.99931 6.57118 6.01822L8.98524 6.94705C9.10039 6.98973 9.19958 7.06685 9.26932 7.16792C9.33907 7.26899 9.37597 7.3891 9.37501 7.51189C9.37322 7.62834 9.33652 7.74156 9.26967 7.83692C9.20281 7.93227 9.10887 8.00536 9.00001 8.04673L6.57188 8.98048C6.52296 8.9994 6.47852 9.02833 6.44143 9.06542C6.40434 9.10251 6.37541 9.14695 6.35649 9.19588L5.42204 11.6247C5.37987 11.7355 5.30489 11.8307 5.20714 11.8977C5.10939 11.9647 4.99352 12.0003 4.87501 11.9997V11.9997Z"
           fill="url(#paint0_linear_890_9117)"
@@ -366,8 +366,8 @@ export const AiIcon = (_props: SVGProps) => {
           y2="13.2124"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#AE66FF" />
-          <stop offset="1" stop-color="#4C6FFF" />
+          <stop stopColor="#AE66FF" />
+          <stop offset="1" stopColor="#4C6FFF" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_890_9117"
@@ -377,8 +377,8 @@ export const AiIcon = (_props: SVGProps) => {
           y2="4.68067"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#AE66FF" />
-          <stop offset="1" stop-color="#4C6FFF" />
+          <stop stopColor="#AE66FF" />
+          <stop offset="1" stopColor="#4C6FFF" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_890_9117"
@@ -388,8 +388,8 @@ export const AiIcon = (_props: SVGProps) => {
           y2="6.70727"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#AE66FF" />
-          <stop offset="1" stop-color="#4C6FFF" />
+          <stop stopColor="#AE66FF" />
+          <stop offset="1" stopColor="#4C6FFF" />
         </linearGradient>
         <clipPath id="clip0_890_9117">
           <rect width="12" height="12" fill="white" />

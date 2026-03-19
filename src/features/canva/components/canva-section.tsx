@@ -105,7 +105,6 @@ export const CanvaSection = ({ section, sectionIndex }: SlotProps) => {
             comment=""
             user={auth.user}
             canEdit
-            defaultEditing
             onCommentSave={async ({ comment, setComment }) => {
               if (!auditId) return;
               await createComment.mutateAsync({

@@ -5,21 +5,25 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
-import { useControls } from "react-zoom-pan-pinch";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Kbd } from "@/components/ui/kbd";
 import { useAuth } from "@/features/auth/auth.hook";
 import { getInitials } from "@/lib/utils";
+import { useCanvaControls } from "../canva.hook";
+import { canvaHotkeys } from "../canva.hotkeys";
 
 export const CanvaDock = () => {
   const auth = useAuth();
-  const { setTransform, centerView, zoomIn, zoomOut, instance } = useControls();
+  const { zoomIn, zoomOut, instance, fitElementToScreen, resetTransform } =
+    useCanvaControls();
 
   return (
     <div className="-translate-1/2 fixed bottom-5 left-1/2 flex h-14 w-fit items-center gap-4 rounded-full border border-secondary bg-muted px-5 py-2.5">
@@ -53,38 +57,41 @@ export const CanvaDock = () => {
         <DropdownMenuContent>
           <DropdownMenuItem onClick={() => zoomIn()}>
             <ZoomIn />
-            Zoom In
+            {canvaHotkeys.zoomIn.label}
+            <DropdownMenuShortcut>
+              <Kbd>{canvaHotkeys.zoomIn.shortcut}</Kbd>
+            </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => zoomOut()}>
             <ZoomOut />
-            Zoom Out
+            {canvaHotkeys.zoomOut.label}
+            <DropdownMenuShortcut>
+              <Kbd>{canvaHotkeys.zoomOut.shortcut}</Kbd>
+            </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              const wrapper = instance.wrapperComponent;
-              const content = instance.contentComponent;
-              if (wrapper && content) {
-                const padding = 80;
-                const scaleX =
-                  wrapper.offsetWidth / (content.scrollWidth + padding);
-                const scaleY =
-                  wrapper.offsetHeight / (content.scrollHeight + padding);
-                // Max scale of 1 means we don't zoom in automatically if the content is small
-                const scale = Math.min(scaleX, scaleY, 1);
-                centerView(scale);
-              }
-            }}
-          >
+          <DropdownMenuItem onClick={() => fitElementToScreen()}>
             <ScanSearch />
-            Fit to Screen
+            {canvaHotkeys.fitToScreen.label}
+            <DropdownMenuShortcut>
+              <Kbd>{canvaHotkeys.fitToScreen.shortcut}</Kbd>
+            </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTransform(0, 0, 1)}>
+          <DropdownMenuItem onClick={() => resetTransform()}>
             <ScanSearch />
-            Reset
+            {canvaHotkeys.resetView.label}
+            <DropdownMenuShortcut>
+              <Kbd>{canvaHotkeys.resetView.shortcut}</Kbd>
+            </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
 
-        <Button color="secondary" className="rounded-full">
+        <Button
+          color="secondary"
+          className="rounded-full"
+          onClick={() => {
+            console.log(instance, instance.transformState);
+          }}
+        >
           <CircleQuestionMarkIcon />
         </Button>
       </DropdownMenu>
