@@ -71,5 +71,5 @@ export async function assignAuditsToTeam(payload: AssignAuditToTeam) {
     analysisIds: payload.auditIds,
     assignedToTeamId: payload.teamId,
   });
-  return response;
+  return response.data;
 }

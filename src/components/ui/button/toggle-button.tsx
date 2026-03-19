@@ -3,25 +3,25 @@ import { cn } from "@/lib/utils";
 import { Button } from ".";
 
 type IconToggleButtonProps = React.ComponentProps<typeof Button> & {
-  isSelected?: boolean;
+  isActive?: boolean;
 };
 
 export function IconToggleButton({
-  isSelected,
+  isActive,
   ...props
 }: IconToggleButtonProps) {
   return (
     <Button
       type="button"
-      appearance={isSelected ? "solid" : "outline"}
-      color={isSelected ? "primary" : "secondary"}
+      appearance={isActive ? "solid" : "outline"}
+      color={isActive ? "primary" : "secondary"}
       size="icon-sm"
       {...props}
     >
       <Plus
         className={cn(
           "transition-transform duration-200",
-          isSelected && "rotate-45", // Selected indicator style
+          isActive && "rotate-45", // Selected indicator style
         )}
       />
     </Button>

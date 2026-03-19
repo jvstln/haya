@@ -2,7 +2,7 @@
 import { ArrowLeft, Blend, BoxAdd, Scan, Share } from "iconsax-reactjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/select";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { useAudit } from "@/features/audits/audit.hook";
+import { NewAuditForm } from "@/features/audits/components/audit-form";
 import { ShareAuditDialog } from "@/features/audits/components/share-audit-dialog";
+import { SelectTeamsDialog } from "@/features/teams/components/select-teams-dialog";
+import { useAssignAuditsToTeam } from "@/features/teams/team.hook";
+import type { Team } from "@/features/teams/team.type";
 import { useCanvaStore } from "../canva.store";
 import { CanvaEditor } from "./canva-editor";
 
@@ -62,10 +66,12 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
           </SelectContent>
         </Select>
 
-        <Button color="secondary" className="ml-auto rounded-full">
-          <Scan className="size-5.5 rounded-sm bg-primary p-1" />
-          Audit
-        </Button>
+        <NewAuditForm>
+          <Button color="secondary" className="ml-auto rounded-full">
+            <Scan className="size-5.5 rounded-sm bg-primary p-1" />
+            Audit
+          </Button>
+        </NewAuditForm>
 
         {/* Only show if not a new canva */}
         {!pathname.endsWith("new") && (
@@ -77,10 +83,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
           </Button>
         )}
 
-        <Button color="secondary" className="rounded-full">
-          <Blend className="size-5.5 rounded-sm bg-cyan p-1" />
-          Assign
-        </Button>
+        <AssignAuditToTeam auditId={auditId} />
 
         {audit.data ? (
           <ShareAuditDialog audit={audit.data}>
@@ -99,6 +102,35 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
 
       <CanvaEditor audit={audit} />
     </div>
+  );
+};
+
+const AssignAuditToTeam = ({ auditId }: { auditId?: string }) => {
+  const assignAuditsToTeam = useAssignAuditsToTeam();
+  const [team, setTeam] = useState<Team | null>(null);
+
+  return (
+    <SelectTeamsDialog
+      // Only a maximum of one team should be selected
+      teams={team ? [team] : []}
+      onTeamsChange={(teams) => setTeam(teams.at(-1) ?? null)}
+      buttonText="Assign"
+      onConfirm={async (teams) => {
+        if (!auditId) {
+          throw new Error("[FE]: Audit has not been created or retrieved");
+        }
+
+        await assignAuditsToTeam.mutateAsync({
+          auditIds: [auditId],
+          teamId: teams[0]._id,
+        });
+      }}
+    >
+      <Button color="secondary" className="rounded-full">
+        <Blend className="size-5.5 rounded-sm bg-cyan p-1" />
+        Assign
+      </Button>
+    </SelectTeamsDialog>
   );
 };
 

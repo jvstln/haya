@@ -14,3 +14,9 @@ export type QueryParams = {
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 };
+
+export type EventReturnType =
+  | undefined
+  | boolean
+  | Promise<boolean | undefined>
+  | Promise<void>;

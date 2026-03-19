@@ -74,10 +74,7 @@ export const TeamMemberSelect = ({
                 </Avatar>
                 <span className="text-muted-foreground">{member.username}</span>
               </div>
-              <IconToggleButton
-                onClick={() => onUserRemove(member)}
-                isSelected
-              />
+              <IconToggleButton onClick={() => onUserRemove(member)} isActive />
             </div>
           ))}
 

@@ -19,6 +19,6 @@ export type Notification = {
   metadata: Partial<{
     teamId: string;
     teamName: string;
-    inviterId: string;
+    responderId: string;
   }>;
 };

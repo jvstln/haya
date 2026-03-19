@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
 import type React from "react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, IconToggleButton } from "@/components/ui/button";
@@ -14,62 +15,81 @@ import {
 } from "@/components/ui/dialog";
 import { InputSearch } from "@/components/ui/input-search";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useAudits } from "@/features/audits/audit.hook";
 import { useFilters } from "@/hooks/use-filters";
+import { getErrorMessage } from "@/lib/api";
+import { getInitials } from "@/lib/utils";
+import type { EventReturnType } from "@/types/type";
+import { useTeams } from "../team.hook";
+import type { Team } from "../team.type";
 
-type SelectableAudit = NonNullable<
-  ReturnType<typeof useAudits>["data"]
->["data"][number];
-
-type SelectAuditsDialogProps = React.ComponentProps<typeof Dialog> & {
-  onSelect: (audits: SelectableAudit[]) => void | Promise<void>;
-  defaultSelectedAudits?: SelectableAudit[];
+type SelectTeamsDialogProps = React.ComponentProps<typeof Dialog> & {
+  teams?: Team[];
+  onTeamsChange?: (teams: Team[]) => void;
+  onConfirm?: (teams: Team[]) => EventReturnType;
+  onCancel?: () => EventReturnType;
   buttonText?: string;
   loadingText?: string;
 };
 
-export const SelectAuditsDialog = ({
-  onSelect,
-  defaultSelectedAudits,
+export const SelectTeamsDialog = ({
+  teams: controlledTeams,
+  onTeamsChange,
+  onConfirm,
+  onCancel,
   buttonText = "Select",
   loadingText,
   ...props
-}: SelectAuditsDialogProps) => {
-  // Controlled and uncontrolled open states
+}: SelectTeamsDialogProps) => {
   const [_open, _setOpen] = useState(props.defaultOpen);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const { filters, setFilters, originalFilters } = useFilters({ limit: 10 });
+  const [_selectedTeams, _setSelectedTeams] = useState<Team[]>([]);
+
+  const teams = useTeams(filters);
+
+  // Controlled and uncontrolled open states
   const open = props.open ?? _open;
   const setOpen = (open: boolean) => {
     props.onOpenChange?.(open);
     _setOpen(open);
     if (!open) {
-      setSelectedAudits(defaultSelectedAudits ?? []);
+      setSelectedTeams([]);
     }
   };
 
-  const [isLoading, setIsLoading] = useState(false);
-  const { filters, setFilters, originalFilters } = useFilters({ limit: 10 });
-  const [selectedAudits, setSelectedAudits] = useState<SelectableAudit[]>(
-    defaultSelectedAudits ?? [],
-  );
-
-  const audits = useAudits(filters);
-
-  const toggleSelect = (audit: SelectableAudit) => {
-    setSelectedAudits((sa) => {
-      const exisitingAudit = sa.find((a) => a._id === audit._id);
-
-      if (exisitingAudit) {
-        return sa.filter((a) => a._id !== audit._id);
-      }
-      return [...sa, audit];
-    });
+  // Controlled and uncontrolled selected teams states
+  const selectedTeams = controlledTeams ?? _selectedTeams;
+  const setSelectedTeams = (teams: Team[]) => {
+    _setSelectedTeams(teams);
+    onTeamsChange?.(teams);
   };
 
-  const handleSelect = async () => {
+  const toggleSelect = (team: Team) => {
+    const exisitingTeam = selectedTeams.find((a) => a._id === team._id);
+
+    if (exisitingTeam) {
+      setSelectedTeams(selectedTeams.filter((a) => a._id !== team._id));
+      return;
+    }
+
+    setSelectedTeams([...selectedTeams, team]);
+  };
+
+  const handleConfirm = async () => {
     try {
+      if (selectedTeams.length === 0) {
+        throw new Error("[FE]: No team selected");
+      }
+
       setIsLoading(true);
-      await onSelect(selectedAudits);
-      setOpen(false);
+      const preventDefault = await onConfirm?.(selectedTeams);
+      if (!preventDefault) {
+        setOpen(false);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      if (errorMessage) toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -80,9 +100,7 @@ export const SelectAuditsDialog = ({
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent closeButton={false}>
         <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle className="font-semibold text-xl">
-            All Projects
-          </DialogTitle>
+          <DialogTitle className="font-semibold text-xl">All Teams</DialogTitle>
           <InputSearch
             placeholder="search"
             value={originalFilters.search}
@@ -90,33 +108,35 @@ export const SelectAuditsDialog = ({
           />
         </DialogHeader>
 
-        <ScrollArea className="h-100 px-6 py-4">
+        <ScrollArea className="h-full max-h-100 px-6 py-4">
           <QueryState
-            query={{ ...audits, isPending: audits.isPending || isLoading }}
+            query={{ ...teams, isPending: teams.isPending || isLoading }}
             errorPrefix="Error fetching audits"
             loadingText={loadingText}
           >
             <div className="flex flex-col gap-4">
-              {audits.data?.data.map((audit) => {
-                const isSelected = selectedAudits.some(
-                  (a) => a._id === audit._id,
+              {teams.data?.teams.map((team) => {
+                const isSelected = selectedTeams.some(
+                  (a) => a._id === team._id,
                 );
 
                 return (
                   <div
-                    key={audit._id}
+                    key={team._id}
                     className="flex items-center justify-between rounded-lg p-2 hover:bg-secondary"
                   >
                     <div className="flex items-center gap-3">
                       <Avatar>
                         <AvatarImage src="" />
-                        <AvatarFallback>Ox</AvatarFallback>
+                        <AvatarFallback>
+                          {getInitials(team.name)}
+                        </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <span className="text-sm">{audit.url}</span>
+                        <span className="text-sm">{team.name}</span>
                         <span className="text-muted-foreground text-xs">
-                          Audited{" "}
-                          {formatDistanceToNow(audit.createdAt, {
+                          Created{" "}
+                          {formatDistanceToNow(team.createdAt, {
                             addSuffix: true,
                           })}
                         </span>
@@ -124,7 +144,7 @@ export const SelectAuditsDialog = ({
                     </div>
                     <IconToggleButton
                       isActive={isSelected}
-                      onClick={() => toggleSelect(audit)}
+                      onClick={() => toggleSelect(team)}
                     />
                   </div>
                 );
@@ -142,7 +162,7 @@ export const SelectAuditsDialog = ({
           >
             Cancel
           </Button>
-          <Button size="lg" onClick={handleSelect} isLoading={isLoading}>
+          <Button size="lg" onClick={handleConfirm} isLoading={isLoading}>
             {buttonText}
           </Button>
         </DialogFooter>

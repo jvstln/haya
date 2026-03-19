@@ -105,7 +105,7 @@ export function MessageTeamMembersForm({ team }: { team: Team }) {
                         </span>
                       </div>
                       <IconToggleButton
-                        isSelected={isSelected}
+                        isActive={isSelected}
                         onClick={() => {
                           if (isSelected) {
                             membersField.remove(
