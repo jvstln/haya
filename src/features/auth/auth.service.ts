@@ -77,13 +77,13 @@ async function getAuth(): Promise<AuthState | null> {
 
     if (!auth) return null;
 
-    return auth;
-  } catch {
-    return null;
+      return auth;
+    } catch {
+      return null;
+    }
   }
-}
 
-export {
+  export {
   signUpEmail,
   login,
   redirectToGoogleAuth,

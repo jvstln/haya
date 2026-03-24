@@ -1,7 +1,7 @@
 import { api } from "@/lib/api";
 import type { User, UserFilters } from "./user.type";
 
-async function getUsers(params: UserFilters) {
+export async function getUsers(params: UserFilters) {
   const response = await api.get<{ data: { users: User[] } }>(
     "/teams/users/search",
     {
@@ -11,4 +11,7 @@ async function getUsers(params: UserFilters) {
   return response.data.data;
 }
 
-export { getUsers };
+export async function updateUsername(payload: { username: string }) {
+  const response = await api.patch("/auth/profile/username", payload);
+  return response.data;
+}
