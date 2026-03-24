@@ -40,15 +40,6 @@ export const DashboardCard = ({
         "group relative flex h-47.25 w-55.5 flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-md",
         classNames?.root,
       )}
-      style={
-        {
-          // Analysis Image
-          // background: `
-          //   linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 /0.5)),
-          //   url(${image || "/images/default-audit-card-bg.webp"}) center center/cover no-repeat
-          //   `,
-        }
-      }
     >
       {typeof image === "string" ? (
         <Image src={image} alt="" className="-z-10" fill />

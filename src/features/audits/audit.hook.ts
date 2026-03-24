@@ -25,7 +25,7 @@ export const useAudit = (auditId: string) => {
       };
     },
     refetchInterval(query) {
-      // Refetch analysis every ^2 seconds (exponentially.. 2 4 8 16s) if status is pending
+      // Refetch audit every ^2 seconds (exponentially.. 2 4 8 16s) if status is pending
       if (
         !query.state.data ||
         !AuditService.getIsAuditInProgress(query.state.data)

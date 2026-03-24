@@ -1,7 +1,7 @@
 import type z from "zod";
 import type { QueryParams } from "@/types/type";
 import type { newAuditSchema } from "./audit.schema";
-import type * as AnalysisService from "./audit.service";
+import type * as AuditService from "./audit.service";
 
 export type NewAudit = z.infer<typeof newAuditSchema>;
 export type NewAuditInput = z.input<typeof newAuditSchema>;
@@ -28,7 +28,7 @@ export interface RawAudit extends AuditWithoutContent {
 }
 
 export interface ParsedAudit extends AuditWithoutContent {
-  content: ReturnType<typeof AnalysisService.parseContent>;
+  content: ReturnType<typeof AuditService.parseContent>;
 }
 
 export interface AuditPage {

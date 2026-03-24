@@ -57,7 +57,7 @@ export const ShareAuditDialog = ({
       <DialogContent className="flex h-full flex-col">
         <DialogHeader>
           <DialogTitle className="text-h1" aria-describedby={undefined}>
-            Share analysis findings
+            Share audit findings
           </DialogTitle>
         </DialogHeader>
 
@@ -75,8 +75,8 @@ export const ShareAuditDialog = ({
               className="text-muted-foreground"
             />
             <span>
-              Sharing link will enable a third-party access to your analysis,
-              see our{" "}
+              Sharing link will enable a third-party access to your audit, see
+              our{" "}
               <span className="font-medium text-foreground">Usage Policy</span>.
             </span>
           </div>
@@ -87,7 +87,7 @@ export const ShareAuditDialog = ({
             </Button>
             <PDFDownloadLink
               document={<AuditPdfDocument audit={audit} />}
-              fileName={`haya-analysis-${audit.url}.pdf`}
+              fileName={`haya-audit-${audit.url}.pdf`}
             >
               <Button size="sm">
                 <DocumentDownload />

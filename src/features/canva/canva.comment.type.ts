@@ -27,10 +27,6 @@ export type GetCommentPayload =
 
 export type Comment = {
   _id: string;
-  // analysisId: {
-  //   _id: string;
-  //   url: string;
-  // };
   pageIndex: number;
   sectionIndex: number;
   teamId: string;

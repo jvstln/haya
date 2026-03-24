@@ -11,7 +11,7 @@ import type {
   RawAudit,
 } from "./audit.type";
 
-/** Hacky - change v1 to v2 in all analysis endpoint because of backend version change */
+/** Hacky - change v1 to v2 in all audit/analysis endpoint because of backend version change */
 
 async function getAudits(params?: AuditFilters) {
   const response = await api.get<{

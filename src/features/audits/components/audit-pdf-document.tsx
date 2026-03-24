@@ -88,7 +88,7 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
   return (
     <Document
       author={auth.user?.username}
-      title={`Haya Analysis - ${audit.url}`}
+      title={`Haya Audit - ${audit.url}`}
       creator={window.location.hostname}
       producer={window.location.hostname}
       style={{
@@ -124,11 +124,11 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
         </View>
 
         <View {...viewSectionProps}>
-          {/* Analysis Summary */}
+          {/* Audit Summary */}
           <Text
             style={{ fontSize: 18, fontWeight: "semibold", marginBottom: 8 }}
           >
-            Analysis Summary
+            Audit Summary
           </Text>
           <View
             style={{

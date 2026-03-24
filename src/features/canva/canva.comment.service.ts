@@ -7,10 +7,7 @@ import type {
 } from "./canva.comment.type";
 
 export async function createComment(payload: NewComment) {
-  const response = await api.post("/comments", {
-    ...payload,
-    analysisId: payload.auditId, // TODO: Get backend to rename analysisId to auditId
-  });
+  const response = await api.post("/comments", payload);
   return response.data;
 }
 
@@ -24,7 +21,7 @@ export async function deleteComment(commentId: string) {
   return response.data;
 }
 
-export async function getCommentsByAnalysisId(auditId: string) {
+export async function getCommentsByAuditId(auditId: string) {
   const response = await api.get<{
     data: {
       comments: Comment[];
@@ -59,7 +56,7 @@ export async function getCommentsByTeamId(teamId: string) {
 /**
  * Fetches comments based on the provided payload.
  * Fetches from the most specific payload properties specified to the least specific property.
- * @param params Object of type GetCommentPayload. if pageIndex and sectionIndex is present, it will fetch comments for that specific section. if analysisId is present, it will fetch comments for that specific analysis. if teamId is present, it will fetch comments for that specific team.
+ * @param params Object of type GetCommentPayload. if pageIndex and sectionIndex is present, it will fetch comments for that specific section. if auditId is present, it will fetch comments for that specific audit. if teamId is present, it will fetch comments for that specific team.
  */
 export async function getComments(
   params: GetCommentPayload,
@@ -74,7 +71,7 @@ export async function getComments(
   ) {
     comments = (await getCommentsBySection(params)).data;
   } else if ("auditId" in params && params.auditId) {
-    comments = (await getCommentsByAnalysisId(params.auditId)).data.comments;
+    comments = (await getCommentsByAuditId(params.auditId)).data.comments;
   } else if ("teamId" in params && params.teamId) {
     comments = (await getCommentsByTeamId(params.teamId)).data;
   }

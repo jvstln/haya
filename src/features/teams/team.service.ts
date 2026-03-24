@@ -66,9 +66,6 @@ export async function deleteMemberFromTeam({
 export async function assignAuditsToTeam(payload: AssignAuditToTeam) {
   const response = await api.post("/tasks", {
     ...payload,
-    // Rewrite properties to the ones the backend understands.
-    // TODO: Remove when backend updates them
-    analysisIds: payload.auditIds,
     assignedToTeamId: payload.teamId,
   });
   return response.data;

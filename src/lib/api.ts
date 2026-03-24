@@ -5,6 +5,29 @@ export const api = axios.create({
   baseURL: "https://api.usehaya.io/api/v1",
 });
 
+// TODO: Remove when backend updates properties
+// Temporary: Rewrite payload properties starting with audit to analysis until backend updates them.
+// Audit is a new name for what the backend calls analysis.
+api.interceptors.request.use(async (config) => {
+  for (const key in config.data || {}) {
+    if (key.startsWith("audit")) {
+      const rewrittenProperty = key.replace(/^audit/, "analysis");
+      config.data[rewrittenProperty] = config.data[key];
+      delete config.data[key];
+    }
+  }
+
+  for (const key in config.params || {}) {
+    if (key.startsWith("audit")) {
+      const rewrittenProperty = key.replace(/^audit/, "analysis");
+      config.params[rewrittenProperty] = config.params[key];
+      delete config.params[key];
+    }
+  }
+
+  return config;
+});
+
 // Attach JWT token to all requests
 api.interceptors.request.use(async (config) => {
   const auth = await getAuth();
