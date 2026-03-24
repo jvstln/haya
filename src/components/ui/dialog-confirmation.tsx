@@ -28,7 +28,7 @@ type ConfirmationDialogProps = React.ComponentProps<typeof Dialog> & {
     e: React.MouseEvent,
     setOpen: (open: boolean) => void,
   ) => Promise<void>;
-  accent?: `--color-${string}-${number}`;
+  accent?: `--color-${string}` | `--color-${string}-${number}`;
 };
 
 export const ConfirmationDialog = ({
@@ -39,7 +39,7 @@ export const ConfirmationDialog = ({
   onConfirm,
   onCancel,
   buttonText = "Proceed",
-  accent = "--color-amber-600",
+  accent = "--color-primary",
   ...props
 }: ConfirmationDialogProps) => {
   const [_open, _setOpen] = useState(false);
@@ -75,12 +75,13 @@ export const ConfirmationDialog = ({
               />
             </svg>
           )}
-          <DialogTitle style={{ color: `var(${accent})` }}>{title}</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
             appearance="outline"
+            color="secondary"
             disabled={isPending}
             onClick={async (e) => {
               await onCancel?.(e, onOpenChange);
