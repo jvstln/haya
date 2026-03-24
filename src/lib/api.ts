@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getAuth } from "@/features/auth/auth.service";
+import { getInvitationCode } from "@/features/auth/components/invitation-code-prompt";
 
 export const api = axios.create({
   baseURL: "https://api.usehaya.io/api/v1",
@@ -23,6 +24,18 @@ api.interceptors.request.use(async (config) => {
       config.params[rewrittenProperty] = config.params[key];
       delete config.params[key];
     }
+  }
+
+  return config;
+});
+
+// Temporary: Intercept auth endpoints that require invitation code and prompt user to enter one
+api.interceptors.request.use(async (config) => {
+  const requiredEndpoints = ["/auth/register", "/auth/login", "/auth/verify"];
+
+  if (requiredEndpoints.some((path) => config.url?.endsWith(path))) {
+    const { code } = await getInvitationCode();
+    config.data.invitationCode = code;
   }
 
   return config;
