@@ -10,15 +10,16 @@ import { cn } from "@/lib/utils";
 import { useCanvaStore } from "../canva.store";
 import { CanvaDock } from "./canva-dock";
 import { CanvaHotkeys } from "./canva-hotkeys";
-import { CanvaSection } from "./canva-section";
+import { CanvaSection, NewCanvaSection } from "./canva-section";
 
-export const CanvaEditor = ({
-  audit,
-}: {
+type CanvaEditorProps = {
   audit: ReturnType<typeof useAudit>;
-}) => {
+};
+
+export const CanvaEditor = ({ audit }: CanvaEditorProps) => {
   const pageIndex = useCanvaStore((state) => state.pageIndex);
   const currentPage = audit.data?.content?.pages[pageIndex];
+  const addNewSection = useCanvaStore((state) => state.addNewSection);
 
   if (currentPage?.sections.length === 0) {
     return (
@@ -30,7 +31,7 @@ export const CanvaEditor = ({
             color="secondary"
             appearance="outline"
             onClick={() => {
-              // actions.addSection();
+              addNewSection();
             }}
           >
             <Add className="size-8" />
@@ -48,7 +49,6 @@ export const CanvaEditor = ({
         minScale={0.2}
         maxScale={8}
         limitToBounds={false}
-        centerZoomedOut
         wheel={{
           excluded: ["no-scrolling"],
           activationKeys: ["Control", "Meta"],
@@ -81,20 +81,20 @@ export const CanvaEditor = ({
                 wrapperClass={cn(
                   "items-start! justify-center! flex-1 origin-center! overflow-hidden",
                 )}
-                contentClass={cn("flex-nowrap! origin-center! items-start")}
+                contentClass={cn("flex-nowrap! origin-center!")}
                 contentProps={{ id: "canva-content" }}
                 wrapperStyle={
                   {
                     background:
                       "radial-gradient(circle, oklch(from var(--color-foreground) l c h / 0.1) 1px, transparent 1px) center / 20px 20px",
-                    "--slot-height": "200px",
+                    "--slot-height": "250px",
                     "--slot-width": "268px",
                   } as React.CSSProperties
                 }
               >
                 {/* Customizable horizontal dashed border that comes after the first image using SVG */}
                 <svg
-                  className="pointer-events-none absolute top-[calc(var(--slot-height))] w-full overflow-visible"
+                  className="pointer-events-none absolute top-[calc(var(--slot-height)+2rem)] w-full overflow-visible"
                   fill="none"
                   aria-hidden="true"
                   height={2}
@@ -111,11 +111,13 @@ export const CanvaEditor = ({
                 </svg>
                 {currentPage?.sections?.map((section, index) => (
                   <CanvaSection
-                    key={`${currentPage.pageUrl}-${index}`}
+                    // biome-ignore lint/suspicious/noArrayIndexKey: index is used as a section identifier
+                    key={index}
                     section={section}
                     sectionIndex={index}
                   />
                 ))}
+                <NewSections audit={audit} />
               </TransformComponent>
               <CanvaDock />
               <CanvaHotkeys />
@@ -125,4 +127,12 @@ export const CanvaEditor = ({
       </TransformWrapper>
     </QueryState>
   );
+};
+
+const NewSections = ({ audit }: CanvaEditorProps) => {
+  const newSections = useCanvaStore((state) => state.newSections);
+
+  return newSections.map((section, _index) => (
+    <NewCanvaSection key={section._id} />
+  ));
 };

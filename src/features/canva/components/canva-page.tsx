@@ -30,11 +30,13 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
   const pathname = usePathname();
 
   const storeAuditId = useCanvaStore((state) => state.auditId);
+  const setStoreAuditId = useCanvaStore((state) => state.setAuditId);
   const pageIndex = useCanvaStore((state) => state.pageIndex);
+  const setPageIndex = useCanvaStore((state) => state.setPageIndex);
 
   // Meant to run only once. Used to track other persistent settings
-  if (auditId !== storeAuditId) {
-    useCanvaStore.setState({ auditId });
+  if (auditId !== storeAuditId && auditId) {
+    setStoreAuditId(auditId);
   }
 
   return (
@@ -50,9 +52,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
 
         <Select
           value={String(pageIndex)}
-          onValueChange={(value) => {
-            useCanvaStore.setState({ pageIndex: Number(value) });
-          }}
+          onValueChange={(value) => setPageIndex(Number(value))}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a page" />

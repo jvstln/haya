@@ -1,4 +1,8 @@
+import { useMutation } from "@tanstack/react-query";
 import { useControls } from "react-zoom-pan-pinch";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/api";
+import * as CanvaService from "./canva.service";
 
 export function useCanvaControls() {
   const {
@@ -83,3 +87,22 @@ export function useCanvaControls() {
     fitElementToScreen,
   };
 }
+
+export const useCreateSection = () => {
+  return useMutation({
+    mutationFn: CanvaService.createSection,
+    onMutate: () => {
+      toast.loading("Initializing section...", { id: "createSection" });
+    },
+    onSuccess: () => {
+      toast.success("Section created successfully", {
+        id: "createSection",
+      });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error) ?? "Failed to create section", {
+        id: "createSection",
+      });
+    },
+  });
+};
