@@ -35,9 +35,14 @@ export const useCanvaStore = create<CanvaStore>()(
       removeEmptySection: () => {
         set((state) => ({ emptySectionsCount: state.emptySectionsCount - 1 }));
       },
-      addCustomSection: (section: AuditCustomSection) => {
+      addCustomSection: (
+        section: AuditCustomSection | AuditCustomSection[],
+      ) => {
         set((state) => ({
-          customSections: [...state.customSections, section],
+          customSections: [
+            ...state.customSections,
+            ...(Array.isArray(section) ? section : [section]),
+          ],
           // emptySectionsCount: state.emptySectionsCount - 1,
         }));
       },

@@ -28,6 +28,7 @@ export const CanvaEditor = () => {
 
   const addEmptySection = useCanvaStore((state) => state.addEmptySection);
   const setCurrentPage = useCanvaStore((state) => state.setCurrentPage);
+  const addCustomSection = useCanvaStore((state) => state.addCustomSection);
 
   const audit = useAudit(auditId ?? "");
 
@@ -38,10 +39,22 @@ export const CanvaEditor = () => {
     }
   }, [audit.data, currentPage, setCurrentPage]);
 
+  // Initialize custom sections
+  useEffect(() => {
+    if (
+      customSections.length === 0 &&
+      audit.data?.customSections &&
+      audit.data?.customSections.length !== 0
+    ) {
+      addCustomSection(audit.data.customSections);
+    }
+  }, [audit.data, customSections, addCustomSection]);
+
   if (
     (currentPage?.sections || []).length === 0 &&
     customSections.length === 0 &&
-    emptySectionsCount === 0
+    emptySectionsCount === 0 &&
+    !pathname.endsWith("/new")
   ) {
     return (
       <div className="flex size-full items-center justify-center">

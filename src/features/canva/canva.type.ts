@@ -13,7 +13,9 @@ export type CanvaStore = {
   addEmptySection: () => void;
   removeEmptySection: () => void;
   customSections: Array<AuditCustomSection>;
-  addCustomSection: (section: AuditCustomSection) => void;
+  addCustomSection: (
+    section: AuditCustomSection | AuditCustomSection[],
+  ) => void;
   removeCustomSection: (sectionId: AuditCustomSection["_id"]) => void;
 };
 
