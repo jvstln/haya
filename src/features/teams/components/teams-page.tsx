@@ -1,6 +1,8 @@
 "use client";
 import { formatDistanceToNow } from "date-fns";
-import { useState } from "react";
+import type { Route } from "next";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import {
   DashboardHeader,
@@ -11,6 +13,7 @@ import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { InputSearch } from "@/components/ui/input-search";
+import { HayaSpinner } from "@/components/ui/spinner";
 import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
 import { useFilters } from "@/hooks/use-filters";
 import { getInitials } from "@/lib/utils";
@@ -23,12 +26,18 @@ type Action = {
   team: Team;
 };
 
-export const TeamsPage = () => {
+const TeamsPage = () => {
   const [view, setView] = useState<"all">("all");
   const { filters, setFilters, originalFilters } = useFilters();
   const [action, setAction] = useState<Action | null>(null);
 
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const teams = useTeams(filters);
+
+  const teamIdForTeamSheet = searchParams.get("teamId") ?? action?.team._id;
 
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6">
@@ -135,13 +144,41 @@ export const TeamsPage = () => {
         />
       )} */}
 
-      {action?.type === "view" && (
+      {((action?.type === "view" && teamIdForTeamSheet) ||
+        teamIdForTeamSheet) && (
         <TeamsSheet
           open={true}
-          onOpenChange={() => setAction(null)}
-          teamId={action.team._id}
+          onOpenChange={() => {
+            setAction(null);
+            if (searchParams.get("teamId")) {
+              const newSearchParams = new URLSearchParams(
+                searchParams.toString(),
+              );
+              newSearchParams.delete("teamId");
+              router.replace(
+                `${pathname}?${newSearchParams.toString()}` as Route,
+              );
+            }
+          }}
+          teamId={teamIdForTeamSheet}
         />
       )}
     </div>
   );
 };
+
+const TeamsPageSuspenseWrapper = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="grid size-full place-content-center">
+          <HayaSpinner />
+        </div>
+      }
+    >
+      <TeamsPage />
+    </Suspense>
+  );
+};
+
+export { TeamsPageSuspenseWrapper as TeamsPage };

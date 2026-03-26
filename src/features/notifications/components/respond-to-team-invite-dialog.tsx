@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,8 @@ export const RespondToTeamInviteDialog = ({
     _setOpen(open);
   };
 
+  const router = useRouter();
+
   const respondToInvite = useRespondToTeamInvite();
   const [respondingAction, setRespondingAction] = useState<
     "accept" | "reject" | null
@@ -46,6 +49,9 @@ export const RespondToTeamInviteDialog = ({
         onSuccess: () => {
           setOpen(false);
           setRespondingAction(null);
+          if (action === "accept") {
+            router.push(`/dashboard/teams?teamId=${teamId}`);
+          }
         },
         onSettled: () => {
           setRespondingAction(null);
