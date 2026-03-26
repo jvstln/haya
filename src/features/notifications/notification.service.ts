@@ -2,7 +2,7 @@ import { api } from "@/lib/api";
 import type { Pagination } from "@/types/type";
 import type { Notification, NotificationFilters } from "./notification.type";
 
-async function getNotifications(params: NotificationFilters) {
+async function getNotifications(params?: NotificationFilters) {
   const response = await api.get<{
     data: {
       notifications: Notification[];

@@ -1,7 +1,7 @@
 import type { QueryParams } from "@/types/type";
 
 export type NotificationFilters = QueryParams & {
-  read?: boolean;
+  status?: "all" | "read" | "unread";
 };
 
 export type NotificationType = "team_invite";

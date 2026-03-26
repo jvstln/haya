@@ -14,12 +14,13 @@ import {
   useMarkNotificationAsRead,
   useNotifications,
 } from "../notification.hook";
-import type { Notification } from "../notification.type";
+import type { Notification, NotificationFilters } from "../notification.type";
 import { NotificationItem } from "./notification-item";
 import { RespondToTeamInviteDialog } from "./respond-to-team-invite-dialog";
 
 export const NotificationsPage = () => {
-  const { filters, setFilters, originalFilters } = useFilters();
+  const { filters, setFilters, originalFilters } =
+    useFilters<NotificationFilters>();
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
 
@@ -43,7 +44,34 @@ export const NotificationsPage = () => {
         }
       />
 
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-1">
+        <Button
+          appearance={
+            filters.status === "all" || !filters.status ? "solid" : "ghost"
+          }
+          color="secondary"
+          size="sm"
+          onClick={() => setFilters(({ status, ...f }) => f)}
+        >
+          All
+        </Button>
+        <Button
+          appearance={filters.status === "unread" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setFilters((f) => ({ ...f, status: "unread" }))}
+        >
+          Unread
+        </Button>
+        <Button
+          appearance={filters.status === "read" ? "solid" : "ghost"}
+          color="secondary"
+          size="sm"
+          onClick={() => setFilters((f) => ({ ...f, status: "read" }))}
+        >
+          Read
+        </Button>
+
         <InputSearch
           placeholder="Search notifications"
           value={originalFilters.search}
