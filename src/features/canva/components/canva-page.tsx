@@ -35,7 +35,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
   const setPageIndex = useCanvaStore((state) => state.setPageIndex);
 
   // Meant to run only once. Used to track other persistent settings
-  if (auditId !== storeAuditId && auditId) {
+  if (auditId !== storeAuditId) {
     setStoreAuditId(auditId);
   }
 
@@ -100,7 +100,7 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
         )}
       </div>
 
-      <CanvaEditor audit={audit} />
+      <CanvaEditor />
     </div>
   );
 };

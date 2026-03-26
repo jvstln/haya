@@ -12,13 +12,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HayaSpinner } from "@/components/ui/spinner";
-import type { AuditSection } from "@/features/audits/audit.type";
+import type {
+  AuditCustomSection,
+  AuditSection,
+} from "@/features/audits/audit.type";
 import {
   ProblemsAndSolutionsCaseSection,
   SeoCaseSection,
 } from "@/features/audits/components/cases/case-content";
 import { useAuth } from "@/features/auth/auth.hook";
-import { cn } from "@/lib/utils";
+import { cn, random } from "@/lib/utils";
 import {
   useComments,
   useCreateComment,
@@ -31,16 +34,12 @@ import { useCanvaStore } from "../canva.store";
 import { CanvaSectionComment } from "./canva-section-comment";
 import { CanvaSectionImage } from "./canva-section-image";
 
-type SlotProps = {
-  section: AuditSection;
-  sectionIndex: number;
-};
-
 type CanvaSectionCoreProps = {
   children?: React.ReactNode;
   classNames?: Partial<Record<"container", string>>;
   isLoading?: boolean;
   imageProps?: React.ComponentProps<typeof CanvaSectionImage>;
+  onRemove?: () => void;
 };
 
 const CanvaSectionCore = ({
@@ -48,6 +47,7 @@ const CanvaSectionCore = ({
   classNames,
   isLoading,
   imageProps,
+  onRemove,
 }: CanvaSectionCoreProps) => {
   return (
     <div
@@ -55,7 +55,7 @@ const CanvaSectionCore = ({
         "relative flex min-w-(--slot-width) max-w-(--slot-width) flex-col items-center",
         classNames?.container,
       )}
-      data-slot="canva-slot"
+      data-slot="canva-section"
     >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -72,7 +72,10 @@ const CanvaSectionCore = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem data-variant="destructive">
+          <DropdownMenuItem
+            data-variant="destructive"
+            onSelect={() => onRemove?.()}
+          >
             Remove Slide
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -114,7 +117,13 @@ const CanvaSectionCore = ({
   );
 };
 
-export const CanvaSection = ({ section, sectionIndex }: SlotProps) => {
+export const AuditCanvaSection = ({
+  section,
+  sectionIndex,
+}: {
+  section: AuditSection;
+  sectionIndex: number;
+}) => {
   const auth = useAuth();
   const auditId = useCanvaStore((state) => state.auditId);
   const pageIndex = useCanvaStore((state) => state.pageIndex);
@@ -189,9 +198,114 @@ export const CanvaSection = ({ section, sectionIndex }: SlotProps) => {
   );
 };
 
-export const NewCanvaSection = () => {
+// TODO: Component functionality requires review after backend update
+export const CustomCanvaSection = ({
+  section,
+}: {
+  section: AuditCustomSection;
+}) => {
   const auth = useAuth();
   const auditId = useCanvaStore((state) => state.auditId);
+  const pageIndex = useCanvaStore((state) => state.pageIndex);
+  const removeCustomSection = useCanvaStore(
+    (state) => state.removeCustomSection,
+  );
+
+  const commentParams = {
+    auditId: auditId ?? "",
+    pageIndex,
+    sectionIndex: section._id,
+  };
+
+  const aiAnalysisProps: AuditSection = {
+    ...section,
+    category: section.sectionName,
+    screenshotUrl: section.imageUrl,
+    textContent: section.sectionName,
+    meta: {
+      accent: `--color-${random(["red", "blue", "purple", "green"])}-500`,
+      sectionNumber: random(1, 1000),
+    },
+  };
+
+  const comments = useComments(commentParams);
+  const createComment = useCreateComment(commentParams);
+  const updateComment = useUpdateComment(commentParams);
+  const deleteComment = useDeleteComment(commentParams);
+
+  return (
+    <CanvaSectionCore
+      imageProps={{ image: section.imageUrl }}
+      onRemove={() => removeCustomSection(section._id)}
+    >
+      {/* Haya analysis  */}
+      <CanvaSectionComment
+        comment={
+          section.aiAnalysis ? (
+            <>
+              <ProblemsAndSolutionsCaseSection section={aiAnalysisProps} />
+              <SeoCaseSection section={aiAnalysisProps} />
+            </>
+          ) : (
+            <div className="flex size-full flex-col items-center justify-center gap-1 overflow-y-auto rounded-md border border-secondary bg-muted p-4 text-muted-foreground text-xxs">
+              <Button color="secondary" size="icon" appearance="outline">
+                <AiIcon />
+              </Button>
+              Haya Ai
+            </div>
+          )
+        }
+        user={{ _id: "ai", username: "Haya" }}
+      />
+
+      {/* Section Comments */}
+      {comments.data?.comments.map((comment) => (
+        <CanvaSectionComment
+          key={comment._id}
+          comment={comment.comment}
+          user={comment.user}
+          canEdit={comment.user._id === auth.user?._id}
+          canDelete={comment.user._id === auth.user?._id}
+          onCommentSave={async ({ comment: updatedComment }) => {
+            await updateComment.mutateAsync({
+              commendId: comment._id,
+              comment: updatedComment,
+            });
+          }}
+          onCommentDelete={async () => {
+            await deleteComment.mutateAsync(comment._id);
+          }}
+        />
+      ))}
+
+      {auth.user && (
+        <CanvaSectionComment
+          comment=""
+          user={auth.user}
+          canEdit
+          onCommentSave={async ({ comment, setComment }) => {
+            if (!auditId) return;
+            await createComment.mutateAsync({
+              comment,
+              auditId,
+              pageIndex,
+              sectionIndex: aiAnalysisProps.meta.sectionNumber,
+            });
+            setComment("");
+          }}
+        />
+      )}
+    </CanvaSectionCore>
+  );
+};
+
+export const EmptyCanvaSection = () => {
+  const auth = useAuth();
+
+  const auditId = useCanvaStore((state) => state.auditId);
+  const addCustomSection = useCanvaStore((state) => state.addCustomSection);
+  const removeEmptySection = useCanvaStore((state) => state.removeEmptySection);
+
   const createNewSection = useCreateSection();
 
   const isLoading = createNewSection.isPending;
@@ -216,8 +330,16 @@ export const NewCanvaSection = () => {
             });
           }
 
-          createNewSection.mutate(parsedPayload.data);
+          createNewSection.mutate(parsedPayload.data, {
+            onSuccess(data) {
+              addCustomSection(data);
+              removeEmptySection();
+            },
+          });
         },
+      }}
+      onRemove={() => {
+        removeEmptySection();
       }}
     >
       {auth.user && (

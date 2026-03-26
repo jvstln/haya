@@ -1,27 +1,48 @@
 "use client";
 
 import { Add } from "iconsax-reactjs";
+import { usePathname } from "next/navigation";
 import type React from "react";
+import { useEffect } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
-import type { useAudit } from "@/features/audits/audit.hook";
+import { useAudit } from "@/features/audits/audit.hook";
 import { cn } from "@/lib/utils";
 import { useCanvaStore } from "../canva.store";
 import { CanvaDock } from "./canva-dock";
 import { CanvaHotkeys } from "./canva-hotkeys";
-import { CanvaSection, NewCanvaSection } from "./canva-section";
+import {
+  AuditCanvaSection,
+  CustomCanvaSection,
+  EmptyCanvaSection,
+} from "./canva-section";
 
-type CanvaEditorProps = {
-  audit: ReturnType<typeof useAudit>;
-};
+export const CanvaEditor = () => {
+  const pathname = usePathname();
+  const auditId = useCanvaStore((state) => state.auditId);
 
-export const CanvaEditor = ({ audit }: CanvaEditorProps) => {
-  const pageIndex = useCanvaStore((state) => state.pageIndex);
-  const currentPage = audit.data?.content?.pages[pageIndex];
-  const addNewSection = useCanvaStore((state) => state.addNewSection);
+  const currentPage = useCanvaStore((state) => state.currentPage);
+  const customSections = useCanvaStore((state) => state.customSections);
+  const emptySectionsCount = useCanvaStore((state) => state.emptySectionsCount);
 
-  if (currentPage?.sections.length === 0) {
+  const addEmptySection = useCanvaStore((state) => state.addEmptySection);
+  const setCurrentPage = useCanvaStore((state) => state.setCurrentPage);
+
+  const audit = useAudit(auditId ?? "");
+
+  // Set the current page to the first page of the audit if it exists
+  useEffect(() => {
+    if (audit.data && !currentPage) {
+      setCurrentPage(audit.data.content?.pages[0]);
+    }
+  }, [audit.data, currentPage, setCurrentPage]);
+
+  if (
+    (currentPage?.sections || []).length === 0 &&
+    customSections.length === 0 &&
+    emptySectionsCount === 0
+  ) {
     return (
       <div className="flex size-full items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4 rounded-md border border-secondary border-dashed p-10 text-muted-foreground [:has(button:hover)]:border-white">
@@ -31,7 +52,7 @@ export const CanvaEditor = ({ audit }: CanvaEditorProps) => {
             color="secondary"
             appearance="outline"
             onClick={() => {
-              addNewSection();
+              addEmptySection();
             }}
           >
             <Add className="size-8" />
@@ -43,7 +64,12 @@ export const CanvaEditor = ({ audit }: CanvaEditorProps) => {
   }
 
   return (
-    <QueryState query={audit}>
+    <QueryState
+      query={{
+        ...audit,
+        isPending: audit.isPending && !pathname.endsWith("/new"),
+      }}
+    >
       <TransformWrapper
         initialScale={1}
         minScale={0.2}
@@ -79,7 +105,7 @@ export const CanvaEditor = ({ audit }: CanvaEditorProps) => {
             >
               <TransformComponent
                 wrapperClass={cn(
-                  "items-start! justify-center! flex-1 origin-center! overflow-hidden",
+                  "items-start! justify-center! min-w-full flex-1 origin-center! overflow-hidden",
                 )}
                 contentClass={cn("flex-nowrap! origin-center!")}
                 contentProps={{ id: "canva-content" }}
@@ -109,15 +135,14 @@ export const CanvaEditor = ({ audit }: CanvaEditorProps) => {
                     className="stroke-secondary"
                   />
                 </svg>
-                {currentPage?.sections?.map((section, index) => (
-                  <CanvaSection
-                    // biome-ignore lint/suspicious/noArrayIndexKey: index is used as a section identifier
-                    key={index}
-                    section={section}
-                    sectionIndex={index}
-                  />
-                ))}
-                <NewSections audit={audit} />
+                {/* There are 3 types of sections: */}
+                {/* 1. Audit sections - from the initial analyzed audit */}
+                {/* 2. Custom sections - added by the user */}
+                {/* 3. Empty sections - placeholders for new sections */}
+
+                <AuditSections />
+                <CustomSections />
+                <EmptySections />
               </TransformComponent>
               <CanvaDock />
               <CanvaHotkeys />
@@ -129,10 +154,31 @@ export const CanvaEditor = ({ audit }: CanvaEditorProps) => {
   );
 };
 
-const NewSections = ({ audit }: CanvaEditorProps) => {
-  const newSections = useCanvaStore((state) => state.newSections);
+const AuditSections = () => {
+  const currentPage = useCanvaStore((state) => state.currentPage);
 
-  return newSections.map((section, _index) => (
-    <NewCanvaSection key={section._id} />
+  return currentPage?.sections?.map((section, index) => (
+    <AuditCanvaSection
+      // biome-ignore lint/suspicious/noArrayIndexKey: index is used as a section identifier
+      key={index}
+      section={section}
+      sectionIndex={index}
+    />
+  ));
+};
+
+const CustomSections = () => {
+  const customSections = useCanvaStore((state) => state.customSections);
+
+  return customSections.map((section, _index) => (
+    <CustomCanvaSection key={section._id} section={section} />
+  ));
+};
+
+const EmptySections = () => {
+  const emptySectionsCount = useCanvaStore((state) => state.emptySectionsCount);
+
+  return Array.from({ length: emptySectionsCount }).map((index) => (
+    <EmptyCanvaSection key={`empty-${index}`} />
   ));
 };

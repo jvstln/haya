@@ -39,7 +39,12 @@ export function shuffleArray<T>(arr: T[]) {
   return arr.toSorted(() => Math.random() - 0.5);
 }
 
-export function random(min = 0, max = 1) {
+export function random<T>(min: number | T[] = 0, max = 1) {
+  if (Array.isArray(min)) {
+    const randomIndex = Math.floor(Math.random() * min.length);
+    return min[randomIndex];
+  }
+
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 

@@ -19,8 +19,12 @@ export interface AuditWithoutContent {
   url: string;
   status: AuditStatus;
   analysis_type: AuditType;
+  teamId?: string;
+  userId: string;
   createdAt: string;
   updatedAt: string;
+
+  customSections: AuditCustomSection[];
 }
 
 export interface RawAudit extends AuditWithoutContent {
@@ -46,6 +50,14 @@ export interface AuditSection {
     sectionNumber: number;
     accent: `--color-${string}`;
   };
+}
+
+export interface AuditCustomSection {
+  _id: string;
+  sectionName: string;
+  imageUrl: string;
+  imagePublicId: string;
+  aiAnalysis: AuditSectionAnalysis | null;
 }
 
 export type AuditSectionAnalysis = {
