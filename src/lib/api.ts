@@ -26,6 +26,16 @@ api.interceptors.request.use(async (config) => {
     }
   }
 
+  if (config.data instanceof FormData) {
+    for (const [key, value] of config.data.entries()) {
+      if (key.startsWith("audit")) {
+        const rewrittenProperty = key.replace(/^audit/, "analysis");
+        config.data.set(rewrittenProperty, value);
+        config.data.delete(key);
+      }
+    }
+  }
+
   return config;
 });
 
