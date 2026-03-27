@@ -10,6 +10,7 @@ export type AuditStatus = "pending" | "completed" | "failed" | "in_progress";
 
 export type AuditFilters = QueryParams & {
   status?: AuditStatus;
+  teamId?: string;
 };
 
 export type AuditType = "Website_Analysis" | string; // Allowing string for potential future types

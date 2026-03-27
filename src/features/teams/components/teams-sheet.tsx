@@ -20,19 +20,17 @@ import { useAssignAuditsToTeam, useTeam } from "../team.hook";
 import { AddTeamMemberDialog } from "./add-team-member-dialog";
 import { MessageTeamMembersForm } from "./message-team-members-form";
 
-type TeamsSheetProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+type TeamsSheetProps = React.ComponentProps<typeof Sheet> & {
   teamId: string;
 };
 
-export const TeamsSheet = ({ open, onOpenChange, teamId }: TeamsSheetProps) => {
+export const TeamsSheet = ({ teamId, ...props }: TeamsSheetProps) => {
   const team = useTeam(teamId);
-  const audits = useAudits();
+  const audits = useAudits({ teamId });
   const assignAuditsToTeam = useAssignAuditsToTeam();
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet {...props}>
       <SheetContent
         className="flex w-full flex-col bg-[#1E1E1E] p-0 text-white sm:max-w-[548px]"
         closeButton={
