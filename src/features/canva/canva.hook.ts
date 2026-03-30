@@ -13,45 +13,45 @@ export function useCanvaControls() {
     resetTransform,
   } = useControls();
 
-  const zoomIn = (scale = 0.1) => {
-    if (!instance.contentComponent) return;
+  // const zoomIn = (scale = 0.1) => {
+  //   if (!instance.contentComponent) return;
 
-    const currentScale = instance.transformState.scale;
-    const currentWidth = instance.contentComponent.offsetWidth;
-    const currentHeight = instance.contentComponent.offsetHeight;
-    const newScale = currentScale + scale;
-    const newWidth = (currentWidth * newScale) / currentScale;
-    const newHeight = (currentHeight * newScale) / currentScale;
+  //   const currentScale = instance.transformState.scale;
+  //   const currentWidth = instance.contentComponent.offsetWidth;
+  //   const currentHeight = instance.contentComponent.offsetHeight;
+  //   const newScale = currentScale + scale;
+  //   const newWidth = (currentWidth * newScale) / currentScale;
+  //   const newHeight = (currentHeight * newScale) / currentScale;
 
-    const deltaWidth = currentWidth - newWidth;
-    const deltaHeight = currentHeight - newHeight;
+  //   const deltaWidth = currentWidth - newWidth;
+  //   const deltaHeight = currentHeight - newHeight;
 
-    setTransform(
-      instance.transformState.positionX - deltaWidth / 2,
-      instance.transformState.positionY - deltaHeight / 2,
-      newScale,
-    );
-  };
+  //   setTransform(
+  //     instance.transformState.positionX - deltaWidth / 2,
+  //     instance.transformState.positionY - deltaHeight / 2,
+  //     newScale,
+  //   );
+  // };
 
-  const zoomOut = (scale = 0.1) => {
-    if (!instance.contentComponent) return;
+  // const zoomOut = (scale = 0.1) => {
+  //   if (!instance.contentComponent) return;
 
-    const currentScale = instance.transformState.scale;
-    const currentWidth = instance.contentComponent.offsetWidth;
-    const currentHeight = instance.contentComponent.offsetHeight;
-    const newScale = currentScale - scale;
-    const newWidth = (currentWidth * newScale) / currentScale;
-    const newHeight = (currentHeight * newScale) / currentScale;
+  //   const currentScale = instance.transformState.scale;
+  //   const currentWidth = instance.contentComponent.offsetWidth;
+  //   const currentHeight = instance.contentComponent.offsetHeight;
+  //   const newScale = currentScale - scale;
+  //   const newWidth = (currentWidth * newScale) / currentScale;
+  //   const newHeight = (currentHeight * newScale) / currentScale;
 
-    const deltaWidth = currentWidth - newWidth;
-    const deltaHeight = currentHeight - newHeight;
+  //   const deltaWidth = currentWidth - newWidth;
+  //   const deltaHeight = currentHeight - newHeight;
 
-    setTransform(
-      instance.transformState.positionX - deltaWidth / 2,
-      instance.transformState.positionY - deltaHeight / 2,
-      newScale,
-    );
-  };
+  //   setTransform(
+  //     instance.transformState.positionX - deltaWidth / 2,
+  //     instance.transformState.positionY - deltaHeight / 2,
+  //     newScale,
+  //   );
+  // };
 
   const fitElementToScreen = (
     element: HTMLElement | null = instance.contentComponent,
@@ -79,8 +79,8 @@ export function useCanvaControls() {
   };
 
   return {
-    zoomIn,
-    zoomOut,
+    zoomIn: _zoomIn,
+    zoomOut: _zoomOut,
     instance,
     setTransform,
     resetTransform,
