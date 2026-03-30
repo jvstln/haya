@@ -21,6 +21,8 @@ import {
   SeoCaseSection,
 } from "@/features/audits/components/cases/case-content";
 import { useAuth } from "@/features/auth/auth.hook";
+import { api } from "@/lib/api";
+import { queryClient } from "@/lib/queryclient";
 import { cn, random } from "@/lib/utils";
 import {
   useComments,
@@ -28,11 +30,12 @@ import {
   useDeleteComment,
   useUpdateComment,
 } from "../canva.comment.hook";
-import { useCreateSection } from "../canva.hook";
+import { useAnalyzeSectionImage, useCreateSection } from "../canva.hook";
 import { newSectionSchema } from "../canva.schema";
 import { useCanvaStore } from "../canva.store";
 import { CanvaSectionComment } from "./canva-section-comment";
 import { CanvaSectionImage } from "./canva-section-image";
+import { useMutation } from "@tanstack/react-query";
 
 type CanvaSectionCoreProps = {
   children?: React.ReactNode;
@@ -134,6 +137,7 @@ export const AuditCanvaSection = ({
   const createComment = useCreateComment(commentParams);
   const updateComment = useUpdateComment(commentParams);
   const deleteComment = useDeleteComment(commentParams);
+  const analyzeSectionImage = useAnalyzeSectionImage();
 
   return (
     <CanvaSectionCore imageProps={{ image: section.screenshotUrl }}>
@@ -147,7 +151,19 @@ export const AuditCanvaSection = ({
             </>
           ) : (
             <div className="flex size-full flex-col items-center justify-center gap-1 overflow-y-auto rounded-md border border-secondary bg-muted p-4 text-muted-foreground text-xxs">
-              <Button color="secondary" size="icon" appearance="outline">
+              <Button
+                color="secondary"
+                size="icon"
+                appearance="outline"
+                onClick={() => {
+                  if (!auditId) return;
+                  analyzeSectionImage.mutate({
+                    auditId,
+                    imageUrl: section.screenshotUrl,
+                  });
+                }}
+                isLoading={analyzeSectionImage.isPending}
+              >
                 <AiIcon />
               </Button>
               Haya Ai
@@ -229,9 +245,50 @@ export const CustomCanvaSection = ({
   };
 
   const comments = useComments(commentParams);
-  const createComment = useCreateComment(commentParams);
+  const createComment = useMutation({
+    mutationFn: async ({
+      comment,
+      analysisId,
+      customSectionId,
+    }: {
+      comment: string;
+      analysisId: string;
+      customSectionId: string;
+    }) => {
+      const response = await api.post("/comments/custom", {
+        analysisId,
+        customSectionId,
+        comment,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Comment added successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["comments", commentParams],
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to add comment");
+    },
+  });
   const updateComment = useUpdateComment(commentParams);
-  const deleteComment = useDeleteComment(commentParams);
+  const deleteComment = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await api.delete(`/comments/custom/${id}`);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Comment deleted successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["comments", commentParams],
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete comment");
+    },
+  });
+  const analyzeSectionImage = useAnalyzeSectionImage();
 
   return (
     <CanvaSectionCore
@@ -248,7 +305,19 @@ export const CustomCanvaSection = ({
             </>
           ) : (
             <div className="flex size-full flex-col items-center justify-center gap-1 overflow-y-auto rounded-md border border-secondary bg-muted p-4 text-muted-foreground text-xxs">
-              <Button color="secondary" size="icon" appearance="outline">
+              <Button
+                color="secondary"
+                size="icon"
+                appearance="outline"
+                onClick={() => {
+                  if (!auditId) return;
+                  analyzeSectionImage.mutate({
+                    auditId,
+                    imageUrl: section.imageUrl,
+                  });
+                }}
+                isLoading={analyzeSectionImage.isPending}
+              >
                 <AiIcon />
               </Button>
               Haya Ai
@@ -287,9 +356,8 @@ export const CustomCanvaSection = ({
             if (!auditId) return;
             await createComment.mutateAsync({
               comment,
-              auditId,
-              pageIndex,
-              sectionIndex: aiAnalysisProps.meta.sectionNumber,
+              analysisId: auditId,
+              customSectionId: section._id,
             });
             setComment("");
           }}

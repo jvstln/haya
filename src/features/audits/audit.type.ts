@@ -53,6 +53,11 @@ export interface AuditSection {
   };
 }
 
+export type UploadedImage = {
+  imageUrl: string;
+  imagePublicId: string;
+};
+
 export interface AuditCustomSection {
   _id: string;
   sectionName: string;

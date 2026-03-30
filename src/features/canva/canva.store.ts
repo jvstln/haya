@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { AuditCustomSection, AuditPage } from "../audits/audit.type";
+import type {
+  AuditCustomSection,
+  AuditPage,
+  UploadedImage,
+} from "../audits/audit.type";
 import type { CanvaStore } from "./canva.type";
 
 export const useCanvaStore = create<CanvaStore>()(
@@ -35,14 +39,18 @@ export const useCanvaStore = create<CanvaStore>()(
       removeEmptySection: () => {
         set((state) => ({ emptySectionsCount: state.emptySectionsCount - 1 }));
       },
-      addCustomSection: (
-        section: AuditCustomSection | AuditCustomSection[],
-      ) => {
+      addCustomSection: (uploadedImage: UploadedImage | UploadedImage[]) => {
+        const parsedCustomSection: AuditCustomSection[] = (
+          Array.isArray(uploadedImage) ? uploadedImage : [uploadedImage]
+        ).map((image) => ({
+          ...image,
+          _id: image.imagePublicId + Math.random(),
+          aiAnalysis: null,
+          sectionName: image.imagePublicId,
+        }));
+
         set((state) => ({
-          customSections: [
-            ...state.customSections,
-            ...(Array.isArray(section) ? section : [section]),
-          ],
+          customSections: [...state.customSections, ...parsedCustomSection],
           // emptySectionsCount: state.emptySectionsCount - 1,
         }));
       },

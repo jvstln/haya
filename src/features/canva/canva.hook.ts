@@ -106,3 +106,22 @@ export const useCreateSection = () => {
     },
   });
 };
+
+export const useAnalyzeSectionImage = () => {
+  return useMutation({
+    mutationFn: CanvaService.analyzeSectionImage,
+    onMutate: () => {
+      toast.loading("Running analysis...", { id: "analyzeSectionImage" });
+    },
+    onSuccess: () => {
+      toast.success("Analysis completed successfully", {
+        id: "analyzeSectionImage",
+      });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error) ?? "Failed to analze", {
+        id: "analyzeSectionImage",
+      });
+    },
+  });
+};

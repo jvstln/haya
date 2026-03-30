@@ -1,5 +1,4 @@
 import { api } from "@/lib/api";
-import type { AuditCustomSection } from "../audits/audit.type";
 import type { NewSection } from "./canva.type";
 
 export async function createSection(payload: NewSection) {
@@ -7,9 +6,16 @@ export async function createSection(payload: NewSection) {
   formData.append("image", payload.image);
   formData.append("auditId", payload.auditId);
 
-  const response = await api.post<{ data: AuditCustomSection }>(
-    "/comments/custom/analyze",
-    formData,
-  );
+  const response = await api.post<{
+    data: { imageUrl: string; imagePublicId: string };
+  }>("/comments/custom/upload", formData);
   return response.data.data;
+}
+
+export async function analyzeSectionImage(payload: {
+  auditId: string;
+  imageUrl: string;
+}) {
+  const response = await api.post("/comments/custom/analyze", payload);
+  return response.data;
 }

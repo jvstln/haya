@@ -1,5 +1,9 @@
 import type z from "zod";
-import type { AuditCustomSection, AuditPage } from "../audits/audit.type";
+import type {
+  AuditCustomSection,
+  AuditPage,
+  UploadedImage,
+} from "../audits/audit.type";
 import type { newSectionSchema } from "./canva.schema";
 
 export type CanvaStore = {
@@ -13,9 +17,7 @@ export type CanvaStore = {
   addEmptySection: () => void;
   removeEmptySection: () => void;
   customSections: Array<AuditCustomSection>;
-  addCustomSection: (
-    section: AuditCustomSection | AuditCustomSection[],
-  ) => void;
+  addCustomSection: (section: UploadedImage | UploadedImage[]) => void;
   removeCustomSection: (sectionId: AuditCustomSection["_id"]) => void;
 };
 
