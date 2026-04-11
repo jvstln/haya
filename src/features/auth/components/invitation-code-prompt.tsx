@@ -54,7 +54,7 @@ export const getInvitationCode = async () => {
 };
 
 export function InvitationCodePrompt() {
-  const { open, resolve } = useInvitationStore();
+  const { open, resolve, reject } = useInvitationStore();
   const [code, setCode] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,8 +66,13 @@ export function InvitationCodePrompt() {
   };
 
   return (
-    <Dialog open={open}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) reject?.("User cancelled");
+      }}
+    >
+      <DialogContent className="w-full py-20">
         <DialogHeader>
           <DialogTitle>INVITATION CODE REQUIRED</DialogTitle>
         </DialogHeader>
