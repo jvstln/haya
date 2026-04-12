@@ -1,6 +1,5 @@
 "use client";
-import { Document, Image, Link, Page, Text, View } from "@react-pdf/renderer";
-import { Fragment } from "react";
+import { Document, Image, Page, Text, View } from "@react-pdf/renderer";
 import { useAuth } from "@/features/auth/auth.hook";
 import type { AuditSection, ParsedAudit } from "../audit.type";
 
@@ -98,7 +97,7 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
         fontWeight: 400,
       }}
     >
-      <Page {...pageProps}>
+      <Page {...pageProps} size={{ ...pageProps.size, height: 400 }}>
         {/* Header */}
         <View
           style={{
@@ -231,7 +230,7 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
           </View>
 
           {/* Pages and Sections */}
-          <Text
+          {/* <Text
             style={{ fontSize: 16, fontWeight: "semibold", marginBottom: 8 }}
           >
             Pages & Sections Overview
@@ -260,7 +259,7 @@ export const AuditPdfDocument = ({ audit }: AuditPdfDocumentProps) => {
                 ))}
               </Fragment>
             ))}
-          </View>
+          </View> */}
 
           {/* TODO: More summaries coming soon. requires backend update */}
         </View>
