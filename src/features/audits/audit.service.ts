@@ -14,16 +14,40 @@ import type {
 /** Hacky - change v1 to v2 in all audit/analysis endpoint because of backend version change */
 
 async function getAudits(params?: AuditFilters) {
-  const response = await api.get<{
+  let data: {
     data: AuditWithoutContent[];
     pagination: Pagination;
-  }>(`${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`, {
-    params: {
-      ...params,
-      page: params?.page ?? 1, // Without this, the backend directly returns an array without pagination. Remove when issue is resolved
-    },
-  });
-  return response.data;
+  };
+
+  if (params?.teamId) {
+    const response = await api.get<{
+      data: { analyses: AuditWithoutContent[] };
+    }>(`/teams/${params.teamId}/analyses`, {
+      params,
+    });
+    data = {
+      data: response.data.data.analyses,
+      pagination: {
+        currentPage: 1,
+        totalPages: 1,
+        hasNext: false,
+        hasPrevious: false,
+        itemsPerPage: response.data.data.analyses.length,
+        totalItems: response.data.data.analyses.length,
+      },
+    };
+  } else {
+    const response = await api.get<{
+      data: AuditWithoutContent[];
+      pagination: Pagination;
+    }>(`${api.defaults.baseURL?.replace("v1", "v2")}/analyze/analysis`, {
+      params,
+    });
+
+    data = response.data;
+  }
+
+  return data;
 }
 
 async function getAudit(auditId: string) {

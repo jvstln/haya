@@ -58,7 +58,7 @@ export const useDeleteAudits = () => {
     onError: (error) => toast.error(`Error: ${error.message}`),
     onSuccess: (data) => {
       toast.success(data.message || "All audits deleted successfully");
-      invalidateQueries();
+      invalidateAuditQueries();
     },
   });
 };
@@ -69,12 +69,12 @@ export const useDeleteAudit = () => {
     onError: (error) => toast.error(`Error: ${error.message}`),
     onSuccess: (data) => {
       toast.success(data.message || "Audit deleted successfully");
-      invalidateQueries();
+      invalidateAuditQueries();
     },
   });
 };
 
-function invalidateQueries() {
+export function invalidateAuditQueries() {
   ["audits", "audit"].map((key) =>
     queryClient.invalidateQueries({ queryKey: [key] }),
   );

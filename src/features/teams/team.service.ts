@@ -64,9 +64,6 @@ export async function deleteMemberFromTeam({
 }
 
 export async function assignAuditsToTeam(payload: AssignAuditToTeam) {
-  const response = await api.post("/tasks", {
-    ...payload,
-    assignedToTeamId: payload.teamId,
-  });
+  const response = await api.post(`/teams/${payload.teamId}/analyses`, payload);
   return response.data;
 }

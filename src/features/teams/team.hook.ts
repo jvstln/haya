@@ -4,6 +4,7 @@ import { invalidateNotificationQueries } from "@/features/notifications/notifica
 import { queryClient } from "@/lib/queryclient";
 import * as TeamService from "./team.service";
 import type { TeamFilters } from "./team.type";
+import { invalidateAuditQueries } from "../audits/audit.hook";
 
 export function useTeams(filters: TeamFilters = {}) {
   return useQuery({
@@ -75,6 +76,7 @@ export function useAssignAuditsToTeam() {
     onSuccess: () => {
       toast.success("Audits assigned successfully");
       invalidateTeamQueries();
+      invalidateAuditQueries();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to assign audits");

@@ -19,6 +19,7 @@ import { getInitials } from "@/lib/utils";
 import { useAssignAuditsToTeam, useTeam } from "../team.hook";
 import { AddTeamMemberDialog } from "./add-team-member-dialog";
 import { MessageTeamMembersForm } from "./message-team-members-form";
+import { FolderIcon } from "@/components/icons";
 
 type TeamsSheetProps = React.ComponentProps<typeof Sheet> & {
   teamId: string;
@@ -133,6 +134,11 @@ export const TeamsSheet = ({ teamId, ...props }: TeamsSheetProps) => {
                         query={audits}
                         errorPrefix="Error fetching audits"
                       />
+                    ) : audits.data.data.length === 0 ? (
+                      <div className="flex grow flex-col items-center justify-center text-sm">
+                        <FolderIcon className="size-40" />
+                        <p>No assigned audit yet</p>
+                      </div>
                     ) : (
                       audits.data?.data?.map((audit) => (
                         <AuditCard key={audit._id} audit={audit} />
