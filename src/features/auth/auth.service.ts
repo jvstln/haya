@@ -25,6 +25,7 @@ async function redirectToGoogleAuth() {
   const baseUrl = api.defaults.baseURL || window.location.host;
   // Temporary: Intercept auth endpoints that require invitation code and prompt user to enter one
   const { code } = await getInvitationCode();
+  if (!code) return;
 
   window.location.href = `${baseUrl.replace(/\/*$/, "/auth/google")}?invitationCode=${code}`;
 }
