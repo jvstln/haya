@@ -8,7 +8,7 @@ export async function createSection(payload: NewSection) {
 
   const response = await api.post<{
     data: { imageUrl: string; imagePublicId: string };
-  }>("/comments/custom/upload", formData);
+  }>("/comments/custom/analyze", formData);
   return response.data.data;
 }
 
