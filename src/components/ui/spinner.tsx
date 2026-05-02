@@ -1,8 +1,9 @@
 "use client";
-import { Loader2 } from "lucide-react";
-import { motion } from "motion/react";
+import type { Loader2 } from "lucide-react";
+// import { motion } from "motion/react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/public/logo";
 import logo from "@/public/logo-icon.svg";
 
 function Spinner({
@@ -10,10 +11,13 @@ function Spinner({
   ...props
 }: React.ComponentProps<typeof Loader2>) {
   return (
-    <Loader2
+    <Logo
       aria-live="polite"
       aria-label="Loading"
-      className={cn("pointer-events-none size-4 animate-spin", className)}
+      className={cn(
+        "pointer-events-none size-4 animate-[spin_2s_linear_infinite]",
+        className,
+      )}
       {...props}
     />
   );
@@ -23,10 +27,11 @@ function HayaSpinner() {
   return (
     <output
       aria-live="polite"
+      aria-busy="true"
       className="relative grid size-18 place-content-center"
       data-slot="loader"
     >
-      <div
+      {/* <div
         className="absolute inset-0"
         style={{
           mask: "radial-gradient(transparent 20%, #000 20%)",
@@ -53,8 +58,13 @@ function HayaSpinner() {
             times: [0, 0.3, 0.5, 0.7, 1],
           }}
         />
-      </div>
-      <Image src={logo} alt="Haya Loader" className="size-5" />
+      </div> */}
+      <Image
+        src={logo}
+        alt="Haya Loader"
+        className="size-12 animate-spin"
+        style={{ animationDuration: "3s" }}
+      />
     </output>
   );
 }
