@@ -5,6 +5,7 @@ import {
   persist,
   type StateStorage,
 } from "zustand/middleware";
+import { getCurrentUserProfile } from "../users/user.service";
 import type { AuthActions, AuthState } from "./auth.type";
 
 const COOKIE_EXPIRY_DAYS = 7;
@@ -40,6 +41,10 @@ export const useAuthStore = create<
       setAuth: (authState: AuthState) => {
         set(authState);
       },
+      refreshAuth: async () => {
+        const user = await getCurrentUserProfile();
+        set({ user });
+      },
       resetAuth: () => {
         set({ accessToken: null, refreshToken: null, user: null });
         // Disconnect wallet if connected
@@ -55,6 +60,7 @@ export const useAuthStore = create<
       name: "haya.auth",
       storage: createJSONStorage(() => cookieStorage),
       onRehydrateStorage: () => (state) => {
+        state?.refreshAuth();
         state?.setHasHydrated(true);
       },
       // Prevent hydrated state from being stored in storage

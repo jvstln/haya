@@ -1,7 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useAuthStore } from "@/features/auth/auth.store";
-import { getUsers, updateUsername } from "./user.service";
+import { queryClient } from "@/lib/queryclient";
+import { useAuth } from "../auth/auth.hook";
+import {
+  getCurrentUserProfile,
+  getUsers,
+  updateUsername,
+} from "./user.service";
 import type { UserFilters } from "./user.type";
 
 export function useUsers(params: UserFilters = {}) {
@@ -12,6 +17,8 @@ export function useUsers(params: UserFilters = {}) {
 }
 
 export function useUpdateUsername() {
+  const auth = useAuth();
+
   return useMutation({
     mutationFn: updateUsername,
     onMutate: () => {
@@ -19,18 +26,14 @@ export function useUpdateUsername() {
         id: "updateUsername",
       });
     },
-    onSuccess(data, variables) {
-      toast.success(data.message || "Username updated successfully", { id: "updateUsername" });
-      const authState = useAuthStore.getState();
-      if (authState.user) {
-        authState.setAuth({
-          ...authState,
-          user: {
-            ...authState.user,
-            username: variables.username,
-          },
-        });
-      }
+    onSuccess(data) {
+      toast.success(data.message || "Username updated successfully", {
+        id: "updateUsername",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["current-user-profile"],
+      });
+      auth.refreshAuth();
     },
     onError(error) {
       toast.error(`Error: ${error.message}`, {
@@ -39,3 +42,10 @@ export function useUpdateUsername() {
     },
   });
 }
+
+export const useCurrentUserProfile = () => {
+  return useQuery({
+    queryKey: ["current-user-profile"],
+    queryFn: getCurrentUserProfile,
+  });
+};

@@ -4,6 +4,8 @@ import { Edit } from "iconsax-reactjs";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
+import { create } from "zustand";
+import { combine } from "zustand/middleware";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +24,27 @@ import { useAuth } from "@/features/auth/auth.hook";
 import { useUpdateUsername } from "../user.hook";
 
 type ChangeUsernameDialogProps = React.ComponentProps<typeof Dialog>;
+
+export const changeUsernameStore = create(
+  combine({ showDialogOnPageLoad: false }, (set) => ({
+    setShowDialogOnPageLoad: (value: boolean) =>
+      set({ showDialogOnPageLoad: value }),
+  })),
+);
+
+export const ChangeUsernameDialogGuard = () => {
+  const auth = useAuth();
+  const shouldChangeUsername = !!(auth.user && !auth.user?.hasUpdatedUsername);
+
+  return (
+    <ChangeUsernameDialog
+      open={shouldChangeUsername}
+      onOpenChange={(open) => {
+        if (!open) auth.refreshAuth();
+      }}
+    />
+  );
+};
 
 export function ChangeUsernameDialog({
   children,

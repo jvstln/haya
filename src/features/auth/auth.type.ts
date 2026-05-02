@@ -38,15 +38,17 @@ export interface SolanaUser {
   walletAddress: string;
   lastLogin: string;
   authMethod: "wallet";
+  hasUpdatedUsername?: boolean;
 }
 
-interface AuthUser {
+export interface AuthUser {
   _id: string; // TODO: Verify that this property exists and is named correctly
   username: string;
   email: string;
   authMethod: "email" | "google";
   lastLogin: string;
   walletAddress?: string;
+  hasUpdatedUsername?: boolean;
 }
 export interface AuthState {
   accessToken: string | null;
@@ -56,4 +58,5 @@ export interface AuthState {
 export interface AuthActions {
   setAuth: (authState: AuthState) => void;
   resetAuth: () => void;
+  refreshAuth: () => void;
 }
