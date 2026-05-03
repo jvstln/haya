@@ -2,7 +2,7 @@ import { Notification } from "iconsax-reactjs";
 import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
 import { useFilters } from "@/hooks/use-filters";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { useNotifications } from "../notification.hook";
 import type { NotificationFilters } from "../notification.type";
 

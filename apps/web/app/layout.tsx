@@ -1,20 +1,20 @@
-import type { Metadata } from "next"
-import { Lato, Syncopate } from "next/font/google"
-import { cn } from "@/lib/utils"
-import "@workspace/ui/globals.css"
-import { Providers } from "@/components/providers"
+import type { Metadata } from "next";
+import { Lato, Syncopate } from "next/font/google";
+import { cn } from "@workspace/ui/lib/utils";
+import "@workspace/ui/globals.css";
+import { Providers } from "@/components/providers";
 
 const lato = Lato({
   subsets: ["latin"],
   variable: "--font-lato",
   weight: ["100", "300", "400", "700", "900"],
-})
+});
 
 const syncopate = Syncopate({
   subsets: ["latin"],
   variable: "--font-syncopate",
   weight: ["400", "700"],
-})
+});
 
 export const metadata: Metadata = {
   title: {
@@ -23,12 +23,12 @@ export const metadata: Metadata = {
   },
   description:
     "Seamless infrastructure for onchain UX analytics, empowering builders to identify and fix friction points in minutes, not weeks.",
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -36,11 +36,11 @@ export default function RootLayout({
         className={cn(
           lato.variable,
           syncopate.variable,
-          "size-full min-h-screen bg-background font-lato text-foreground antialiased"
+          "size-full min-h-screen bg-background font-lato text-foreground antialiased",
         )}
       >
         <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }

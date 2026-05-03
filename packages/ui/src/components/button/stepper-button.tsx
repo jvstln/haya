@@ -1,5 +1,5 @@
 import { ArrowDown2, ArrowUp2 } from "iconsax-reactjs";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { Button } from ".";
 
 type StepperButtonProps = Omit<

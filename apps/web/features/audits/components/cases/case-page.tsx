@@ -33,7 +33,7 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { useAudit } from "../../audit.hook";
 import { getIsAuditInProgress } from "../../audit.service";
 import type { AuditPage } from "../../audit.type";

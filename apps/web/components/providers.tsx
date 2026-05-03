@@ -5,7 +5,7 @@ import { OnboardingFormDialog } from "@/features/auth/components/onboarding-dial
 import { SolanaProvider } from "@/features/auth/components/solana-provider";
 import { ChangeUsernameDialogGuard } from "@/features/users/components/change-username-dialog";
 import { queryClient } from "@/lib/queryclient";
-import { Toaster } from "./ui/sonner";
+import { Toaster } from "@workspace/ui/components/sonner";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (

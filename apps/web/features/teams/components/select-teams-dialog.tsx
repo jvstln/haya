@@ -1,9 +1,13 @@
 import { formatDistanceToNow } from "date-fns";
 import type React from "react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { QueryState } from "@/components/query-states";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar";
 import { Button, IconToggleButton } from "@workspace/ui/components/button";
 import {
   Dialog,

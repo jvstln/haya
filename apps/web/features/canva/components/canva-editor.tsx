@@ -8,7 +8,7 @@ import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@workspace/ui/components/button";
 import { useAudit } from "@/features/audits/audit.hook";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { useCanvaStore } from "../canva.store";
 import { CanvaDock } from "./canva-dock";
 import { CanvaHotkeys } from "./canva-hotkeys";

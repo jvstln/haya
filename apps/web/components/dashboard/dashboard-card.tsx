@@ -2,14 +2,14 @@ import { MoreVertical } from "lucide-react";
 import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { cn } from "@workspace/ui/lib/utils";
+import { Button } from ".@workspace/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from ".@workspace/ui/components/dropdown-menu";
 
 type DashboardCardProps = {
   href?: Route;

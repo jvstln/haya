@@ -17,7 +17,7 @@ import {
   InputGroupInput,
 } from "@workspace/ui/components/input-group";
 import { Label } from "@workspace/ui/components/label";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { LogoDark } from "@/public/logo";
 import type { ParsedAudit } from "../audit.type";
 

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import * as AuthService from "./auth.service";
 import { useAuthStore } from "./auth.store";
 

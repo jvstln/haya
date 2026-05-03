@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
-import { Button } from "./index.js";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { cn } from "../../lib/utils";
+import { Button } from ".";
 
 type IconToggleButtonProps = React.ComponentProps<typeof Button> & {
   isActive?: boolean;

@@ -1,10 +1,10 @@
-import { SearchNormal } from "iconsax-reactjs"
-import { Input } from "./input.js"
-import { cn } from "../lib/utils.js"
+import { SearchNormal } from "iconsax-reactjs";
+import { cn } from "../lib/utils";
+import { Input } from "./input";
 
 type InputSearchProps = React.ComponentProps<typeof Input> & {
-  classNames?: Partial<Record<"root" | "input" | "icon", string>>
-}
+  classNames?: Partial<Record<"root" | "input" | "icon", string>>;
+};
 
 export const InputSearch = ({
   classNames,
@@ -15,7 +15,7 @@ export const InputSearch = ({
     <div
       className={cn(
         "relative ml-auto w-50 transition-[width] duration-300 ease-in-out focus-within:w-64",
-        classNames?.root
+        classNames?.root,
       )}
     >
       <Input
@@ -23,16 +23,16 @@ export const InputSearch = ({
         className={cn(
           "rounded-full border-secondary pl-12",
           classNames?.input,
-          className
+          className,
         )}
         {...props}
       />
       <SearchNormal
         className={cn(
-          "absolute top-1/2 left-4 size-4 -translate-y-1/2",
-          classNames?.icon
+          "-translate-y-1/2 absolute top-1/2 left-4 size-4",
+          classNames?.icon,
         )}
       />
     </div>
-  )
-}
+  );
+};

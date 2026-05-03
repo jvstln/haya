@@ -7,7 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@workspace/ui/components/collapsible";
-import { cn, random } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import type { AuditSection } from "../../audit.type";
 
 type CaseSectionProps = {

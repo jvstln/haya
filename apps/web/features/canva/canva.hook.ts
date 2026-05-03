@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useControls } from "react-zoom-pan-pinch";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { getErrorMessage } from "@/lib/api";
 import * as CanvaService from "./canva.service";
 

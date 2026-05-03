@@ -3,10 +3,14 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ArrowLeft2 } from "iconsax-reactjs";
 import { type ComponentProps, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { create } from "zustand";
 import { Button } from "@workspace/ui/components/button";
-import { Dialog, DialogContent, DialogTrigger } from "@workspace/ui/components/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
 import {
   useForgotPassword,
   useLogin,

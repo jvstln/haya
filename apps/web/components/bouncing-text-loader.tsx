@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 
 const genericTransform = [
   "translateY(0px)",

@@ -1,5 +1,4 @@
 "use client";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { BoxAdd, Clipboard, Scan } from "iconsax-reactjs";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,7 +9,11 @@ import { Button } from "@workspace/ui/components/button";
 import { ConfirmationDialog } from "@workspace/ui/components/dialog-confirmation";
 import { InputSearch } from "@workspace/ui/components/input-search";
 import { LogicalPagination } from "@workspace/ui/components/pagination";
-import { Tooltip, TooltipContent } from "@workspace/ui/components/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
 import { useFilters } from "@/hooks/use-filters";

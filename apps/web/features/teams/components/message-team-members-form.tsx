@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowDown2 } from "iconsax-reactjs";
 import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
 import { Button, IconToggleButton } from "@workspace/ui/components/button";
 import { Field, FieldError } from "@workspace/ui/components/field";

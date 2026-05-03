@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { queryClient } from "@/lib/queryclient";
 import * as AuditService from "./audit.service";
 import type { AuditFilters } from "./audit.type";

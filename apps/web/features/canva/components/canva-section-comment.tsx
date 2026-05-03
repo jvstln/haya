@@ -1,6 +1,6 @@
 "use client";
 
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import { CloseSquare, MaximizeCircle, TickSquare } from "iconsax-reactjs";
 import { MoreVerticalIcon } from "lucide-react";
 import { useState } from "react";
@@ -23,7 +23,7 @@ import { InputGroupTextarea } from "@workspace/ui/components/input-group";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { HayaSpinner } from "@workspace/ui/components/spinner";
 import type { User } from "@/features/users/user.type";
-import { cn, getInitials } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 
 type CommentActionProps = {
   comment: string;

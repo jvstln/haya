@@ -1,10 +1,8 @@
 "use client";
 import type { Loader2 } from "lucide-react";
-// import { motion } from "motion/react";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { Logo } from "@/public/logo";
-import logo from "@/public/logo-icon.svg";
+import { cn } from "../lib/utils";
+import { Logo } from "@workspace/assets/logo";
+import logo from "@workspace/assets/logo-icon.svg";
 
 function Spinner({
   className,
@@ -66,7 +64,7 @@ function HayaSpinner({
           }}
         />
       </div> */}
-      <Image
+      <img
         src={logo}
         alt="Haya Loader"
         className={cn("size-12 animate-spin", classNames?.spinner)}

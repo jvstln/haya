@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { queryClient } from "@/lib/queryclient";
 import { isEmpty } from "@/lib/utils";
 import * as CanvaCommentService from "./canva.comment.service";

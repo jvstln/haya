@@ -1,10 +1,9 @@
-
-import { cn } from "@workspace/ui/lib/utils.js";
+import { Slot } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Button as ButtonPrimitive } from "@base-ui/react/button"
-
 import * as React from "react";
-import { Spinner } from "../spinner.js";
+
+import { Spinner } from "../spinner";
+import { cn } from "@workspace/ui/lib/utils";
 
 const buttonVariants = cva(
   "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -57,7 +56,7 @@ function Button({
   asChild = false,
   isLoading,
   loadingText,
-  children,
+  children: defaultChildren,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -65,9 +64,20 @@ function Button({
     isLoading?: boolean;
     loadingText?: string;
   }) {
+  const Comp = asChild ? Slot.Root : "button";
+  const LoadingComp = asChild ? "div" : React.Fragment;
+
+  const children = isLoading ? (
+    <LoadingComp>
+      <Spinner />
+      {loadingText}
+    </LoadingComp>
+  ) : (
+    defaultChildren
+  );
 
   return (
-    <ButtonPrimitive
+    <Comp
       data-slot="button"
       data-size={size}
       data-appearance={appearance}
@@ -76,16 +86,11 @@ function Button({
       {...props}
       disabled={isLoading || props.disabled}
     >
-      {isLoading ?       
-      <>
-      {loadingText}
-      <Spinner />
-      </>
-       : children}
-    </ButtonPrimitive>
+      {children}
+    </Comp>
   );
 }
 
 export { Button, buttonVariants };
-export * from "./toggle-button.js";
-export * from "./stepper-button.js";
+export * from "./toggle-button";
+export * from "./stepper-button";

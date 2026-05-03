@@ -3,7 +3,7 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useMutation } from "@tanstack/react-query";
 import bs58 from "bs58";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { useAuth } from "./auth.hook";
 import { setOnboardingFormDialogView } from "./components/onboarding-dialog";
 import * as SolanaService from "./solana.service";

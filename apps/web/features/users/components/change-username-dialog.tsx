@@ -2,7 +2,7 @@
 
 import { Edit } from "iconsax-reactjs";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import z from "zod";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";

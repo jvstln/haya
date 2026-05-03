@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { create } from "zustand";
 import { Button } from "@workspace/ui/components/button";
 import {

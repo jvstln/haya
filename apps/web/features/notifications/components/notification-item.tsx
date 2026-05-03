@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import type { Notification } from "../notification.type";
 
 export const NotificationItem = ({

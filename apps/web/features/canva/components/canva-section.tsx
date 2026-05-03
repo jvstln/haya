@@ -1,7 +1,7 @@
 "use client";
 
 import { MenuIcon } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { AiIcon } from "@/components/icons";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -23,7 +23,7 @@ import {
 import { useAuth } from "@/features/auth/auth.hook";
 import { api } from "@/lib/api";
 import { queryClient } from "@/lib/queryclient";
-import { cn, random } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import {
   useComments,
   useCreateComment,

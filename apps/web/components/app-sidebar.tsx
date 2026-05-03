@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { getSidebarContent } from "@/data/navlinks";
-import { cn } from "@/lib/utils";
-import logo from "@/public/logo.svg";
-import { Button } from "./ui/button";
+import { cn } from "@workspace/ui/lib/utils";
+import logo from "@workspace/assets/logo.svg";
+import { Button } from "@workspace/ui/components/button";
 import {
   Sidebar,
   SidebarContent,
@@ -17,8 +17,12 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
   useSidebar,
-} from "./ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+} from "@workspace/ui/components/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
 
 export const AppSidebar = ({
   sidebarItems,

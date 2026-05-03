@@ -6,9 +6,9 @@ import { useAuth } from "@/features/auth/auth.hook";
 import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 import { NotificationButton } from "@/features/notifications/components/notification-button";
 import { UserMenu } from "@/features/users/components/user-menu";
-import logo from "@/public/logo.svg";
-import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
+import logo from "@workspace/assets/logo.svg";
+import { Button } from "@workspace/ui/components/button";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 
 export const AppHeader = () => {
   const { isMobile, toggleSidebar } = useSidebar();

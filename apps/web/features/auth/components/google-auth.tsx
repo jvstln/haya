@@ -1,6 +1,6 @@
 import { ArrowRight, Google } from "iconsax-reactjs";
 import { Button } from "@workspace/ui/components/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { redirectToGoogleAuth } from "../auth.service";
 
 export const GoogleAuthButton = ({

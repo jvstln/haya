@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
-import { HayaSpinner } from "./ui/spinner";
+import { cn } from "@workspace/ui/lib/utils";
+import { Button } from "@workspace/ui/components/button";
+import { HayaSpinner } from "@workspace/ui/components/spinner";
 
 /**
  * Props for the ErrorState component.

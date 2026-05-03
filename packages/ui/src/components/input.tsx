@@ -1,20 +1,37 @@
-import * as React from "react"
-import { Input as InputPrimitive } from "@base-ui/react/input"
+import type * as React from "react";
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+export const inputSizeClassName = cn(
+  "h-8.75 rounded-md px-8 py-4 text-xs data-[size=lg]:h-17.5",
+);
+
+export const inputColorClassName = cn(
+  "border-border bg-[linear-gradient(var(--color-border),var(--color-red-500))_content-box,var(--colorful-gradient)_border-box] selection:bg-primary selection:text-primary-foreground file:bg-transparent file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring disabled:opacity-50 data-placeholder:text-muted-foreground data-disabled:opacity-50",
+);
+
+export function Input({
+  className,
+  type,
+  ...props
+}: React.ComponentProps<"input">) {
   return (
-    <InputPrimitive
+    <input
       type={type}
       data-slot="input"
       className={cn(
-        "h-9 w-full min-w-0 rounded-3xl border border-transparent bg-input/50 px-3 py-1 text-base transition-[color,box-shadow,background-color] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-        className
+        inputSizeClassName,
+        inputColorClassName,
+        "w-full min-w-0 border border-transparent shadow-xs outline-none transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:font-medium file:text-sm disabled:pointer-events-none disabled:cursor-not-allowed data-disabled:cursor-not-allowed",
+        "focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        className,
       )}
+      style={{
+        background:
+          "linear-gradient(var(--color-secondary), var(--color-secondary)) padding-box, var(--colorful-gradient) border-box",
+      }}
       {...props}
     />
-  )
+  );
 }
-
-export { Input }

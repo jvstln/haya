@@ -2,8 +2,12 @@ import { formatDistanceToNow } from "date-fns";
 import { Trash } from "iconsax-reactjs";
 import type { Route } from "next";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
-import { cn } from "@/lib/utils";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar";
+import { cn } from "@workspace/ui/lib/utils";
 import type { AuditWithoutContent } from "../audit.type";
 
 type AuditCardProps = {

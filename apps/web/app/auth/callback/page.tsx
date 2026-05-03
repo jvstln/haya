@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { Button } from "@workspace/ui/components/button";
 import { HayaSpinner } from "@workspace/ui/components/spinner";
 import { useExchangeGoogleAuthCode } from "@/features/auth/auth.hook";

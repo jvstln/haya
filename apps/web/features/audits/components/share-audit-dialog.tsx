@@ -8,7 +8,7 @@ import {
 } from "iconsax-reactjs";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@workspace/ui/components/sonner";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,

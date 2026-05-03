@@ -5,7 +5,7 @@ import {
   type Path,
   useWatch,
 } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { passwordRequirements } from "../auth.schema";
 
 interface PasswordRequirementsProps<T extends FieldValues> {
