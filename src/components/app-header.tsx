@@ -15,7 +15,7 @@ export const AppHeader = () => {
   const auth = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 flex h-(--header-height) w-full shrink-0 items-center gap-4 border-b bg-muted px-5 md:px-10">
+    <header className="sticky top-0 z-40 flex h-(--header-height) w-full shrink-0 items-center gap-4 border-secondary border-b bg-muted px-5 md:px-10">
       {isMobile ? (
         <Button appearance="ghost" size="icon" onClick={() => toggleSidebar()}>
           <HamburgerMenu />
