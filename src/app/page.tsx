@@ -5,10 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  DashboardHeader,
-  GradientBackground,
-} from "@/components/dashboard-header";
+import { DashboardHeader } from "@/components/dashboard-header";
 import { FolderIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { InputSearch } from "@/components/ui/input-search";
@@ -51,7 +48,6 @@ export default function Home() {
         <main className="relative flex w-full flex-1 flex-col">
           {/* Children */}
           <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--audit-card-height:189px] [--audit-card-width:212px] md:p-6">
-            <GradientBackground />
             <DashboardHeader
               title="UX intelligence that turns websites into revenue machines"
               cta={

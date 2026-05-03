@@ -4,10 +4,7 @@ import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import {
-  DashboardHeader,
-  GradientBackground,
-} from "@/components/dashboard-header";
+import { DashboardHeader } from "@/components/dashboard-header";
 import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -41,7 +38,6 @@ const TeamsPage = () => {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6">
-      <GradientBackground />
       <DashboardHeader
         title="Build your team, where AI meets human expertise for flawless UX insights"
         cta={

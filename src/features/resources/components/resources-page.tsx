@@ -2,10 +2,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import {
-  DashboardHeader,
-  GradientBackground,
-} from "@/components/dashboard-header";
+import { DashboardHeader } from "@/components/dashboard-header";
 import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
@@ -50,7 +47,6 @@ export const ResourcesPage = () => {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--resource-card-height:189px] [--resource-card-width:212px] md:p-6">
-      <GradientBackground />
       <DashboardHeader
         title="Unlock Premium Growth Resources for Smarter Conversions"
         cta={<SubscribeToResourcesForm />}
