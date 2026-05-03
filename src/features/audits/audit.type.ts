@@ -24,6 +24,7 @@ export interface AuditWithoutContent {
   userId: string;
   createdAt: string;
   updatedAt: string;
+  firstImageUrl?: string;
 
   customSections: AuditCustomSection[];
 }

@@ -281,7 +281,7 @@ export const CasePage = () => {
                   "radial-gradient(ellipse at top, transparent 20%, black 70%)",
               }}
             >
-              <HayaSpinner />
+              <HayaSpinner classNames={{ spinner: "size-8" }} />
             </div>
           )}
         </div>
@@ -327,7 +327,7 @@ export const CasePage = () => {
                   "radial-gradient(ellipse at top, transparent 20%, black 70%)",
               }}
             >
-              <HayaSpinner />
+              <HayaSpinner classNames={{ spinner: "size-8" }} />
             </div>
           )}
         </div>

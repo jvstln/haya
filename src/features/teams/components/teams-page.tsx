@@ -16,7 +16,7 @@ import { InputSearch } from "@/components/ui/input-search";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
 import { useFilters } from "@/hooks/use-filters";
-import { getInitials } from "@/lib/utils";
+import { getInitials, stringToColor } from "@/lib/utils";
 import { useTeams } from "../team.hook";
 import type { Team } from "../team.type";
 import { TeamsSheet } from "./teams-sheet";
@@ -101,7 +101,12 @@ const TeamsPage = () => {
                     content: "w-full items-center justify-between",
                   }}
                   image={
-                    <div className="flex h-full items-center justify-center bg-amber-500 text-background text-h1">
+                    <div
+                      className="flex h-full items-center justify-center text-background text-h1"
+                      style={{
+                        backgroundColor: stringToColor(team._id),
+                      }}
+                    >
                       {getInitials(team.owner.username)}
                     </div>
                   }

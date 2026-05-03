@@ -15,7 +15,7 @@ export const AuditCard = ({ audit, onDelete }: AuditCardProps) => {
   return (
     <DashboardCard
       href={`/dashboard/audits/${audit._id}` as Route}
-      image="/images/default-audit-card-bg.webp"
+      image={audit.firstImageUrl}
       classNames={{
         root: cn(
           audit.status === "failed"

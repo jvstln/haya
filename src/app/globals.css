@@ -53,6 +53,7 @@
   --text-body-4--font-weight: var(--font-weight-semibold);
 
   --font-lato: var(--font-lato);
+  --font-syncopate: var(--font-syncopate);
 
   /* Only enable variables when needed */
   /* 
@@ -92,7 +93,7 @@
   --popover: var(--background);
   --popover-foreground: var(--foreground);
 
-  --sidebar: var(--background);
+  --sidebar: var(--muted);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
@@ -165,6 +166,9 @@
 }
 
 @layer components {
+  .link {
+    @apply text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary;
+  }
   /* Animated border glow effect */
   .animate-border-glow {
     @apply relative overflow-hidden z-0;

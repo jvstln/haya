@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
+import { Lato, Syncopate } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Providers } from "@/components/providers";
@@ -8,6 +8,12 @@ const lato = Lato({
   subsets: ["latin"],
   variable: "--font-lato",
   weight: ["100", "300", "400", "700", "900"],
+});
+
+const syncopate = Syncopate({
+  subsets: ["latin"],
+  variable: "--font-syncopate",
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -29,6 +35,7 @@ export default function RootLayout({
       <body
         className={cn(
           lato.variable,
+          syncopate.variable,
           "size-full min-h-screen bg-background font-lato text-foreground antialiased",
         )}
       >

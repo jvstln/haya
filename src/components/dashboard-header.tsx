@@ -18,7 +18,7 @@ export const DashboardHeader = ({ title, cta }: DashboardHeaderProps) => {
       }}
     >
       {/* Decorative Background */}
-      <div
+      {/* <div
         className="pointer-events-none absolute size-44 max-md:hidden"
         style={{
           left: "calc(50% - 176px/2 - 0.5px)",
@@ -27,32 +27,36 @@ export const DashboardHeader = ({ title, cta }: DashboardHeaderProps) => {
             "linear-gradient(261.15deg, rgba(255, 175, 164, 0.8) -29.14%, rgba(122, 99, 255, 0.8) 99.41%)",
           filter: "blur(52.8px)",
         }}
-      />
+      /> */}
 
       <div className="z-10 flex basis-full flex-col items-start gap-6 p-6 md:basis-3/5">
         <h1 className="text-base text-white lg:text-h3">{title}</h1>
         {cta}
       </div>
-      <div className="relative basis-2/5 max-md:hidden">
+      {/* <div className="relative basis-2/5 max-md:hidden">
         <Image
           src="/images/archive-illustration.svg"
           alt="New audit"
           fill
           className="object-contain object-left-center"
         />
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export const GradientBackground = () => (
-  <div
-    className="-z-10 absolute inset-x-0 top-0 h-39.25"
-    style={{
-      background:
-        "linear-gradient(152.36deg, rgba(122, 99, 255, 0.38) 22.82%, #121212 82.58%)",
-      opacity: 0.7,
-      filter: "blur(50px)",
-    }}
-  />
-);
+export const GradientBackground = () => {
+  return null;
+
+  // return (
+  //   <div
+  //     className="-z-10 absolute inset-x-0 top-0 h-39.25"
+  //     style={{
+  //       background:
+  //         "linear-gradient(152.36deg, rgba(122, 99, 255, 0.38) 22.82%, #121212 82.58%)",
+  //       opacity: 0.7,
+  //       filter: "blur(50px)",
+  //     }}
+  //   />
+  // );
+};

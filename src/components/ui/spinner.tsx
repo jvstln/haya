@@ -23,12 +23,19 @@ function Spinner({
   );
 }
 
-function HayaSpinner() {
+function HayaSpinner({
+  classNames,
+}: {
+  classNames?: Partial<Record<"root" | "spinner", string>>;
+}) {
   return (
     <output
       aria-live="polite"
       aria-busy="true"
-      className="relative grid size-18 place-content-center"
+      className={cn(
+        "relative grid size-18 place-content-center",
+        classNames?.root,
+      )}
       data-slot="loader"
     >
       {/* <div
@@ -62,7 +69,7 @@ function HayaSpinner() {
       <Image
         src={logo}
         alt="Haya Loader"
-        className="size-12 animate-spin"
+        className={cn("size-12 animate-spin", classNames?.spinner)}
         style={{ animationDuration: "3s" }}
       />
     </output>

@@ -42,7 +42,7 @@ export const DashboardCard = ({
       )}
     >
       {typeof image === "string" ? (
-        <Image src={image} alt="" className="-z-10" fill />
+        <Image src={image} alt="" className="-z-10 object-cover" fill />
       ) : (
         image
       )}

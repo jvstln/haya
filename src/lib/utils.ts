@@ -52,3 +52,12 @@ export function isEmpty(value?: object | null) {
   if (!value) return true;
   return Object.keys(value).length === 0;
 }
+
+export function stringToColor(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = hash % 360;
+  return `hsl(${h}, 70%, 60%)`;
+}
