@@ -82,3 +82,27 @@ export type AuditSectionAnalysis = {
   };
   uxScore: number;
 };
+
+export type PreAuditInfo = {
+  status: boolean;
+  rootUrl: string;
+  pages: Array<{
+    url: string;
+    name: string;
+  }>;
+  pageCount: number;
+  pricing: {
+    pageCount: number;
+    pricePerPage: number;
+    totalPriceUsd: number;
+    currency: string;
+    network: string;
+  };
+  tokenBalance: {
+    analysisTokens: number;
+    tokenCostPerAnalysis: number;
+    enoughForFreeAnalysis: boolean;
+    freeTierMaxPages: number;
+  };
+  recommendation: string;
+};

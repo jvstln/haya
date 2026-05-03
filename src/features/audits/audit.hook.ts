@@ -74,6 +74,14 @@ export const useDeleteAudit = () => {
   });
 };
 
+export const usePreAuditInfo = (payload: { url: string }) => {
+  return useQuery({
+    queryKey: ["pre-audit-info", payload],
+    queryFn: () => AuditService.getPreAuditInfo(payload),
+    enabled: !!payload.url,
+  });
+};
+
 export function invalidateAuditQueries() {
   ["audits", "audit"].map((key) =>
     queryClient.invalidateQueries({ queryKey: [key] }),

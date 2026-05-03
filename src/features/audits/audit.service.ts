@@ -8,6 +8,7 @@ import type {
   AuditWithoutContent,
   NewAudit,
   ParsedAudit,
+  PreAuditInfo,
   RawAudit,
 } from "./audit.type";
 
@@ -79,6 +80,14 @@ async function deleteAudit(auditId: string) {
   return response.data;
 }
 
+async function getPreAuditInfo(payload: { url: string }) {
+  const response = await api.post(
+    `${api.defaults.baseURL?.replace("v1", "v2")}/analyze/discover`,
+    payload,
+  );
+  return response.data as PreAuditInfo;
+}
+
 function parseContent(content: string) {
   try {
     let jsonContent = JSON.parse(content || "null");
@@ -130,6 +139,7 @@ export {
   createAudit,
   deleteAudits,
   deleteAudit,
+  getPreAuditInfo,
   parseContent,
   getIsAuditInProgress,
 };

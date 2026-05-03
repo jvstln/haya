@@ -5,4 +5,5 @@ export const newAuditSchema = z.object({
     .string()
     .transform((val) => val.trim().replace(/^(?!(.+?):\/\/)/, "https://"))
     .pipe(z.url()),
+  pageCount: z.int().min(1).default(1).optional(),
 });

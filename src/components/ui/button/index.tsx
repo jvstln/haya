@@ -93,3 +93,4 @@ function Button({
 
 export { Button, buttonVariants };
 export * from "./toggle-button";
+export * from "./stepper-button";
