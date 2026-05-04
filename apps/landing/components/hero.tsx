@@ -4,7 +4,7 @@ import React from "react";
 import type { HAYA_TWEAKS_DEFAULTS } from "@/config/tweaks";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
-import owlImage from "@workspace/assets/images/owl.png";
+import { OwlBackground } from "./owl-background/owl-background";
 
 type HeroProps = { tweaks: typeof HAYA_TWEAKS_DEFAULTS };
 
@@ -25,12 +25,7 @@ export function Hero({ tweaks }: HeroProps) {
   return (
     <section className="hero">
       <div className="max-md:py-0 max-md:px-5">
-        <Image
-          alt="Haya owl"
-          src={owlImage}
-          className="absolute -z-50 inset-0 object-cover"
-          fill
-        />
+        <OwlBackground />
         <div className="eyebrow">
           <span className="dot"></span>
           PRIVATE BETA · INVITE ONLY

@@ -6,7 +6,7 @@ import { SidebarProvider } from "@workspace/ui/components/sidebar";
 import { HayaSpinner } from "@workspace/ui/components/spinner";
 import { getSidebarContent } from "@/data/navlinks";
 import { useAuth } from "@/features/auth/auth.hook";
-import { cn } from "@workspace/ui/lib/utils";";
+import { cn } from "@workspace/ui/lib/utils";
 
 const HEADER_HEIGHT = "70px";
 
