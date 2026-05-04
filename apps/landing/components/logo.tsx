@@ -2,7 +2,7 @@
 import React from "react";
 import { Logo as LogoPrimitive } from "@workspace/assets/logo";
 import { cn } from "@workspace/ui/lib/utils";
-import { useAudioPlayer } from "./audio-player";
+import { useAudioPlayer } from "@workspace/assets/audio/player";
 import { Play, Pause } from "lucide-react";
 import { useGSAP, gsap } from "@workspace/ui/lib/gsap.util";
 

@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@workspace/ui/components/button";
+import { LINKS } from "@workspace/assets/data";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -53,16 +54,6 @@ export function Hero() {
           "-=0.7",
         )
         .from(
-          ".hero-ctas > *",
-          {
-            y: 20,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-          },
-          "-=0.6",
-        )
-        .from(
           ".dashboard-wrap",
           {
             y: 60,
@@ -72,6 +63,18 @@ export function Hero() {
           },
           "-=0.8",
         );
+
+      gsap.from(
+        ".hero-cta-btn",
+        {
+          y: 20,
+          // opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          delay: 1.5,
+        },
+        // "-=0.6",
+      );
 
       // Subtle float animation for dashboard
       gsap.to(".dashboard", {
@@ -109,24 +112,24 @@ export function Hero() {
             fontSize: "clamp(48px, 7vw, 92px)",
           }}
         >
-          See the friction.
+          See the friction,
           <br />
           <em className="inline-block">Fix the funnel.</em>
         </h1>
         <p className="tag gsap-reveal">
-          Haya AI runs an AI-powered behavioral audit on your website or app
+          Haya AI runs an AI-powered behavioral audit on your website or app,
           screenshots every friction point, identifies the problem, and tells
           you how to fix it. In minutes.
         </p>
-        <div className="hero-ctas gsap-reveal">
+        <div className="flex gap-3 justify-center items-center">
           <Button
             appearance="solid"
             color="primary"
             size="lg"
-            className="animate-border-glow rounded-full"
+            className="hero-cta-btn gsap-reveal animate-border-glow rounded-full"
             asChild
           >
-            <Link href="#try">
+            <Link href={LINKS.webAppUrl}>
               Run a free audit
               <ArrowRightIcon />
             </Link>
@@ -135,7 +138,7 @@ export function Hero() {
             appearance="outline"
             color="secondary"
             size="lg"
-            className="rounded-full"
+            className="hero-cta-btn gsap-reveal rounded-full"
             asChild
           >
             <Link href="#how">

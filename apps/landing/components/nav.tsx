@@ -4,6 +4,7 @@ import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { Logo } from "./logo";
 import { useGSAP, gsap } from "@workspace/ui/lib/gsap.util";
+import { LINKS } from "@workspace/assets/data";
 
 export function Nav() {
   const container = React.useRef(null);
@@ -37,7 +38,7 @@ export function Nav() {
             className="animate-border-glow rounded-full"
             asChild
           >
-            <Link href="#cta">Request access</Link>
+            <Link href={LINKS.webAppUrl}>Request access</Link>
           </Button>
         </div>
       </div>

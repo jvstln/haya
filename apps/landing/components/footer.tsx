@@ -109,8 +109,8 @@ export function Footer() {
 
   return (
     <footer className="footer" ref={container}>
-      <div className="container">
-        <div className="flex flex-col">
+      <div className="container space-y-5">
+        <div className="flex justify-between">
           <div className="self-end w-100">
             <Logo className="mb-4" />
             <p>

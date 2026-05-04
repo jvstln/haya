@@ -31,7 +31,6 @@ export function HomePage() {
       <div className="shell">
         <Nav />
         <Hero />
-        {/* <HeroStaging /> */}
         <Bento />
         <TryHaya />
         <Steps />

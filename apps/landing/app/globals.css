@@ -284,11 +284,6 @@ button {
   max-width: 620px;
   line-height: 1.6;
 }
-.hero-ctas {
-  display: inline-flex;
-  gap: 12px;
-  align-items: center;
-}
 .kbd {
   display: inline-flex;
   align-items: center;

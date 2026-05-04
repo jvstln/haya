@@ -8,6 +8,8 @@ import {
 import { ArrowRight } from "lucide-react";
 import React, { useRef } from "react";
 import { useGSAP, gsap } from "@workspace/ui/lib/gsap.util";
+import Link from "next/link";
+import { LINKS } from "@workspace/assets/data";
 
 export function TryHaya() {
   const [url, setUrl] = React.useState("");
@@ -48,9 +50,11 @@ export function TryHaya() {
                 placeholder="https://yourwebsite.com"
               />
               <InputGroupAddon align="inline-end">
-                <Button size="lg">
-                  Run audit
-                  <ArrowRight />
+                <Button size="lg" asChild>
+                  <Link href={LINKS.webAppUrl}>
+                    Run audit
+                    <ArrowRight />
+                  </Link>
                 </Button>
               </InputGroupAddon>
             </InputGroup>

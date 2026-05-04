@@ -3,10 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
+    "./data": "./data.ts",
     "./audio/*": "./audio/*.ts",
     "./images/*": "./images/*",
     "./logo": "./logo.tsx",
     "./logo.svg": "./logo.svg",
     "./logo-icon.svg": "./logo-icon.svg"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
   }
 }

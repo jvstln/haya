@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   createHayaSoundscape,
   SoundscapeController,
@@ -7,12 +7,13 @@ import {
   playHayaCrystal,
   playUIWhoosh,
   playUIClick,
-} from "@workspace/assets/audio/effects";
+} from "./effects";
 
 // Singleton instances to prevent multiple soundscapes
 let globalController: SoundscapeController | null = null;
 let globalContext: AudioContext | null = null;
-let globalIsPlaying = false;
+let globalIsPlaying = true; // Enabled by default
+let hasInitialized = false;
 const listeners = new Set<(playing: boolean) => void>();
 
 function notifyListeners() {
@@ -53,6 +54,38 @@ export function useAudioPlayer() {
     notifyListeners();
   }, [ensureContext]);
 
+  useEffect(() => {
+    // Initial play attempt
+    if (!hasInitialized && typeof window !== "undefined") {
+      hasInitialized = true;
+
+      const attemptPlay = async () => {
+        const { ctrl, ctx } = ensureContext();
+        if (ctrl && globalIsPlaying) {
+          try {
+            // Attempt to start - will be suspended by browser initially
+            ctrl.start();
+
+            // Add a one-time global click listener to unlock AudioContext
+            const unlock = async () => {
+              if (ctx?.state === "suspended") {
+                await ctx.resume();
+              }
+              window.removeEventListener("click", unlock);
+              window.removeEventListener("touchstart", unlock);
+            };
+            window.addEventListener("click", unlock);
+            window.addEventListener("touchstart", unlock);
+          } catch (e) {
+            console.warn("Autoplay blocked:", e);
+          }
+        }
+      };
+
+      attemptPlay();
+    }
+  }, [ensureContext]);
+
   // Test triggers for individual sounds (commented out for user testing)
   const testSounds = useCallback(() => {
     const { ctx } = ensureContext();
@@ -61,7 +94,7 @@ export function useAudioPlayer() {
     // playHayaHoot(ctx, ctx.destination);
     // playHayaCrystal(ctx, ctx.destination);
     // playUIWhoosh(ctx, ctx.destination);
-    playUIClick(ctx, ctx.destination);
+    // playUIClick(ctx, ctx.destination);
   }, [ensureContext]);
 
   return { isPlaying, toggleSound, testSounds };
