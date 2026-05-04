@@ -61,7 +61,7 @@ export function OwlBackground() {
       <Image
         alt="Haya owl"
         src={owlImage}
-        className="-z-50 absolute inset-0 object-cover"
+        className="-z-50 absolute opacity-20 inset-0 object-cover"
         fill
       />
 

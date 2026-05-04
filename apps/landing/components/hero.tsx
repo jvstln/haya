@@ -29,7 +29,12 @@ export function Hero({ tweaks }: HeroProps) {
           <span className="dot" />
           PRIVATE BETA · INVITE ONLY
         </div>
-        <h1>
+        <h1
+          className="font-inter text-balance mb-4 leading-none tracking-tight"
+          style={{
+            fontSize: "clamp(48px, 7vw, 92px)",
+          }}
+        >
           See the friction.
           <br />
           <em>Fix the funnel.</em>
@@ -217,7 +222,7 @@ function DashboardMain({
       </div>
       <div className="db-canvas">
         <div className="db-canvas-page">
-          <h3>Complete your order</h3>
+          <h3 className="font-inter mb-1">Complete your order</h3>
           <div className="sub">Step 3 of 4 · Secure checkout</div>
           <div className="db-canvas-grid">
             <div className="db-canvas-tile" />

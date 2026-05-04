@@ -62,6 +62,7 @@
   --text-body-4--font-weight: var(--font-weight-semibold);
 
   --font-lato: var(--font-lato);
+  --font-inter: var(--font-inter);
   --font-syncopate: var(--font-syncopate);
 
   /* Only enable variables when needed */

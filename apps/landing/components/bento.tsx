@@ -148,7 +148,7 @@ export function Bento() {
       <div className="container">
         <div className="section-head">
           <div className="section-eyebrow">02 · The product</div>
-          <h2>
+          <h2 className="font-inter mb-4 text-balance">
             Not just a scan. <em>A second pair of eyes.</em>
           </h2>
           <p className="section-sub">

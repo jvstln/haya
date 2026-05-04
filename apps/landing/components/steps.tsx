@@ -1,47 +1,52 @@
+const steps = [
+  {
+    subTitle: "Connect",
+    title: "Point Haya at your URL",
+    description:
+      "Or install the SDK in 30 seconds. Works with any stack — React, Vue, plain HTML.",
+    illustration: StepArtConnect,
+  },
+  {
+    subTitle: "Scan",
+    title: "The audit runs itself",
+    description:
+      "Vision models, heuristic checks, and session replay correlate to surface the issues that actually move metrics.",
+    illustration: StepArtScan,
+  },
+  {
+    subTitle: "Ship",
+    title: "Merge the fix",
+    description:
+      "Haya opens a PR with code-aware patches. You review, you ship. Onward.",
+    illustration: StepArtShip,
+  },
+];
+
 export function Steps() {
   return (
     <section className="section" id="how">
       <div className="container">
         <div className="section-head">
           <div className="section-eyebrow">04 · How it works</div>
-          <h2>
+          <h2 className="font-inter mb-4 text-balance">
             Three steps. <em>Zero meetings.</em>
           </h2>
         </div>
         <div className="steps">
-          <div className="step">
-            <div className="num">01 / CONNECT</div>
-            <h4>Point Haya at your URL</h4>
-            <p>
-              Or install the SDK in 30 seconds. Works with any stack — React,
-              Vue, plain HTML.
-            </p>
-            <div className="step-art">
-              <StepArtConnect />
+          {steps.map((step, index) => (
+            <div className="step flex flex-col" key={step.title}>
+              <div className="font-mono text-xs text-primary mb-4 uppercase tracking-widest">
+                0{index + 1} / {step.subTitle}
+              </div>
+              <h4 className="font-inter mb-2 text-balance text-2xl">
+                {step.title}
+              </h4>
+              <p>{step.description}</p>
+              <div className="step-art mt-auto">
+                <step.illustration />
+              </div>
             </div>
-          </div>
-          <div className="step">
-            <div className="num">02 / SCAN</div>
-            <h4>The audit runs itself</h4>
-            <p>
-              Vision models, heuristic checks, and session replay correlate to
-              surface the issues that actually move metrics.
-            </p>
-            <div className="step-art">
-              <StepArtScan />
-            </div>
-          </div>
-          <div className="step">
-            <div className="num">03 / SHIP</div>
-            <h4>Merge the fix</h4>
-            <p>
-              Haya opens a PR with code-aware patches. You review, you ship.
-              Onward.
-            </p>
-            <div className="step-art">
-              <StepArtShip />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

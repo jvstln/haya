@@ -16,7 +16,7 @@ export function TryHaya() {
         <div className="try">
           <div className="try-inner">
             <div className="section-eyebrow">03 · Try it now</div>
-            <h3>
+            <h3 className="font-inter mb-2 text-balance">
               Audit any live URL in <em>under 12 seconds.</em>
             </h3>
             <p>No signup. No install. Drop a link, watch Haya tear it apart.</p>

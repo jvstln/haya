@@ -2,7 +2,7 @@
 import React from "react";
 import { HAYA_TWEAKS_DEFAULTS } from "@/config/tweaks";
 import { Bento } from "./bento";
-import { CTA, Footer, Trusted } from "./footer";
+import { CTA, Footer } from "./footer";
 import { Hero } from "./hero";
 import { Steps } from "./steps";
 import { TryHaya } from "./try-haya";
@@ -51,7 +51,6 @@ export function HomePage() {
       <div className="shell">
         <Nav />
         <Hero tweaks={tweaks} />
-        <Trusted />
         <Bento />
         <TryHaya />
         <Steps />
