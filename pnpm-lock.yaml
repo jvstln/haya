@@ -29,12 +29,12 @@ importers:
 
   apps/landing:
     dependencies:
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
+      '@workspace/assets':
+        specifier: workspace:*
+        version: link:../../packages/assets
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       iconsax-reactjs:
         specifier: ^0.0.8
         version: 0.0.8(react@19.2.4)
@@ -129,12 +129,6 @@ importers:
       bs58:
         specifier: ^6.0.0
         version: 6.0.0
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
