@@ -1,12 +1,12 @@
 import { Logo } from "@workspace/assets/logo";
-import { ArrowRight, Facebook } from "iconsax-reactjs";
 import { Button } from "@workspace/ui/components/button";
 import {
   InputGroup,
-  InputGroupInput,
   InputGroupAddon,
+  InputGroupInput,
 } from "@workspace/ui/components/input-group";
-import { url } from "inspector";
+import { ArrowRight, Facebook } from "iconsax-reactjs";
+import Link from "next/link";
 import { useState } from "react";
 
 const socials = [
@@ -26,12 +26,12 @@ export function CTA() {
         <h2>
           Your funnel <em>is leaking.</em>
           <br />
-          Let's plug it.
+          Let&apos;s plug it.
         </h2>
         <p>
           Join the private beta. We're onboarding 12 design-led teams a week.
         </p>
-        <InputGroup className="h-auto mx-auto max-w-150">
+        <InputGroup className="mx-auto h-auto max-w-150">
           <InputGroupInput
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -92,27 +92,31 @@ export function Footer() {
             <div className="footer-socials" style={{ marginTop: 16 }}>
               {socials.map((social) => (
                 <Button
+                  key={social.name}
                   color="secondary"
-                  appearance="outline"
+                  appearance="ghost"
                   size="icon-sm"
-                  className="flex"
-                  asChild
+                  // className="flex"
+                  // asChild
                 >
-                  <a href={social.url}>
-                    <social.icon />
-                  </a>
+                  {/* <Link
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  > */}
+                  <social.icon />
+                  {/* </Link> */}
                 </Button>
               ))}
             </div>
           </div>
-          <div className="footer-col">
+          <div className="footer-col ml-auto">
             <h5>Product</h5>
             <a href="#features">Features</a>
             <a href="#try">Try a demo</a>
             <a href="#how">How it works</a>
-            <a href="#">Changelog</a>
           </div>
-          <div className="footer-col">
+          {/* <div className="footer-col">
             <h5>Company</h5>
             <a href="#">About</a>
             <a href="#">Manifesto</a>
@@ -125,7 +129,7 @@ export function Footer() {
             <a href="#">API</a>
             <a href="#">Status</a>
             <a href="#">Privacy</a>
-          </div>
+          </div> */}
         </div>
 
         <div className="bigmark">haya</div>

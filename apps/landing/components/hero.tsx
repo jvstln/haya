@@ -1,9 +1,8 @@
+import { Button } from "@workspace/ui/components/button";
 import { ArrowRightIcon } from "lucide-react";
-import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import type { HAYA_TWEAKS_DEFAULTS } from "@/config/tweaks";
-import { Button } from "@workspace/ui/components/button";
-import Link from "next/link";
 import { OwlBackground } from "./owl-background/owl-background";
 
 type HeroProps = { tweaks: typeof HAYA_TWEAKS_DEFAULTS };
@@ -23,11 +22,11 @@ export function Hero({ tweaks }: HeroProps) {
   const onLeave = () => setTilt({ x: 0, y: 0 });
 
   return (
-    <section className="hero">
-      <div className="max-md:py-0 max-md:px-5">
-        <OwlBackground />
+    <section className="hero relative">
+      <OwlBackground />
+      <div className="max-md:px-5 max-md:py-0">
         <div className="eyebrow">
-          <span className="dot"></span>
+          <span className="dot" />
           PRIVATE BETA · INVITE ONLY
         </div>
         <h1>
@@ -107,7 +106,7 @@ function DashboardChrome() {
               borderRadius: "50%",
               background: "#3b3b4a",
             }}
-          ></span>
+          />
           <span
             style={{
               width: 10,
@@ -115,7 +114,7 @@ function DashboardChrome() {
               borderRadius: "50%",
               background: "#3b3b4a",
             }}
-          ></span>
+          />
           <span
             style={{
               width: 10,
@@ -123,7 +122,7 @@ function DashboardChrome() {
               borderRadius: "50%",
               background: "#3b3b4a",
             }}
-          ></span>
+          />
         </div>
         <span className="db-pill">
           app.usehaya.io / projects / acme-checkout
@@ -165,7 +164,7 @@ function DashboardSide() {
                 ? "linear-gradient(135deg,#a78bfa,#7c3aed)"
                 : "rgba(255,255,255,0.06)",
             }}
-          ></span>
+          />
           {it.label}
         </div>
       ))}
@@ -190,7 +189,7 @@ function DashboardSide() {
                 borderRadius: "50%",
                 background: s.c,
               }}
-            ></span>
+            />
             {s.t}
           </span>
           <span
@@ -221,19 +220,19 @@ function DashboardMain({
           <h3>Complete your order</h3>
           <div className="sub">Step 3 of 4 · Secure checkout</div>
           <div className="db-canvas-grid">
-            <div className="db-canvas-tile"></div>
-            <div className="db-canvas-tile"></div>
-            <div className="db-canvas-tile"></div>
+            <div className="db-canvas-tile" />
+            <div className="db-canvas-tile" />
+            <div className="db-canvas-tile" />
           </div>
-          <div className="db-canvas-row mid"></div>
-          <div className="db-canvas-row short"></div>
-          <div className="db-canvas-row"></div>
-          <div className="db-canvas-row mid"></div>
-          <div className="db-canvas-cta"></div>
+          <div className="db-canvas-row mid" />
+          <div className="db-canvas-row short" />
+          <div className="db-canvas-row" />
+          <div className="db-canvas-row mid" />
+          <div className="db-canvas-cta" />
         </div>
 
         {(heroAnim === "scan" || heroAnim === "both") && (
-          <div className="scan-line"></div>
+          <div className="scan-line" />
         )}
 
         {(heroAnim === "markers" || heroAnim === "both") && (
@@ -284,11 +283,8 @@ function FrictionMarker({
       className="friction"
       style={{ top, left, animationDelay: `${delay}s` }}
     >
-      <div
-        className="friction-pulse"
-        style={{ animationDelay: `${delay}s` }}
-      ></div>
-      <div className="friction-core"></div>
+      <div className="friction-pulse" style={{ animationDelay: `${delay}s` }} />
+      <div className="friction-core" />
       <div className="friction-label">
         <span className="sev">{severity}</span>
         {label}
