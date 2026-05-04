@@ -25,9 +25,7 @@ export function Nav() {
   return (
     <nav className="nav backdrop-blur-xs" ref={container}>
       <div className="container nav-inner gsap-reveal">
-        <Link href="#">
-          <Logo />
-        </Link>
+        <Logo className="nav-logo" />
         <div className="nav-links">
           <a href="#features">Product</a>
           <a href="#how">How it works</a>
