@@ -3,7 +3,7 @@ import { BoxAdd, Clipboard, Scan } from "iconsax-reactjs";
 import Link from "next/link";
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { FolderIcon } from "@/components/icons";
+import { FolderIcon } from "@workspace/ui/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@workspace/ui/components/button";
 import { ConfirmationDialog } from "@workspace/ui/components/dialog-confirmation";

@@ -1,3 +1,4 @@
+import { LinkedInIcon, TwitterXIcon } from "@workspace/ui/components/icons";
 import { Logo } from "./logo";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -5,15 +6,25 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@workspace/ui/components/input-group";
-import { ArrowRight, Facebook } from "iconsax-reactjs";
+import { ArrowRight, Instagram } from "iconsax-reactjs";
 import Link from "next/link";
 import { useState } from "react";
 
 const socials = [
   {
     name: "X",
-    icon: Facebook,
-    url: "#",
+    icon: TwitterXIcon,
+    url: "https://x.com/hayaonchain?s=11",
+  },
+  {
+    name: "Instagram",
+    icon: Instagram,
+    url: "https://www.instagram.com/usehaya.io?igsh=MTIyNjQ1YTQ2YjR5YQ%3D%3D&utm_source=qr",
+  },
+  {
+    name: "LinkedIn",
+    icon: LinkedInIcon,
+    url: "https://www.linkedin.com/company/hayaai/",
   },
 ] as const;
 
@@ -53,44 +64,38 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer-cols">
-          <div className="">
+        <div className="flex flex-col">
+          <div className="self-end w-100">
             <Logo className="mb-4" />
             <p>
               The AI design auditor for ambitious teams. See the friction, fix
               the funnel.
             </p>
-            <div className="footer-socials" style={{ marginTop: 16 }}>
-              {socials.map((social) => (
-                <Button
-                  key={social.name}
-                  color="secondary"
-                  appearance="ghost"
-                  size="icon-lg"
-                  asChild
-                >
-                  <Link
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <social.icon variant="Bold" />
-                  </Link>
-                </Button>
-              ))}
-            </div>
           </div>
-          <div className="footer-col flex-flex-col ml-auto">
-            <h5>Product</h5>
-            <a href="#features">Features</a>
-            <a href="#try">Try a demo</a>
-            <a href="#how">How it works</a>
+          <div className="flex mx-auto gap-2 mt-4">
+            {socials.map((social) => (
+              <Button
+                key={social.name}
+                color="secondary"
+                appearance="ghost"
+                size="icon-lg"
+                asChild
+              >
+                <Link
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <social.icon variant="Bold" />
+                </Link>
+              </Button>
+            ))}
           </div>
         </div>
 
         {/* Bigmark */}
         <div
-          className="relative font-serif  italic text-center tracking-tight text-transparent select-none bg-clip-text pointer-events-none overflow-hidden whitespace-nowrap leading-[0.9]"
+          className="relative font-inter uppercase  text-center tracking-widest text-transparent select-none bg-clip-text pointer-events-none  overflow-hidden whitespace-nowrap leading-[0.9]"
           style={{
             background: `linear-gradient(
               180deg,
@@ -102,7 +107,7 @@ export function Footer() {
             fontSize: `clamp(140px, 22vw, 320px)`,
           }}
         >
-          haya
+          Haya
         </div>
 
         <div className="footer-bottom">

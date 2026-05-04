@@ -2,7 +2,7 @@
 
 import { MenuIcon } from "lucide-react";
 import { toast } from "@workspace/ui/components/sonner";
-import { AiIcon } from "@/components/icons";
+import { AiIcon } from "@workspace/ui/components/icons";
 import { Button } from "@workspace/ui/components/button";
 import {
   DropdownMenu,

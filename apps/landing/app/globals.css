@@ -36,6 +36,16 @@
   --violet: #8b5cf6;
   --violet-2: #a78bfa;
   --violet-glow: rgba(139, 92, 246, 0.35);
+  --canvas-background:
+    linear-gradient(rgb(255 255 255 0.02), rgb(255 255 255 0.02)),
+    linear-gradient(180deg, #15112a, #0d0a1c);
+  --canvas-bg: #0d0a1c;
+  --canvas-text: #ffffff;
+  --canvas-subtext: #a09bc4;
+  --canvas-tile: rgba(255, 255, 255, 0.04);
+  --canvas-tile-overlay: rgba(255, 255, 255, 0.04);
+  --canvas-row: rgba(255, 255, 255, 0.08);
+  --canvas-border: rgba(255, 255, 255, 0.1);
 
   --accent: oklch(0.97 0 0); /* cyan accent */
   --accent-glow: rgba(34, 211, 238, 0.35);
@@ -429,26 +439,26 @@ button {
 .db-canvas {
   position: relative;
   border-radius: 8px;
-  background: #fafafa;
+  background: var(--canvas-background);
   height: 360px;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--canvas-border);
 }
 .db-canvas-page {
   position: absolute;
   inset: 0;
   padding: 18px;
-  color: #1a1a1a;
+  color: var(--canvas-text);
   font-family: "Geist", sans-serif;
 }
 .db-canvas-page h3 {
   font-size: 28px;
   font-weight: 400;
   letter-spacing: -0.02em;
-  color: #0c0c0c;
+  color: #ffffff;
 }
 .db-canvas-page .sub {
-  color: #555;
+  color: var(--canvas-subtext);
   font-size: 11px;
   margin-bottom: 14px;
 }
@@ -460,7 +470,7 @@ button {
 }
 .db-canvas-tile {
   height: 56px;
-  background: #efeef5;
+  background: var(--canvas-tile);
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -471,8 +481,8 @@ button {
   inset: 8px;
   background: repeating-linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.04),
-    rgba(0, 0, 0, 0.04) 4px,
+    var(--canvas-tile-overlay),
+    var(--canvas-tile-overlay) 4px,
     transparent 4px,
     transparent 8px
   );
@@ -487,7 +497,7 @@ button {
 }
 .db-canvas-row {
   height: 8px;
-  background: #e7e5ee;
+  background: var(--canvas-row);
   border-radius: 2px;
   margin-bottom: 6px;
 }
@@ -829,9 +839,9 @@ button {
   position: relative;
   height: 150px;
   border-radius: 8px;
-  background: linear-gradient(180deg, #f4f3f8, #e9e7f0);
+  background: linear-gradient(180deg, #15112a, #0d0a1c);
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
 }
 .scanner-mini .blocks {
   position: absolute;
@@ -841,12 +851,12 @@ button {
   gap: 4px;
 }
 .scanner-mini .blocks div {
-  background: #d4d2dc;
+  background: var(--canvas-tile);
   border-radius: 2px;
   height: 8px;
 }
 .scanner-mini .blocks div:nth-child(odd) {
-  background: #c0bdca;
+  background: var(--canvas-row);
   height: 12px;
 }
 .scanner-mini .scan {
@@ -1287,37 +1297,6 @@ button {
   border-top: 1px solid var(--border);
   color: var(--text-dim);
 }
-.footer-cols {
-  display: grid;
-  grid-template-columns: 1.5fr repeat(3, 1fr);
-  gap: 48px;
-  padding-bottom: 48px;
-}
-.footer-col h5 {
-  font-family: "Geist Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-mute);
-  margin: 0 0 16px;
-  font-weight: 500;
-}
-.footer-col a {
-  display: block;
-  color: var(--text-dim);
-  font-size: 14px;
-  margin-bottom: 10px;
-  transition: color 0.2s;
-}
-.footer-col a:hover {
-  color: var(--text);
-}
-.footer-col p {
-  color: var(--text-dim);
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-}
 .footer-bottom {
   display: flex;
   justify-content: space-between;
@@ -1327,10 +1306,6 @@ button {
   font-family: "Geist Mono", monospace;
   font-size: 11px;
   color: var(--text-mute);
-}
-.footer-socials {
-  display: flex;
-  gap: 8px;
 }
 .socbtn {
   width: 32px;

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { FolderIcon } from "@/components/icons";
+import { FolderIcon } from "@workspace/ui/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@workspace/ui/components/button";
 import { Field, FieldError } from "@workspace/ui/components/field";

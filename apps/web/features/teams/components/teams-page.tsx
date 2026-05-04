@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { FolderIcon } from "@/components/icons";
+import { FolderIcon } from "@workspace/ui/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
 import { Button } from "@workspace/ui/components/button";

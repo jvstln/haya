@@ -1,7 +1,7 @@
 import { ArrowRight } from "iconsax-reactjs";
 import { X } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
-import { SolanaIcon } from "@/components/icons";
+import { SolanaIcon } from "@workspace/ui/components/icons";
 import { Button } from "@workspace/ui/components/button";
 import {
   DialogDescription,

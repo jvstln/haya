@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { FolderIcon } from "@/components/icons";
+import { FolderIcon } from "@workspace/ui/components/icons";
 import { Button } from "@workspace/ui/components/button";
 import { InputSearch } from "@workspace/ui/components/input-search";
 import { SidebarProvider } from "@workspace/ui/components/sidebar";

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { FolderIcon } from "@/components/icons";
+import { FolderIcon } from "@workspace/ui/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@workspace/ui/components/button";
 import { InputSearch } from "@workspace/ui/components/input-search";

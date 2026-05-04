@@ -102,7 +102,7 @@ function StepArtScan() {
         inset: 12,
         borderRadius: 6,
         overflow: "hidden",
-        background: "#f4f3f8",
+        background: "var(--canvas-bg)",
       }}
     >
       <div
@@ -118,7 +118,7 @@ function StepArtScan() {
             key={i}
             style={{
               height: 8,
-              background: i % 3 === 0 ? "#c0bdca" : "#d4d2dc",
+              background: i % 3 === 0 ? "var(--canvas-row)" : "var(--canvas-tile)",
               borderRadius: 1,
             }}
           ></div>

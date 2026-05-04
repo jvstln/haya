@@ -14,7 +14,6 @@ export function Nav() {
         <div className="nav-links">
           <a href="#features">Product</a>
           <a href="#how">How it works</a>
-          <a href="#try">Try it</a>
         </div>
         <div className="nav-cta">
           <Button

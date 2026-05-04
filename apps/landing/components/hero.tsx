@@ -2,12 +2,8 @@ import { Button } from "@workspace/ui/components/button";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import type { HAYA_TWEAKS_DEFAULTS } from "@/config/tweaks";
-import { OwlBackground } from "./owl-background/owl-background";
-
-type HeroProps = { tweaks: typeof HAYA_TWEAKS_DEFAULTS };
-
-export function Hero({ tweaks }: HeroProps) {
+import { HeroBackground } from "./hero-background";
+export function Hero() {
   const dashRef = React.useRef<HTMLDivElement | null>(null);
   const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
 
@@ -23,7 +19,7 @@ export function Hero({ tweaks }: HeroProps) {
 
   return (
     <section className="hero relative">
-      <OwlBackground />
+      <HeroBackground />
       <div className="max-md:px-5 max-md:py-0">
         <div className="eyebrow">
           <span className="dot" />
@@ -40,9 +36,9 @@ export function Hero({ tweaks }: HeroProps) {
           <em>Fix the funnel.</em>
         </h1>
         <p className="tag">
-          Haya is the AI design auditor for ambitious teams. It scans every
-          screen, surfaces every dead-end, and ships fixes before your users
-          churn.
+          Haya AI runs an AI-powered behavioral audit on your website or app
+          screenshots every friction point, identifies the problem, and tells
+          you how to fix it. In minutes.
         </p>
         <div className="hero-ctas">
           <Button
@@ -77,8 +73,6 @@ export function Hero({ tweaks }: HeroProps) {
           onMouseMove={onMove}
           onMouseLeave={onLeave}
         >
-          {/* {tweaks.heroAnim !== "none" && <div className="dashboard-glow" />} */}
-
           <div
             ref={dashRef}
             className="dashboard"
@@ -89,7 +83,7 @@ export function Hero({ tweaks }: HeroProps) {
             <DashboardChrome />
             <div className="db-body">
               <DashboardSide />
-              <DashboardMain heroAnim={tweaks.heroAnim} />
+              <DashboardMain heroAnim="both" />
               <DashboardRight />
             </div>
           </div>
@@ -211,7 +205,7 @@ function DashboardSide() {
 function DashboardMain({
   heroAnim,
 }: {
-  heroAnim: HeroProps["tweaks"]["heroAnim"];
+  heroAnim: "scan" | "markers" | "both" | "none";
 }) {
   return (
     <div className="db-main">

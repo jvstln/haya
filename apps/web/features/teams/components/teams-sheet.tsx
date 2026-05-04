@@ -19,7 +19,7 @@ import { getInitials } from "@/lib/utils";
 import { useAssignAuditsToTeam, useTeam } from "../team.hook";
 import { AddTeamMemberDialog } from "./add-team-member-dialog";
 import { MessageTeamMembersForm } from "./message-team-members-form";
-import { FolderIcon } from "@/components/icons";
+import { FolderIcon } from "@workspace/ui/components/icons";
 
 type TeamsSheetProps = React.ComponentProps<typeof Sheet> & {
   teamId: string;

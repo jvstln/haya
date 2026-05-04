@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
+    "@gsap/react": "^2.1.2",
     "@workspace/assets": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gsap": "^3.15.0",
     "iconsax-reactjs": "^0.0.8",
     "input-otp": "^1.4.2",
     "lucide-react": "^1.14.0",
