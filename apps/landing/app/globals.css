@@ -1377,3 +1377,16 @@ button {
     border-bottom: 1px solid var(--border);
   }
 }
+
+.bigmark-char {
+  background: linear-gradient(
+    180deg,
+    rgba(167, 139, 250, 0.5) 0%,
+    rgba(139, 92, 246, 0.05) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}

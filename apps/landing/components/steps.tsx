@@ -1,3 +1,7 @@
+"use client";
+import React, { useRef } from "react";
+import { useGSAP, gsap } from "@workspace/ui/lib/gsap.util";
+
 const steps = [
   {
     subTitle: "Connect",
@@ -23,9 +27,40 @@ const steps = [
 ];
 
 export function Steps() {
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.from(".section-head > *", {
+        scrollTrigger: {
+          trigger: ".section-head",
+          start: "top 80%",
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power4.out",
+      });
+
+      gsap.from(".step", {
+        scrollTrigger: {
+          trigger: ".steps",
+          start: "top 70%",
+        },
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power4.out",
+      });
+    },
+    { scope: container },
+  );
+
   return (
-    <section className="section" id="how">
-      <div className="container">
+    <section className="section" id="how" ref={container}>
+      <div className="container gsap-reveal">
         <div className="section-head">
           <div className="section-eyebrow">04 · How it works</div>
           <h2 className="font-inter mb-4 text-balance">
@@ -118,7 +153,8 @@ function StepArtScan() {
             key={i}
             style={{
               height: 8,
-              background: i % 3 === 0 ? "var(--canvas-row)" : "var(--canvas-tile)",
+              background:
+                i % 3 === 0 ? "var(--canvas-row)" : "var(--canvas-tile)",
               borderRadius: 1,
             }}
           ></div>

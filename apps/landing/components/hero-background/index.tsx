@@ -3,21 +3,81 @@ import owlImage from "@workspace/assets/images/owl.png";
 import Image from "next/image";
 import React, { useRef } from "react";
 import { DottedOverlay } from "./dotted-overlay";
+import { useGSAP, gsap } from "@workspace/ui/lib/gsap.util";
 
 export function HeroBackground() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
+  useGSAP(
+    () => {
+      // Entrance animation for background elements
+      gsap.from(".bg-circles > div", {
+        opacity: 0,
+        scale: 0.5,
+        duration: 2,
+        stagger: {
+          amount: 0.8,
+          from: "center",
+        },
+        ease: "expo.out",
+      });
+
+      // Owl parallax - more pronounced
+      gsap.to(".owl-img", {
+        scrollTrigger: {
+          trigger: wrapRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 3,
+        },
+        y: 200,
+        scale: 2.15,
+        opacity: 0.1,
+        ease: "none",
+      });
+
+      // Individual circles parallax for depth (staggered effect)
+      const circles = gsap.utils.toArray<HTMLElement>(".bg-circles > div");
+      circles.forEach((circle, i) => {
+        gsap.to(circle, {
+          scrollTrigger: {
+            trigger: wrapRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+          y: (i + 1) * -30,
+          x: i % 2 === 0 ? 20 : -20,
+          ease: "none",
+        });
+      });
+
+      // Subtle movement for the dots
+      gsap.to(".dots", {
+        scrollTrigger: {
+          trigger: wrapRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+        y: -100,
+        ease: "none",
+      });
+    },
+    { scope: wrapRef },
+  );
+
   return (
     <div
       ref={wrapRef}
-      className="owl-wrap absolute bg-[#020103] -z-10 inset-0"
+      className="owl-wrap fixed bg-[#020103] -z-10 inset-0 overflow-hidden"
       style={{
         background:
           "linear-gradient(to bottom right, oklch(from #020103 l c h), oklch(from #020103) l c h / 0.5))",
       }}
     >
       <DottedOverlay
-        className="absolute opacity-4  w-full h-full"
+        className="dots absolute opacity-4  w-full h-full"
         style={
           {
             "--tw-blur": "blur(2px)",
@@ -27,7 +87,7 @@ export function HeroBackground() {
 
       {/* Group 8104 */}
       <div
-        className="absolute opacity-70 -top-32 left-0"
+        className="bg-circles gsap-reveal absolute opacity-70 -top-32 left-0"
         style={{
           width: "776.21px",
           height: "713.71px",
@@ -134,7 +194,7 @@ export function HeroBackground() {
       <Image
         alt="Haya owl"
         src={owlImage}
-        className="-z-50 absolute opacity-20 inset-0 object-cover"
+        className="owl-img gsap-reveal -z-50 absolute opacity-20 inset-0 object-cover"
         fill
       />
     </div>

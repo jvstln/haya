@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@workspace/ui/components/button";
 import {
   InputGroup,
@@ -5,14 +6,33 @@ import {
   InputGroupInput,
 } from "@workspace/ui/components/input-group";
 import { ArrowRight } from "lucide-react";
-import React from "react";
+import React, { useRef } from "react";
+import { useGSAP, gsap } from "@workspace/ui/lib/gsap.util";
 
 export function TryHaya() {
   const [url, setUrl] = React.useState("");
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.from(".try-inner > *", {
+        scrollTrigger: {
+          trigger: ".try",
+          start: "top 80%",
+        },
+        y: 20,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power4.out",
+      });
+    },
+    { scope: container },
+  );
 
   return (
-    <section className="section" id="try">
-      <div className="container">
+    <section className="section" id="try" ref={container}>
+      <div className="container gsap-reveal">
         <div className="try">
           <div className="try-inner">
             <div className="section-eyebrow">03 · Try it now</div>
@@ -25,6 +45,7 @@ export function TryHaya() {
               <InputGroupInput
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://yourwebsite.com"
               />
               <InputGroupAddon align="inline-end">
                 <Button size="lg">

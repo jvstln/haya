@@ -3,11 +3,28 @@ import React from "react";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { Logo } from "./logo";
+import { useGSAP, gsap } from "@workspace/ui/lib/gsap.util";
 
 export function Nav() {
+  const container = React.useRef(null);
+
+  useGSAP(
+    () => {
+      gsap.from(".nav-inner > *", {
+        y: -20,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power4.out",
+        delay: 0.2,
+      });
+    },
+    { scope: container },
+  );
+
   return (
-    <nav className="nav backdrop-blur-xs">
-      <div className="container nav-inner">
+    <nav className="nav backdrop-blur-xs" ref={container}>
+      <div className="container nav-inner gsap-reveal">
         <Link href="#">
           <Logo />
         </Link>

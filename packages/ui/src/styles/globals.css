@@ -210,4 +210,9 @@
   .animate-border-glow::after {
     @apply absolute inset-0.5 -z-1 content-[''] bg-inherit rounded-[inherit];
   }
+
+  /* ============ GSAP Utilities ============ */
+  .gsap-reveal {
+    visibility: hidden;
+  }
 }

@@ -1,11 +1,89 @@
+"use client";
 import { Button } from "@workspace/ui/components/button";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { HeroBackground } from "./hero-background";
+import { useGSAP, gsap, SplitText } from "@workspace/ui/lib/gsap.util";
+
 export function Hero() {
+  const container = React.useRef<HTMLDivElement>(null);
   const dashRef = React.useRef<HTMLDivElement | null>(null);
   const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
+
+  useGSAP(
+    () => {
+      // Split the h1 into lines for a beautiful staggered entrance
+      const splitTitle = new SplitText("h1", {
+        type: "lines",
+        linesClass: "overflow-hidden",
+      });
+
+      const splitTag = new SplitText(".tag", {
+        type: "lines",
+        linesClass: "overflow-hidden",
+      });
+
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+      tl.from(".eyebrow", {
+        y: 10,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.2,
+      })
+        .from(
+          splitTitle.lines,
+          {
+            y: 80,
+            opacity: 0,
+            duration: 1.2,
+            stagger: 0.15,
+          },
+          "-=0.6",
+        )
+        .from(
+          splitTag.lines,
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+          },
+          "-=0.7",
+        )
+        .from(
+          ".hero-ctas > *",
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+          },
+          "-=0.6",
+        )
+        .from(
+          ".dashboard-wrap",
+          {
+            y: 60,
+            opacity: 0,
+            duration: 1.2,
+            scale: 0.98,
+          },
+          "-=0.8",
+        );
+
+      // Subtle float animation for dashboard
+      gsap.to(".dashboard", {
+        y: -10,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    },
+    { scope: container },
+  );
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!dashRef.current) return;
@@ -18,29 +96,29 @@ export function Hero() {
   const onLeave = () => setTilt({ x: 0, y: 0 });
 
   return (
-    <section className="hero relative">
+    <section className="hero relative" ref={container}>
       <HeroBackground />
       <div className="max-md:px-5 max-md:py-0">
-        <div className="eyebrow">
+        <div className="eyebrow gsap-reveal">
           <span className="dot" />
           PRIVATE BETA · INVITE ONLY
         </div>
         <h1
-          className="font-inter text-balance mb-4 leading-none tracking-tight"
+          className="font-inter text-balance mb-4 leading-none tracking-tight gsap-reveal"
           style={{
             fontSize: "clamp(48px, 7vw, 92px)",
           }}
         >
           See the friction.
           <br />
-          <em>Fix the funnel.</em>
+          <em className="inline-block">Fix the funnel.</em>
         </h1>
-        <p className="tag">
+        <p className="tag gsap-reveal">
           Haya AI runs an AI-powered behavioral audit on your website or app
           screenshots every friction point, identifies the problem, and tells
           you how to fix it. In minutes.
         </p>
-        <div className="hero-ctas">
+        <div className="hero-ctas gsap-reveal">
           <Button
             appearance="solid"
             color="primary"
@@ -69,7 +147,7 @@ export function Hero() {
 
         <div
           role="none"
-          className="dashboard-wrap"
+          className="dashboard-wrap gsap-reveal"
           onMouseMove={onMove}
           onMouseLeave={onLeave}
         >

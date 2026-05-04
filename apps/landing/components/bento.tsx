@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+"use client";
+import { ReactNode, useRef } from "react";
+import { useGSAP, gsap, ScrollTrigger } from "@workspace/ui/lib/gsap.util";
 
 interface BentoItem {
   cardClassName: string;
@@ -136,6 +138,37 @@ const bentoItems: BentoItem[] = [
 ];
 
 export function Bento() {
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.from(".section-head > *", {
+        scrollTrigger: {
+          trigger: ".section-head",
+          start: "top 80%",
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power4.out",
+      });
+
+      gsap.from(".bento-card", {
+        scrollTrigger: {
+          trigger: ".bento",
+          start: "top 90%",
+        },
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power4.out",
+      });
+    },
+    { scope: container },
+  );
+
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const r = card.getBoundingClientRect();
@@ -144,8 +177,8 @@ export function Bento() {
   };
 
   return (
-    <section className="section" id="features">
-      <div className="container">
+    <section className="section" id="features" ref={container}>
+      <div className="container gsap-reveal">
         <div className="section-head">
           <div className="section-eyebrow">02 · The product</div>
           <h2 className="font-inter mb-4 text-balance">
