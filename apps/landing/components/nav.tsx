@@ -38,7 +38,7 @@ export function Nav() {
             className="animate-border-glow rounded-full"
             asChild
           >
-            <Link href={LINKS.webAppUrl}>Request access</Link>
+            <Link href={LINKS.webAppUrl}>Run free audit</Link>
           </Button>
         </div>
       </div>

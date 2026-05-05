@@ -71,7 +71,7 @@ export function CTA() {
           />
           <InputGroupAddon align="inline-end">
             <Button>
-              Request access
+              Run free audit
               <ArrowRight />
             </Button>
           </InputGroupAddon>
