@@ -75,7 +75,7 @@ export default function Home() {
                     onClick={openSignupPage}
                   >
                     <PenAdd className="size-5.5 rounded-sm bg-[#0088FF] p-1" />
-                    Editor
+                    List
                   </Button>
                 </div>
               }
