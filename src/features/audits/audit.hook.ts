@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { queryClient } from "@/lib/queryclient";
 import * as AuditService from "./audit.service";
 import type { AuditFilters } from "./audit.type";
+import { urlSchema } from "@/schemas";
 
 export const useAudits = (params: AuditFilters = {}) => {
   return useQuery({
@@ -25,7 +26,7 @@ export const useAudit = (auditId: string) => {
       };
     },
     refetchInterval(query) {
-      // Refetch audit every ^2 seconds (exponentially.. 2 4 8 16s) if status is pending
+      // Refetch audit every 5 seconds if status is pending
       if (
         !query.state.data ||
         !AuditService.getIsAuditInProgress(query.state.data)
@@ -34,7 +35,7 @@ export const useAudit = (auditId: string) => {
         return false;
       }
 
-      return (10 + ++refetchCount.current) * 1000; // 10 seconds + refetchCount seconds
+      return 5 * 1000; // 5 seconds
     },
     enabled: !!auditId,
   });
@@ -48,6 +49,7 @@ export const useCreateAudit = () => {
     onError: (error) => toast.error(`Error: ${error.message}`),
     onSuccess: (data) => {
       toast.success(data.message || "Case started successfully");
+      queryClient.invalidateQueries({ queryKey: ["pre-audit-info"] });
     },
   });
 };
@@ -74,12 +76,19 @@ export const useDeleteAudit = () => {
   });
 };
 
-export const usePreAuditInfo = (payload: { url: string }) => {
+export const usePreAuditInfo = (_payload: { url: string }) => {
+  const { data: url, success: isUrlValid } = urlSchema.safeParse(_payload.url);
+  const payload = { ..._payload, url: url || "" };
+
   return useQuery({
     queryKey: ["pre-audit-info", payload],
     queryFn: () => AuditService.getPreAuditInfo(payload),
-    enabled: !!payload.url,
+    enabled: isUrlValid,
   });
+};
+
+export const useStaticPreAuditInfo = () => {
+  return usePreAuditInfo({ url: window.location.origin });
 };
 
 export function invalidateAuditQueries() {

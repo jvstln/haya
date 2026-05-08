@@ -17,10 +17,17 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { HayaSpinner, Spinner } from "@/components/ui/spinner";
-import { useAudit, useCreateAudit, usePreAuditInfo } from "../audit.hook";
+import {
+  useAudit,
+  useCreateAudit,
+  usePreAuditInfo,
+  useStaticPreAuditInfo,
+} from "../audit.hook";
 import { newAuditSchema } from "../audit.schema";
 import { getIsAuditInProgress } from "../audit.service";
 import type { NewAudit } from "../audit.type";
+import z from "zod";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const FloatingTag = ({
   color,
@@ -224,20 +231,6 @@ export const NewAuditForm = ({
   const createAudit = useCreateAudit();
   const router = useRouter();
 
-  // Used to store the returned analysed audit id.. then fetch the current audit and only proceed when the audit status is completed
-  const [newAuditId, setNewAuditId] = useState("");
-  const newAudit = useAudit(newAuditId);
-
-  console.log(newAuditId);
-
-  useEffect(() => {
-    if (!newAudit.data) return;
-    if (!getIsAuditInProgress(newAudit.data)) {
-      router.push(`/dashboard/audits/${newAuditId}`);
-      setNewAuditId("");
-    }
-  }, [newAuditId, newAudit.data, router.push]);
-
   const form = useForm<NewAudit>({
     defaultValues: { url: "" },
     resolver: zodResolver(newAuditSchema),
@@ -245,9 +238,10 @@ export const NewAuditForm = ({
 
   const url = form.watch("url");
   const pageCount = form.watch("pageCount");
-  const isUrlValid = newAuditSchema.shape.url.safeParse(url).success;
 
-  const preAuditInfo = usePreAuditInfo({ url: isUrlValid ? url : "" });
+  const deboucedUrl = useDebounce(url, 800);
+  const preAuditInfo = usePreAuditInfo({ url: deboucedUrl });
+  const staticPreAuditInfo = useStaticPreAuditInfo();
 
   useEffect(() => {
     if (!preAuditInfo.data?.rootUrl) return;
@@ -264,17 +258,12 @@ export const NewAuditForm = ({
   const handleSubmit = (values: NewAudit) => {
     createAudit.mutate(values, {
       onSuccess(data) {
-        setNewAuditId(data?._id);
+        router.push(`/dashboard/audits/${data._id}`);
       },
     });
   };
 
-  const isLoading =
-    form.formState.isSubmitting ||
-    createAudit.isPending ||
-    (newAuditId && getIsAuditInProgress(newAudit.data));
-
-  console.log(preAuditInfo.data);
+  const isLoading = form.formState.isSubmitting || createAudit.isPending;
 
   return (
     <Dialog {...props} open={isLoading ? true : open} onOpenChange={setOpen}>
@@ -322,60 +311,65 @@ export const NewAuditForm = ({
               <FieldError errors={[form.formState.errors.url]} />
             </Field>
 
-            <Field>
-              <FieldLabel>
-                Total Cost
-                {preAuditInfo.isFetching ? <Spinner /> : null}
-              </FieldLabel>
+            {staticPreAuditInfo.data &&
+              !staticPreAuditInfo.data.tokenBalance.enoughForFreeAnalysis && (
+                <Field>
+                  <FieldLabel>
+                    Total Cost
+                    {preAuditInfo.isFetching ? <Spinner /> : null}
+                  </FieldLabel>
 
-              <div className="relative flex flex-col gap-4 rounded-2xl border bg-[#060607] p-6 shadow-inner">
-                {preAuditInfo.isError ? (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-none bg-inherit text-destructive">
-                    Failed to load website data
-                    <Button
-                      size="sm"
-                      type="button"
-                      appearance="outline"
-                      color="secondary"
-                    >
-                      Retry
-                    </Button>
-                  </div>
-                ) : null}
+                  <div className="relative flex flex-col gap-4 rounded-2xl border bg-[#060607] p-6 shadow-inner">
+                    {preAuditInfo.isError ? (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-none bg-inherit text-destructive">
+                        Failed to load website data
+                        <Button
+                          size="sm"
+                          type="button"
+                          appearance="outline"
+                          color="secondary"
+                        >
+                          Retry
+                        </Button>
+                      </div>
+                    ) : null}
 
-                <div className="flex items-baseline gap-2">
-                  <span className="text-muted-foreground text-xl">$</span>
-                  <span className="font-bold text-white text-xl">
-                    {preAuditInfo.data && pageCount
-                      ? preAuditInfo.data.pricing.pricePerPage * pageCount
-                      : "-"}
-                  </span>
-                </div>
-
-                <hr />
-
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col">
-                    <span className="text-muted-foreground text-sm">Pages</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-white text-xl">
-                        {pageCount || "-"} pages
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-muted-foreground text-xl">$</span>
+                      <span className="font-bold text-white text-xl">
+                        {preAuditInfo.data && pageCount
+                          ? preAuditInfo.data.pricing.pricePerPage * pageCount
+                          : "-"}
                       </span>
                     </div>
-                  </div>
-                  <StepperButton
-                    onClick={(_, count) => {
-                      if (!preAuditInfo.data) return;
 
-                      form.setValue(
-                        "pageCount",
-                        (form.getValues("pageCount") || 0) + count,
-                      );
-                    }}
-                  />
-                </div>
-              </div>
-            </Field>
+                    <hr />
+
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col">
+                        <span className="text-muted-foreground text-sm">
+                          Pages
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-white text-xl">
+                            {pageCount || "-"} pages
+                          </span>
+                        </div>
+                      </div>
+                      <StepperButton
+                        onClick={(_, count) => {
+                          if (!preAuditInfo.data) return;
+
+                          form.setValue(
+                            "pageCount",
+                            (form.getValues("pageCount") || 0) + count,
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+                </Field>
+              )}
 
             <Button size="lg">Audit now</Button>
           </form>
