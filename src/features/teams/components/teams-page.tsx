@@ -4,7 +4,11 @@ import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import { DashboardHeader } from "@/components/dashboard-header";
+import {
+  DashboardHeader,
+  DashboardSlot,
+  DashboardTitle,
+} from "@/components/dashboard-ui";
 import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -13,7 +17,8 @@ import { InputSearch } from "@/components/ui/input-search";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
 import { useFilters } from "@/hooks/use-filters";
-import { getInitials, stringToColor } from "@/lib/utils";
+import { stringToColor } from "@/lib/color.util";
+import { getInitials } from "@/lib/utils";
 import { useTeams } from "../team.hook";
 import type { Team } from "../team.type";
 import { TeamsSheet } from "./teams-sheet";
@@ -37,17 +42,18 @@ const TeamsPage = () => {
   const teamIdForTeamSheet = searchParams.get("teamId") ?? action?.team._id;
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6">
-      <DashboardHeader
-        title="Build your team, where AI meets human expertise for flawless UX insights"
-        cta={
-          <CreateTeamDialog>
-            <Button className="animate-border-glow rounded-full">
-              Create team
-            </Button>
-          </CreateTeamDialog>
-        }
-      />
+    <DashboardSlot>
+      <DashboardHeader>
+        <DashboardTitle>
+          Build your team, where AI meets human expertise for flawless UX
+          insights
+        </DashboardTitle>
+        <CreateTeamDialog>
+          <Button className="animate-border-glow rounded-full">
+            Create team
+          </Button>
+        </CreateTeamDialog>
+      </DashboardHeader>
 
       <div className="flex items-center justify-between gap-1">
         <Button
@@ -75,7 +81,7 @@ const TeamsPage = () => {
         </div>
       )}
 
-      <QueryState query={teams} errorPrefix="Error fetching teams">
+      <QueryState query={teams}>
         <div className="flex flex-wrap gap-4">
           {teams.data?.teams.map((team) => {
             return (
@@ -164,7 +170,7 @@ const TeamsPage = () => {
           teamId={teamIdForTeamSheet}
         />
       )}
-    </div>
+    </DashboardSlot>
   );
 };
 

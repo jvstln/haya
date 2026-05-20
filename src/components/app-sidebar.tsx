@@ -3,9 +3,10 @@ import { Add } from "iconsax-reactjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { getSidebarContent } from "@/data/navlinks";
+import React from "react";
 import { cn } from "@/lib/utils";
 import logo from "@/public/logo.svg";
+import { useSidebarContent } from "./providers/sidebar-content.provider";
 import { Button } from "./ui/button";
 import {
   Sidebar,
@@ -20,13 +21,12 @@ import {
 } from "./ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-export const AppSidebar = ({
-  sidebarItems,
-}: {
-  sidebarItems: ReturnType<typeof getSidebarContent>;
-}) => {
+export const AppSidebar = () => {
   const pathname = usePathname();
   const { isMobile, toggleSidebar, setOpenMobile } = useSidebar();
+
+  // const sidebarItems = useGlobalStore((state) => state.sidebarConfig.content);
+  const sidebarItems = useSidebarContent().content;
 
   if (!sidebarItems) return null;
 
@@ -54,12 +54,17 @@ export const AppSidebar = ({
       {/* This sidebar content follows a flat structure rather than nested one defined in shadcn for simplicity */}
       <SidebarContent className={cn(!isMobile && "mt-6")}>
         {sidebarItems.map((item) => {
-          const isLink = "url" in item;
-          const isGroupLabel = !isLink;
+          if (React.isValidElement(item) || item === null) {
+            return item;
+          }
+
+          const isLink = typeof item === "object" && "url" in item;
+          const isGroupLabel =
+            typeof item === "object" && "title" in item && !isLink;
 
           if (isLink) {
-            const isActive = item.exact
-              ? pathname === item.url
+            const isActive = item.getIsActive
+              ? item.getIsActive(pathname)
               : pathname.startsWith(item.url);
 
             const sidebarLink = (
@@ -86,7 +91,7 @@ export const AppSidebar = ({
             if (item.tooltip) {
               return (
                 <Tooltip key={item.title + item.url}>
-                  <TooltipTrigger asChild>{sidebarLink}</TooltipTrigger>
+                  <TooltipTrigger render={sidebarLink} />
                   <TooltipContent side="right">{item.tooltip}</TooltipContent>
                 </Tooltip>
               );

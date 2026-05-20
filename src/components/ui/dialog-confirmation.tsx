@@ -1,8 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "./button";
 import {
+  createDialogHandle,
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -16,17 +18,18 @@ type ConfirmationDialogProps = React.ComponentProps<typeof Dialog> & {
   title?: React.ReactNode;
   description?: React.ReactNode;
   buttonText?: React.ReactNode;
+  children?: React.ReactElement;
   /**Function to run when the user confirms the operation
    * For async functions, the dialog remains until the function is resolved.
    * You can also prevent the dialog from closing using `e.preventDefault()` and then manually close it using `setOpen(false)`
    */
   onConfirm?: (
     e: React.MouseEvent,
-    setOpen: (open: boolean) => void,
+    // setOpen: (open: boolean) => void,
   ) => Promise<void>;
   onCancel?: (
     e: React.MouseEvent,
-    setOpen: (open: boolean) => void,
+    // setOpen: (open: boolean) => void,
   ) => Promise<void>;
   accent?: `--color-${string}` | `--color-${string}-${number}`;
 };
@@ -42,20 +45,21 @@ export const ConfirmationDialog = ({
   accent = "--color-primary",
   ...props
 }: ConfirmationDialogProps) => {
-  const [_open, _setOpen] = useState(false);
+  const [confirmationDialogHandle] = useState(() => createDialogHandle());
   const [isPending, setIsPending] = useState(false);
-
-  const open = props.open || _open;
-  const onOpenChange = (open: boolean) => {
-    if (isPending) return;
-    props.onOpenChange?.(open);
-    _setOpen(open);
-  };
+  const shouldCloseRef = useRef(true);
 
   return (
-    <Dialog {...props} open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+    <Dialog
+      {...props}
+      handle={confirmationDialogHandle}
+      onOpenChange={(...args) => {
+        if (!shouldCloseRef.current) return args[1].cancel();
+        props.onOpenChange?.(...args);
+      }}
+    >
+      {children && <DialogTrigger render={children} />}
+      <DialogContent>
         <DialogHeader className="sm:text-center">
           {image || (
             <svg
@@ -79,30 +83,40 @@ export const ConfirmationDialog = ({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            appearance="outline"
-            color="secondary"
-            disabled={isPending}
-            onClick={async (e) => {
-              await onCancel?.(e, onOpenChange);
-              if (!e.defaultPrevented) onOpenChange(false);
-            }}
+          <DialogClose
+            render={
+              <Button
+                appearance="outline"
+                color="secondary"
+                disabled={isPending}
+                onClick={async (e) => {
+                  await onCancel?.(e);
+                  if (!e.defaultPrevented) confirmationDialogHandle.close();
+                }}
+              />
+            }
           >
             Cancel
-          </Button>
+          </DialogClose>
+
           <Button
-            onClick={async (e) => {
-              setIsPending(true);
-              try {
-                await onConfirm?.(e, onOpenChange);
-              } finally {
-                setIsPending(false);
-                if (!e.defaultPrevented) onOpenChange(false);
-              }
-            }}
             isLoading={isPending}
             color="destructive"
             style={{ "--bg": `var(${accent})` } as React.CSSProperties}
+            onClick={async (e) => {
+              shouldCloseRef.current = false;
+              setIsPending(true);
+              try {
+                await onConfirm?.(e);
+              } finally {
+                setIsPending(false);
+                if (!e.defaultPrevented) {
+                  shouldCloseRef.current = true;
+                  confirmationDialogHandle.close();
+                }
+                shouldCloseRef.current = true;
+              }
+            }}
           >
             {buttonText}
           </Button>

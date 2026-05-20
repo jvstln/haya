@@ -50,7 +50,7 @@ export const ForgotPasswordForm = ({
           <FieldError errors={[errors.email]} />
         </Field>
 
-        <Button size="lg" isLoading={isLoading}>
+        <Button type="submit" size="lg" isLoading={isLoading}>
           Send Reset Code
         </Button>
       </form>
@@ -130,7 +130,7 @@ export const ResetPasswordForm = ({
           <FieldError errors={[errors.confirmPassword]} />
         </Field>
 
-        <Button size="lg" isLoading={isLoading}>
+        <Button type="submit" size="lg" isLoading={isLoading}>
           Reset Password
         </Button>
       </form>

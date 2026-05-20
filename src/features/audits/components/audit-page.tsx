@@ -1,23 +1,16 @@
 "use client";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import { BoxAdd, Clipboard, Scan } from "iconsax-reactjs";
-import Link from "next/link";
 import { useState } from "react";
-import { DashboardHeader } from "@/components/dashboard-header";
 import { FolderIcon } from "@/components/icons";
-import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import { InputSearch } from "@/components/ui/input-search";
 import { LogicalPagination } from "@/components/ui/pagination";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { useAudits } from "@/features/audits/audit.hook";
 import { useAuth } from "@/features/auth/auth.hook";
 import { useFilters } from "@/hooks/use-filters";
 import { useDeleteAudit } from "../audit.hook";
 import type { AuditFilters, AuditWithoutContent } from "../audit.type";
-import { AuditCard } from "./audit-card";
-import { NewAuditForm } from "./audit-form";
+import { TagInstallation } from "./tag-installation";
 
 type Action = {
   type: "delete";
@@ -25,7 +18,9 @@ type Action = {
 };
 
 export const AuditPage = () => {
-  const [view, setView] = useState<"all" | "assigned" | "completed">("all");
+  const [view, setView] = useState<"sessionReplay" | "heatmap">(
+    "sessionReplay",
+  );
   const [action, setAction] = useState<Action | null>(null);
   const { filters, setFilters, originalFilters } = useFilters<AuditFilters>();
 
@@ -35,58 +30,26 @@ export const AuditPage = () => {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--audit-card-height:189px] [--audit-card-width:212px] md:p-6">
-      <DashboardHeader
-        title="UX intelligence that turns websites into revenue machines"
-        cta={
-          <div className="flex gap-4">
-            <NewAuditForm>
-              <Button color="secondary" className="rounded-full">
-                <Scan className="size-5.5 rounded-sm bg-primary p-1" /> Audit
-              </Button>
-            </NewAuditForm>
-            <Button color="secondary" className="rounded-full" asChild>
-              <Link href="/dashboard/canva">
-                <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
-                Canva
-              </Link>
-            </Button>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button color="secondary" className="rounded-full">
-                  <Clipboard className="size-5.5 rounded-sm bg-primary p-1" />
-                  List
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Coming soon</TooltipContent>
-            </Tooltip>
-          </div>
-        }
-      />
+      <TagInstallation />
 
-      <div className="flex items-center justify-between gap-1">
+      <h1 className="text-h3">All behavioural data</h1>
+
+      <div className="-mt-2 flex items-center justify-between gap-1">
         <Button
-          appearance={view === "all" ? "solid" : "ghost"}
+          appearance={view === "sessionReplay" ? "solid" : "ghost"}
           color="secondary"
           size="sm"
-          onClick={() => setView("all")}
+          onClick={() => setView("sessionReplay")}
         >
-          All audits
+          Session replay
         </Button>
         <Button
-          appearance={view === "assigned" ? "solid" : "ghost"}
+          appearance={view === "heatmap" ? "solid" : "ghost"}
           color="secondary"
           size="sm"
-          onClick={() => setView("assigned")}
+          onClick={() => setView("heatmap")}
         >
-          Assigned
-        </Button>
-        <Button
-          appearance={view === "completed" ? "solid" : "ghost"}
-          color="secondary"
-          size="sm"
-          onClick={() => setView("completed")}
-        >
-          Completed
+          Heatmap
         </Button>
 
         <InputSearch
@@ -98,14 +61,16 @@ export const AuditPage = () => {
         />
       </div>
 
-      {(!isAuthenticated || (audits.data && audits.data.data.length === 0)) && (
+      {(!isAuthenticated ||
+        (audits.data && audits.data.data.length === 0) ||
+        true) && (
         <div className="flex grow flex-col items-center justify-center text-sm">
           <FolderIcon className="size-40" />
-          <p>No audit yet</p>
+          <p>No sessions yet</p>
         </div>
       )}
 
-      {isAuthenticated && (
+      {/* {isAuthenticated && (
         <div className="flex flex-wrap gap-4">
           {audits.isPending || audits.isError ? (
             <QueryState query={audits} errorPrefix="Error fetching analyses:" />
@@ -119,7 +84,7 @@ export const AuditPage = () => {
             ))
           )}
         </div>
-      )}
+      )} */}
 
       {audits.data && (
         <LogicalPagination

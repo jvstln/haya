@@ -36,7 +36,7 @@ export default function RootLayout({
         className={cn(
           lato.variable,
           syncopate.variable,
-          "size-full min-h-screen bg-background font-lato text-foreground antialiased",
+          "relative size-full min-h-screen bg-background font-lato text-foreground antialiased",
         )}
       >
         <Providers>{children}</Providers>

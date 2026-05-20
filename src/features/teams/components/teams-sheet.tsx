@@ -1,5 +1,5 @@
 import { Blend } from "iconsax-reactjs";
-import { MoreVertical, Plus, X } from "lucide-react";
+import { MoreVertical, Plus } from "lucide-react";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { InputSearch } from "@/components/ui/input-search";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -19,7 +18,6 @@ import { getInitials } from "@/lib/utils";
 import { useAssignAuditsToTeam, useTeam } from "../team.hook";
 import { AddTeamMemberDialog } from "./add-team-member-dialog";
 import { MessageTeamMembersForm } from "./message-team-members-form";
-import { FolderIcon } from "@/components/icons";
 
 type TeamsSheetProps = React.ComponentProps<typeof Sheet> & {
   teamId: string;
@@ -32,20 +30,7 @@ export const TeamsSheet = ({ teamId, ...props }: TeamsSheetProps) => {
 
   return (
     <Sheet {...props}>
-      <SheetContent
-        className="flex w-full flex-col bg-[#1E1E1E] p-0 text-white sm:max-w-[548px]"
-        closeButton={
-          <SheetClose asChild>
-            <Button
-              className="absolute top-4 right-[calc(100%+1rem)]"
-              color="secondary"
-              size="icon-sm"
-            >
-              <X />
-            </Button>
-          </SheetClose>
-        }
-      >
+      <SheetContent>
         <SheetHeader className="flex flex-row items-center justify-between border-b p-4 text-left">
           <SheetTitle className="font-semibold text-foreground">
             All Teams
@@ -62,7 +47,7 @@ export const TeamsSheet = ({ teamId, ...props }: TeamsSheetProps) => {
           </AddTeamMemberDialog>
         </SheetHeader>
 
-        <QueryState query={team} errorPrefix="Error fetching team">
+        <QueryState query={team}>
           {team.data && (
             <ScrollArea className="flex-1 overflow-hidden">
               <div className="flex flex-col gap-4 p-6">
@@ -129,21 +114,18 @@ export const TeamsSheet = ({ teamId, ...props }: TeamsSheetProps) => {
                     </SelectAuditsDialog>
                   </div>
                   <div className="flex flex-wrap gap-4">
-                    {audits.isPending || audits.isError ? (
-                      <QueryState
-                        query={audits}
-                        errorPrefix="Error fetching audits"
-                      />
-                    ) : audits.data.data.length === 0 ? (
-                      <div className="flex grow flex-col items-center justify-center text-sm">
-                        <FolderIcon className="size-40" />
-                        <p>No assigned audit yet</p>
-                      </div>
-                    ) : (
-                      audits.data?.data?.map((audit) => (
-                        <AuditCard key={audit._id} audit={audit} />
-                      ))
-                    )}
+                    <QueryState
+                      query={audits}
+                      getIsEmpty={(query) =>
+                        query.data.data.length === 0 && "No assigned audit yet"
+                      }
+                    >
+                      {(audits) =>
+                        audits.data.data?.map((audit) => (
+                          <AuditCard key={audit._id} audit={audit} />
+                        ))
+                      }
+                    </QueryState>
                   </div>
                 </div>
                 <Button

@@ -49,12 +49,12 @@ export const CanvaDock = () => {
 
       {/* Zoom dropdown */}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button color="secondary" className="rounded-full">
-            <ZoomIn />
-            <ArrowDown2 />
-            <span className="sr-only">Zoom</span>
-          </Button>
+        <DropdownMenuTrigger
+          render={<Button color="secondary" className="rounded-full" />}
+        >
+          <ZoomIn />
+          <ArrowDown2 />
+          <span className="sr-only">Zoom</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={() => zoomIn()}>

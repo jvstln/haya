@@ -6,7 +6,7 @@ import { redirectToGoogleAuth } from "../auth.service";
 export const GoogleAuthButton = ({
   className,
   ...props
-}: React.ComponentProps<typeof Button>) => {
+}: Button.ButtonProps) => {
   return (
     <Button
       size="lg"

@@ -1,9 +1,17 @@
 "use client";
 import { ArrowLeft, Blend, BoxAdd, Scan, Share } from "iconsax-reactjs";
-import Link from "next/link";
+import { Construction } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import {
   Select,
   SelectContent,
@@ -12,14 +20,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HayaSpinner } from "@/components/ui/spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAudit } from "@/features/audits/audit.hook";
 import { NewAuditForm } from "@/features/audits/components/audit-form";
-import { ShareAuditDialog } from "@/features/audits/components/share-audit-dialog";
 import { SelectTeamsDialog } from "@/features/teams/components/select-teams-dialog";
 import { useAssignAuditsToTeam } from "@/features/teams/team.hook";
 import type { Team } from "@/features/teams/team.type";
 import { useCanvaStore } from "../canva.store";
-import { CanvaEditor } from "./canva-editor";
 
 type CanvaPageProps = {
   auditId?: string;
@@ -43,11 +54,9 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
     <div className="relative flex size-full max-h-[calc(100vh-var(--header-height))] grow flex-col">
       {/* Navigation and controls */}
       <div className="flex items-center gap-4 p-3 md:px-6">
-        <Button appearance="soft" size="sm" asChild>
-          <Link href="/dashboard">
-            <ArrowLeft />
-            Back to Dashboard
-          </Link>
+        <Button appearance="soft" size="sm" href="/dashboard">
+          <ArrowLeft />
+          Back to Dashboard
         </Button>
 
         <Select
@@ -75,32 +84,50 @@ const CanvaPage = ({ auditId }: CanvaPageProps) => {
 
         {/* Only show if not a new canva */}
         {!pathname.endsWith("new") && (
-          <Button color="secondary" className="rounded-full" asChild>
-            <Link href="/dashboard/canva">
-              <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
-              New Canva
-            </Link>
+          <Button
+            href="/dashboard/canva"
+            color="secondary"
+            className="rounded-full"
+          >
+            <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
+            New Canva
           </Button>
         )}
 
         <AssignAuditToTeam auditId={auditId} />
 
-        {audit.data ? (
-          <ShareAuditDialog audit={audit.data}>
-            <Button appearance="soft" size="sm">
-              <Share />
-              Share Findings
-            </Button>
-          </ShareAuditDialog>
-        ) : (
-          <Button appearance="soft" size="sm" disabled>
+        <Tooltip>
+          <TooltipTrigger
+            render={<Button appearance="soft" size="sm" disabled />}
+          >
             <Share />
             Share Findings
-          </Button>
-        )}
+          </TooltipTrigger>
+          <TooltipContent>Coming soon</TooltipContent>
+        </Tooltip>
       </div>
 
-      <CanvaEditor />
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia>
+            <Construction className="size-24" />
+          </EmptyMedia>
+          <EmptyTitle className="text-h1">In Development</EmptyTitle>
+          <EmptyDescription>
+            The Canva editor is currently being built. Soon you'll be able to
+            create stunning visual reports, annotate findings with your team,
+            and export beautiful PDFs directly from your audit results.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button href="/dashboard" appearance="soft" size="sm">
+            <ArrowLeft />
+            Back to Dashboard
+          </Button>
+        </EmptyContent>
+      </Empty>
+
+      {/* <CanvaEditor /> */}
     </div>
   );
 };

@@ -1,12 +1,15 @@
+"use client";
 import { formatDistanceToNow } from "date-fns";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, IconToggleButton } from "@/components/ui/button";
 import {
+  createDialogHandle,
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -18,7 +21,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFilters } from "@/hooks/use-filters";
 import { getErrorMessage } from "@/lib/api";
 import { getInitials } from "@/lib/utils";
-import type { EventReturnType } from "@/types/type";
+import type { EventReturnType } from "@/types";
 import { useTeams } from "../team.hook";
 import type { Team } from "../team.type";
 
@@ -29,6 +32,7 @@ type SelectTeamsDialogProps = React.ComponentProps<typeof Dialog> & {
   onCancel?: () => EventReturnType;
   buttonText?: string;
   loadingText?: string;
+  children?: React.ReactElement;
 };
 
 export const SelectTeamsDialog = ({
@@ -38,9 +42,10 @@ export const SelectTeamsDialog = ({
   onCancel,
   buttonText = "Select",
   loadingText,
+  children,
   ...props
 }: SelectTeamsDialogProps) => {
-  const [_open, _setOpen] = useState(props.defaultOpen);
+  const [dialogHandle] = useState(createDialogHandle);
 
   const [isLoading, setIsLoading] = useState(false);
   const { filters, setFilters, originalFilters } = useFilters({ limit: 10 });
@@ -48,22 +53,19 @@ export const SelectTeamsDialog = ({
 
   const teams = useTeams(filters);
 
-  // Controlled and uncontrolled open states
-  const open = props.open ?? _open;
-  const setOpen = (open: boolean) => {
-    props.onOpenChange?.(open);
-    _setOpen(open);
-    if (!open) {
-      setSelectedTeams([]);
-    }
-  };
-
   // Controlled and uncontrolled selected teams states
   const selectedTeams = controlledTeams ?? _selectedTeams;
   const setSelectedTeams = (teams: Team[]) => {
     _setSelectedTeams(teams);
     onTeamsChange?.(teams);
   };
+
+  // Reset selected teams state if dialog is closed
+  useEffect(() => {
+    if (!dialogHandle.isOpen && selectedTeams.length > 0) {
+      setSelectedTeams([]);
+    }
+  }, [dialogHandle.isOpen, selectedTeams.length, setSelectedTeams]);
 
   const toggleSelect = (team: Team) => {
     const exisitingTeam = selectedTeams.find((a) => a._id === team._id);
@@ -85,7 +87,7 @@ export const SelectTeamsDialog = ({
       setIsLoading(true);
       const preventDefault = await onConfirm?.(selectedTeams);
       if (!preventDefault) {
-        setOpen(false);
+        dialogHandle.close();
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -96,8 +98,8 @@ export const SelectTeamsDialog = ({
   };
 
   return (
-    <Dialog {...props} open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{props.children}</DialogTrigger>
+    <Dialog handle={dialogHandle} {...props}>
+      {children && <DialogTrigger render={children} />}
       <DialogContent closeButton={false}>
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle className="font-semibold text-xl">All Teams</DialogTitle>
@@ -110,9 +112,10 @@ export const SelectTeamsDialog = ({
 
         <ScrollArea className="h-full max-h-100 px-6 py-4">
           <QueryState
-            query={{ ...teams, isPending: teams.isPending || isLoading }}
-            errorPrefix="Error fetching audits"
-            loadingText={loadingText}
+            query={teams}
+            getIsLoading={(query) =>
+              (query.isPending || isLoading) && (loadingText || true)
+            }
           >
             <div className="flex flex-col gap-4">
               {teams.data?.teams.map((team) => {
@@ -154,14 +157,11 @@ export const SelectTeamsDialog = ({
         </ScrollArea>
 
         <DialogFooter className="mt-8 *:flex-1">
-          <Button
-            color="secondary"
-            size="lg"
-            onClick={() => setOpen(false)}
-            disabled={isLoading}
+          <DialogClose
+            render={<Button color="secondary" size="lg" disabled={isLoading} />}
           >
             Cancel
-          </Button>
+          </DialogClose>
           <Button size="lg" onClick={handleConfirm} isLoading={isLoading}>
             {buttonText}
           </Button>

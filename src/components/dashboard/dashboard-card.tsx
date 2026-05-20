@@ -1,7 +1,6 @@
 import { MoreVertical } from "lucide-react";
-import type { Route } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Link, { type LinkProps } from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import {
@@ -11,8 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-type DashboardCardProps = {
-  href?: Route;
+type DashboardCardProps<TLink> = {
+  href?: LinkProps<TLink>["href"];
   image?: string | React.ReactNode;
   classNames?: Partial<Record<"root" | "content", string>>;
   content?: React.ReactNode;
@@ -24,23 +23,15 @@ type DashboardCardProps = {
   >;
 };
 
-export const DashboardCard = ({
+export const DashboardCard = <const TLink extends string>({
   href,
   classNames,
   image = "/images/default-audit-card-bg.webp",
   content,
   actions,
-}: DashboardCardProps) => {
-  const RootComponent = href ? Link : "div";
-
-  return (
-    <RootComponent
-      href={href as Route}
-      className={cn(
-        "group relative flex h-47.25 w-55.5 flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-md",
-        classNames?.root,
-      )}
-    >
+}: DashboardCardProps<TLink>) => {
+  const componentContent = (
+    <>
       {typeof image === "string" ? (
         <Image src={image} alt="" className="-z-10 object-cover" fill />
       ) : (
@@ -60,19 +51,21 @@ export const DashboardCard = ({
       {/* Actions */}
       {actions && actions.length > 0 && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              appearance="ghost"
-              color="secondary"
-              className="absolute top-1 right-1 size-6 rounded-md"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              <MoreVertical />
-            </Button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                appearance="ghost"
+                color="secondary"
+                className="absolute top-1 right-1 size-6 rounded-md"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <MoreVertical />
+              </Button>
+            }
+          />
           <DropdownMenuContent
             align="end"
             onClick={(e) => {
@@ -102,6 +95,21 @@ export const DashboardCard = ({
           </DropdownMenuContent>
         </DropdownMenu>
       )}
-    </RootComponent>
+    </>
   );
+
+  const rootClassName = cn(
+    "group relative flex h-47.25 w-55.5 flex-col overflow-hidden rounded-2xl border shadow-primary transition hover:shadow-md",
+    classNames?.root,
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={rootClassName}>
+        {componentContent}
+      </Link>
+    );
+  }
+
+  return <div className={rootClassName}>{componentContent}</div>;
 };

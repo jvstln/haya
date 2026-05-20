@@ -19,12 +19,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { LogoDark } from "@/public/logo";
-import type { ParsedAudit } from "../audit.type";
+import type { Audit } from "../audit.type";
 
 type Step = "input" | "compiling" | "success";
 
 type ShareFindingsDialogProps = React.ComponentProps<typeof Dialog> & {
-  audit: ParsedAudit;
+  audit: Audit;
+  children?: React.ReactElement;
 };
 
 export const ShareFindingsDialog = ({
@@ -44,9 +45,7 @@ export const ShareFindingsDialog = ({
 
   return (
     <Dialog {...props}>
-      {props.children && (
-        <DialogTrigger asChild>{props.children}</DialogTrigger>
-      )}
+      {props.children && <DialogTrigger render={props.children} />}
       <DialogContent className="flex h-full max-h-[90vh] flex-col overflow-hidden sm:max-w-auto">
         <DialogHeader className="">
           <DialogTitle>Share Findings</DialogTitle>

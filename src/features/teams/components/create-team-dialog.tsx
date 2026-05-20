@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
+  createDialogHandle,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -19,19 +20,15 @@ import { newTeamSchema } from "../team.schema";
 import type { NewTeam, NewTeamInput } from "../team.type";
 import { TeamMemberSelect } from "./team-member-select";
 
-type CreateTeamDialogProps = React.ComponentProps<typeof Dialog> & {};
+type CreateTeamDialogProps = React.ComponentProps<typeof Dialog> & {
+  children?: React.ReactElement;
+};
 
 export const CreateTeamDialog = ({
   children,
   ...props
 }: CreateTeamDialogProps) => {
-  // Handled controlled and uncontrolled open state
-  const [_open, _setOpen] = useState(props.defaultOpen ?? false);
-  const open = props.open ?? _open;
-  const setOpen = (open: boolean) => {
-    _setOpen(open);
-    props.onOpenChange?.(open);
-  };
+  const [dialogHandle] = useState(createDialogHandle);
 
   const createTeam = useCreateTeam();
 
@@ -52,15 +49,15 @@ export const CreateTeamDialog = ({
     createTeam.mutate(values, {
       onSuccess() {
         form.reset();
-        setOpen(false);
+        dialogHandle.close();
       },
     });
   };
 
   return (
-    <Dialog {...props} open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-md" closeButton={false}>
+    <Dialog handle={dialogHandle} {...props}>
+      {children && <DialogTrigger render={children} />}
+      <DialogContent closeButton={false}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <DialogHeader>
             <DialogTitle>Create Team</DialogTitle>

@@ -114,16 +114,18 @@ export const CanvaSectionComment = ({
         <span className="text-muted-foreground">{user.username}</span>
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              size="icon"
-              appearance="ghost"
-              color="secondary"
-              className="ml-auto size-auto rounded-sm p-1"
-            >
-              <MoreVerticalIcon />
-            </Button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                size="icon"
+                appearance="ghost"
+                color="secondary"
+                className="ml-auto size-auto rounded-sm p-1"
+              >
+                <MoreVerticalIcon />
+              </Button>
+            }
+          />
           <DropdownMenuContent>
             <DropdownMenuItem onClick={() => setIsExpanded(true)}>
               View
@@ -271,7 +273,6 @@ export const CanvaSectionComment = ({
               </div>
             )}
             <ScrollArea
-              type="always"
               className={cn(
                 "h-full max-h-[60vh] rounded-lg border border-secondary bg-muted text-muted-foreground text-sm",
                 !isEditing && "p-4",
@@ -341,10 +342,12 @@ export const CanvaSectionComment = ({
                     Delete
                   </Button>
                 )}
-                <DialogClose asChild>
-                  <Button size="sm" appearance="outline" color="secondary">
-                    Close
-                  </Button>
+                <DialogClose
+                  render={
+                    <Button size="sm" appearance="outline" color="secondary" />
+                  }
+                >
+                  Close
                 </DialogClose>
               </>
             )}

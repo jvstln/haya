@@ -72,7 +72,7 @@ export function InvitationCodePrompt() {
         if (!open) reject?.("User cancelled");
       }}
     >
-      <DialogContent className="w-full py-20">
+      <DialogContent className="py-20">
         <DialogHeader>
           <DialogTitle>INVITATION CODE REQUIRED</DialogTitle>
         </DialogHeader>

@@ -58,7 +58,7 @@ export const LoginForm = ({
         </div>
 
         <GoogleAuthButton disabled={isLoading} />
-        <Button size="lg" isLoading={isLoading}>
+        <Button type="submit" size="lg" isLoading={isLoading}>
           Login
         </Button>
       </form>

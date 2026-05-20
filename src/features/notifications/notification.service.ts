@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import type { Pagination } from "@/types/type";
+import type { Pagination } from "@/types";
 import type { Notification, NotificationFilters } from "./notification.type";
 
 async function getNotifications(params?: NotificationFilters) {

@@ -50,37 +50,45 @@ export const UserMenu = () => {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button appearance="ghost" color="secondary" className="h-auto gap-2">
-            <Avatar className="size-9">
-              <AvatarImage src="" alt={getDisplayName()} />
-              <AvatarFallback>
-                {getInitials(user?.username || "User")}
-              </AvatarFallback>
-            </Avatar>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              appearance="ghost"
+              color="secondary"
+              className="h-auto gap-2"
+            />
+          }
+        >
+          <Avatar className="size-9">
+            <AvatarImage src="" alt={getDisplayName()} />
+            <AvatarFallback>
+              {getInitials(user?.username || "User")}
+            </AvatarFallback>
+          </Avatar>
 
-            <span className="hidden max-w-14 flex-col text-left md:flex">
-              <span className="truncate text-sm">{getDisplayName()}</span>
-              <span className="truncate text-xs">{getSecondaryInfo()}</span>
-            </span>
+          <span className="hidden max-w-14 flex-col text-left md:flex">
+            <span className="truncate text-sm">{getDisplayName()}</span>
+            <span className="truncate text-xs">{getSecondaryInfo()}</span>
+          </span>
 
-            <ArrowDown2 className="max-md:hidden" />
-          </Button>
+          <ArrowDown2 className="max-md:hidden" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col gap-1">
-              <p className="font-medium text-sm leading-none">
-                {getDisplayName()}
-              </p>
-              <p className="truncate text-muted-foreground text-xs">
-                {getSecondaryInfo()}
-              </p>
-            </div>
-          </DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col gap-1">
+                <p className="font-medium text-sm leading-none">
+                  {getDisplayName()}
+                </p>
+                <p className="truncate text-muted-foreground text-xs">
+                  {getSecondaryInfo()}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={() => setIsUsernameDialogOpen(true)}>
+            <DropdownMenuItem onClick={() => setIsUsernameDialogOpen(true)}>
               <User className="size-4" />
               Profile
             </DropdownMenuItem>

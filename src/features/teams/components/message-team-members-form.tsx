@@ -57,31 +57,33 @@ export function MessageTeamMembersForm({ team }: { team: Team }) {
           />
           <InputGroupAddon className="border-t" align="block-end">
             <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  size="sm"
-                  className="ml-auto"
-                  appearance="outline"
-                  color="secondary"
-                >
-                  Send to
-                  {membersField.fields.length > 0 && (
-                    <span className="relative flex">
-                      {membersField.fields.map((member) => (
-                        <Avatar
-                          key={member.id}
-                          className="not-first:-ml-3.5 size-4.5"
-                        >
-                          <AvatarFallback>
-                            {getInitials(member.username)}
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                    </span>
-                  )}
-                  <ArrowDown2 />
-                </Button>
+              <PopoverTrigger
+                render={
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="ml-auto"
+                    appearance="outline"
+                    color="secondary"
+                  />
+                }
+              >
+                Send to
+                {membersField.fields.length > 0 && (
+                  <span className="relative flex">
+                    {membersField.fields.map((member) => (
+                      <Avatar
+                        key={member.id}
+                        className="not-first:-ml-3.5 size-4.5"
+                      >
+                        <AvatarFallback>
+                          {getInitials(member.username)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </span>
+                )}
+                <ArrowDown2 />
               </PopoverTrigger>
               <PopoverContent className="flex w-64 flex-col p-1" align="end">
                 {team.members.map((member) => {

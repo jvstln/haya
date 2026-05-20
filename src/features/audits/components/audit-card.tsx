@@ -1,6 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
 import { Trash } from "iconsax-reactjs";
-import type { Route } from "next";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -14,7 +13,7 @@ type AuditCardProps = {
 export const AuditCard = ({ audit, onDelete }: AuditCardProps) => {
   return (
     <DashboardCard
-      href={`/dashboard/audits/${audit._id}` as Route}
+      href={`/dashboard/track-experience/${audit._id}`}
       image={audit.firstImageUrl}
       classNames={{
         root: cn(

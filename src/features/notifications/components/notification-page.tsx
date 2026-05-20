@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
-import { DashboardHeader } from "@/components/dashboard-header";
+import {
+  DashboardHeader,
+  DashboardSlot,
+  DashboardTitle,
+} from "@/components/dashboard-ui";
 import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
@@ -26,19 +30,19 @@ export const NotificationsPage = () => {
   const markAsRead = useMarkNotificationAsRead();
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6">
-      <DashboardHeader
-        title="Stay updated with your latest notifications"
-        cta={
-          <Button
-            className="animate-border-glow rounded-full"
-            onClick={() => markAllAsRead.mutate()}
-            disabled={markAllAsRead.isPending}
-          >
-            Mark all as read
-          </Button>
-        }
-      />
+    <DashboardSlot>
+      <DashboardHeader>
+        <DashboardTitle>
+          Stay updated with your latest notifications
+        </DashboardTitle>
+      </DashboardHeader>
+      <Button
+        className="animate-border-glow rounded-full"
+        onClick={() => markAllAsRead.mutate()}
+        disabled={markAllAsRead.isPending}
+      >
+        Mark all as read
+      </Button>
 
       <div className="flex items-center justify-end gap-1">
         <Button
@@ -86,7 +90,7 @@ export const NotificationsPage = () => {
 
       <QueryState
         query={notifications}
-        errorPrefix="Error fetching notifications"
+        getIsError={(query) => query.isError && "Error fetching notifications"}
       >
         <div className="flex flex-col gap-3">
           {notifications.data?.notifications.map((notification) => (
@@ -111,6 +115,6 @@ export const NotificationsPage = () => {
           if (!open) setSelectedNotification(null);
         }}
       />
-    </div>
+    </DashboardSlot>
   );
 };

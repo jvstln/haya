@@ -1,7 +1,12 @@
-import { urlSchema } from "@/schemas";
 import { z } from "zod";
+import { urlSchema } from "@/schemas";
+
+export const auditTypes = [
+  { label: "Landing Page", value: "landing_page" },
+  { label: "Product/WebApp", value: "saas_product" },
+] as const;
 
 export const newAuditSchema = z.object({
   url: urlSchema,
-  pageCount: z.int().min(1).default(1).optional(),
+  audit_type: z.enum(auditTypes.map((type) => type.value)),
 });

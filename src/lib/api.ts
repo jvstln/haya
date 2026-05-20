@@ -11,7 +11,7 @@ export const api = axios.create({
 // Audit is a new name for what the backend calls analysis.
 api.interceptors.request.use(async (config) => {
   for (const key in config.data || {}) {
-    if (key.startsWith("audit")) {
+    if (key.startsWith("audit") && key !== "audit_type") {
       const rewrittenProperty = key.replace(/^audit/, "analysis");
       config.data[rewrittenProperty] = config.data[key];
       delete config.data[key];

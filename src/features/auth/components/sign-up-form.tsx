@@ -80,7 +80,7 @@ export const SignupEmailForm = ({
         </div>
 
         <GoogleAuthButton disabled={isLoading} />
-        <Button size="lg" isLoading={isLoading}>
+        <Button type="submit" size="lg" isLoading={isLoading}>
           Sign up now
         </Button>
       </form>

@@ -3,7 +3,7 @@ import * as AuditService from "@/features/audits/audit.service";
 
 export const generateMetadata = async ({
   params,
-}: LayoutProps<"/dashboard/audits/[auditId]">): Promise<Metadata> => {
+}: LayoutProps<"/dashboard/track-experience/[auditId]">): Promise<Metadata> => {
   try {
     const { auditId } = await params;
     const audit = await AuditService.getAudit(auditId);

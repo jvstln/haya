@@ -2,9 +2,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/queryclient";
+import { urlSchema } from "@/schemas";
 import * as AuditService from "./audit.service";
 import type { AuditFilters } from "./audit.type";
-import { urlSchema } from "@/schemas";
 
 export const useAudits = (params: AuditFilters = {}) => {
   return useQuery({
@@ -19,11 +19,11 @@ export const useAudit = (auditId: string) => {
   const query = useQuery({
     queryKey: ["audit", auditId],
     queryFn: () => AuditService.getAudit(auditId),
+    // TODO: remove when backend returns an object or null instetad of string
     select(data) {
-      return {
-        ...data,
-        content: AuditService.parseContent(data.content),
-      };
+      return typeof data.content === "string"
+        ? { ...data, content: null }
+        : data;
     },
     refetchInterval(query) {
       // Refetch audit every 5 seconds if status is pending

@@ -5,13 +5,15 @@ import { OnboardingFormDialog } from "@/features/auth/components/onboarding-dial
 import { SolanaProvider } from "@/features/auth/components/solana-provider";
 import { ChangeUsernameDialogGuard } from "@/features/users/components/change-username-dialog";
 import { queryClient } from "@/lib/queryclient";
-import { Toaster } from "./ui/sonner";
+import { Toaster } from "../ui/sonner";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SolanaProvider>
-        {children}
+        <div className="relative isolate flex min-h-svh flex-col">
+          {children}
+        </div>
         <Toaster position="top-center" richColors />
         <OnboardingFormDialog />
         <ChangeUsernameDialogGuard />

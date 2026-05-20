@@ -1,3 +1,5 @@
+import type { AppRoutes, LayoutRoutes } from "../../.next/types/routes";
+
 export type Pagination = {
   currentPage: number;
   totalPages: number;
@@ -13,6 +15,8 @@ export type QueryParams = {
   search?: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
+  from?: Date;
+  to?: Date;
 };
 
 export type EventReturnType =
@@ -20,3 +24,7 @@ export type EventReturnType =
   | boolean
   | Promise<boolean | undefined>
   | Promise<void>;
+
+export type RouteWithParams = AppRoutes;
+
+export type Params<T extends RouteWithParams> = Awaited<PageProps<T>["params"]>;

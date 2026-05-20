@@ -1,25 +1,55 @@
+import type { UseQueryResult } from "@tanstack/react-query";
+import { Warning2 } from "iconsax-reactjs";
+import type React from "react";
 import { cn } from "@/lib/utils";
+import { FolderIcon } from "./icons";
 import { Button } from "./ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "./ui/empty";
 import { HayaSpinner } from "./ui/spinner";
+
+type QueryStateProps<
+  TData = unknown,
+  TQuery extends Partial<UseQueryResult<TData>> = Partial<
+    UseQueryResult<TData>
+  >,
+> = {
+  query: TQuery;
+  children?:
+    | React.ReactNode
+    | ((
+        query: Extract<TQuery, { data: NonNullable<TData> }>,
+      ) => React.ReactNode);
+
+  getIsLoading?: (query: TQuery) => boolean | string;
+  getIsError?: (query: TQuery) => boolean | string;
+  getIsEmpty?: (
+    query: Extract<TQuery, { data: NonNullable<TData> }>,
+  ) => boolean | string | EmptyStateProps;
+};
+
+type EmptyStateProps = {
+  title: React.ReactNode;
+  description: React.ReactNode;
+  cta: React.ReactNode;
+};
 
 /**
  * Props for the ErrorState component.
  */
 type ErrorStateProps = {
   /** The query object from TanStack Query containing error and status */
-  query?: {
-    error?: Error | null;
-    refetch?: () => void;
-    isFetching?: boolean;
-    isPending?: boolean;
-    isError?: boolean;
-  };
+  query?: QueryStateProps["query"];
   /** Optional custom class names for styling specific parts of the component */
   classNames?: Partial<
     Record<"errorRoot" | "root" | "error" | "button", string>
   >;
-  /** Custom prefix for the error message (default: "Error:") */
-  errorPrefix?: string;
   /** Custom error message. Overrides the default error message */
   errorMessage?: string;
 };
@@ -28,35 +58,38 @@ type ErrorStateProps = {
  * Displays an error message with a retry button.
  * Renders when a query fails.
  */
-export const ErrorState = ({
+const ErrorState = ({
   query,
-  classNames,
-  errorMessage,
-  errorPrefix,
+  errorMessage = "An error occurred",
 }: ErrorStateProps) => {
   return (
-    <div
-      className={cn(
-        "flex h-full min-h-32 w-full flex-col items-center justify-center gap-2 rounded-2xl border border-destructive p-2 text-center",
-        classNames?.root,
-        classNames?.errorRoot,
-      )}
-    >
-      <p className={cn("text-red-500 text-sm", classNames?.error)}>
-        {errorMessage ?? `${errorPrefix ?? "Error"}: ${query?.error?.message}`}
-      </p>
-      {query?.refetch && (
-        <Button
-          size="sm"
-          appearance="outline"
-          color="secondary"
-          isLoading={query?.isFetching}
-          onClick={() => query?.refetch?.()}
-          className={classNames?.button}
+    <div className="flex min-h-24 w-full items-center justify-center p-4">
+      <Empty className="border-destructive/20 bg-destructive/5 shadow-sm">
+        <EmptyMedia
+          variant="icon"
+          className="bg-destructive/10 text-destructive"
         >
-          Retry
-        </Button>
-      )}
+          <Warning2 size={40} variant="Bulk" />
+        </EmptyMedia>
+        <EmptyHeader>
+          <EmptyTitle className="text-destructive">
+            Something went wrong
+          </EmptyTitle>
+          <EmptyDescription>
+            {errorMessage ?? query?.error?.message} <br />
+            Please try again or contact support if the problem persists.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button
+            onClick={() => query?.refetch?.()}
+            appearance="outline"
+            color="secondary"
+          >
+            Try Again
+          </Button>
+        </EmptyContent>
+      </Empty>
     </div>
   );
 };
@@ -73,49 +106,109 @@ type LoadingStateProps = {
 /**
  * Displays a loading spinner centered in a container.
  */
-export const LoadingState = ({
-  classNames,
-  loadingText,
-}: LoadingStateProps) => {
+const LoadingState = ({ classNames, loadingText }: LoadingStateProps) => {
   return (
     <div
       className={cn(
-        "flex h-full min-h-32 w-full flex-col items-center justify-center gap-2 rounded-2xl p-2 text-center",
+        "flex h-full min-h-24 w-full flex-col items-center justify-center gap-2 rounded-2xl p-2 text-center",
         classNames?.root,
         classNames?.loadingRoot,
       )}
     >
       <HayaSpinner />
-      {loadingText && <p className="text-sm">{loadingText}</p>}
+      {loadingText && <p className="animate-pulse text-sm">{loadingText}</p>}
     </div>
   );
 };
 
-/**
- * A wrapper component that handles loading and error states for queries.
- * - Renders `LoadingState` if `query.isFetching` is true.
- * - Renders `ErrorState` if `query.error` is present.
- * - Returns `null` otherwise (allowing children or subsequent content to render).
- */
-export const QueryState = ({
-  query,
-  classNames,
-  errorPrefix,
-  children,
-}: ErrorStateProps & LoadingStateProps & { children?: React.ReactNode }) => {
-  if (query?.isPending) {
-    return <LoadingState classNames={classNames} />;
-  }
+function hasData<
+  TData,
+  TQuery extends Partial<UseQueryResult<TData>> = Partial<
+    UseQueryResult<TData>
+  >,
+>(query: TQuery): query is Extract<TQuery, { data: NonNullable<TData> }> {
+  return query.data !== undefined && query.data !== null;
+}
 
-  if (query?.error || query?.isError) {
+/**
+ * A wrapper component that handles loading, error, and empty states for queries.
+ * - Renders `LoadingState` if the query is pending or custom loading is active.
+ * - Renders `ErrorState` if the query has failed or custom error is active.
+ * - Renders an empty placeholder state if the custom empty check evaluates to true.
+ * - Renders children or custom builder functions otherwise.
+ */
+export function QueryState<
+  TData,
+  TQuery extends Partial<UseQueryResult<TData>>,
+>({
+  query,
+  getIsLoading,
+  getIsError,
+  getIsEmpty,
+  children,
+}: QueryStateProps<TData, TQuery>) {
+  const possibleLoadingMessage = getIsLoading?.(query);
+  const possibleErrorMessage = getIsError?.(query);
+  const possibleEmptyMessage = hasData<TData>(query)
+    ? getIsEmpty?.(query)
+    : false;
+
+  if (getIsLoading ? possibleLoadingMessage : query?.isPending) {
     return (
-      <ErrorState
-        query={query}
-        classNames={classNames}
-        errorPrefix={errorPrefix}
+      <LoadingState
+        loadingText={
+          typeof possibleLoadingMessage === "string"
+            ? possibleLoadingMessage
+            : undefined
+        }
       />
     );
   }
 
-  return children;
-};
+  if (getIsError ? possibleErrorMessage : query?.error || query?.isError) {
+    return (
+      <ErrorState
+        query={query}
+        errorMessage={
+          typeof possibleErrorMessage === "string"
+            ? possibleErrorMessage
+            : undefined
+        }
+      />
+    );
+  }
+
+  if (possibleEmptyMessage) {
+    let title: React.ReactNode;
+    let cta: React.ReactNode;
+    let description: React.ReactNode;
+
+    if (typeof possibleEmptyMessage === "boolean") {
+      title = "No data available";
+    } else if (typeof possibleEmptyMessage === "string") {
+      title = possibleEmptyMessage;
+    } else {
+      ({ title, description, cta } = possibleEmptyMessage);
+    }
+
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <Empty className="border-none bg-transparent">
+          <EmptyHeader>
+            <EmptyMedia className="relative">
+              <FolderIcon className="size-28 animate-pulse text-primary/80" />
+              <div className="absolute inset-0 rounded-full bg-primary/5 blur-xl" />
+            </EmptyMedia>
+            {title && <EmptyTitle>{title}</EmptyTitle>}
+            {description && <EmptyDescription>{description}</EmptyDescription>}
+          </EmptyHeader>
+          {cta && <EmptyContent>{cta}</EmptyContent>}
+        </Empty>
+      </div>
+    );
+  }
+
+  if (!hasData<TData>(query)) return null;
+
+  return typeof children === "function" ? children(query) : children;
+}

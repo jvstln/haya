@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  createDialogHandle,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -15,6 +16,7 @@ import { TeamMemberSelect } from "./team-member-select";
 
 type AddTeamMemberDialogProps = React.ComponentProps<typeof Dialog> & {
   teamId: string;
+  children?: React.ReactElement;
 };
 
 export const AddTeamMemberDialog = ({
@@ -22,12 +24,7 @@ export const AddTeamMemberDialog = ({
   children,
   ...props
 }: AddTeamMemberDialogProps) => {
-  const [_open, _setOpen] = useState(props.defaultOpen ?? false);
-  const open = props.open ?? _open;
-  const setOpen = (open: boolean) => {
-    _setOpen(open);
-    props.onOpenChange?.(open);
-  };
+  const [dialogHandle] = useState(createDialogHandle);
 
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const inviteUser = useInviteUserToTeam();
@@ -39,13 +36,13 @@ export const AddTeamMemberDialog = ({
       ),
     );
     setSelectedUsers([]);
-    setOpen(false);
+    dialogHandle.close();
   };
 
   return (
-    <Dialog {...props} open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-md" closeButton>
+    <Dialog handle={dialogHandle} {...props}>
+      {children && <DialogTrigger render={children} />}
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Member</DialogTitle>
           <DialogDescription>

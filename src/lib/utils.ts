@@ -53,11 +53,24 @@ export function isEmpty(value?: object | null) {
   return Object.keys(value).length === 0;
 }
 
-export function stringToColor(str: string) {
+export function stringToHashedNumber(str: string) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const h = hash % 360;
-  return `hsl(${h}, 70%, 60%)`;
+  return hash;
 }
+
+export const getPlaceholderArrays = (() => {
+  const store: Array<{ id: number }> = [];
+
+  return function getPlaceholderArrays(count: number) {
+    if (store.length >= count) return store.slice(0, count);
+    for (let i = store.length; i < count; i++) {
+      store.push({ id: Math.random() });
+    }
+    return store.slice(0, count);
+  };
+})();
+
+export * from "./color.util";

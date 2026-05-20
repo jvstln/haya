@@ -8,6 +8,7 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { Button } from "@/components/ui/button";
 import {
+  createDialogHandle,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -23,7 +24,9 @@ import {
 import { useAuth } from "@/features/auth/auth.hook";
 import { useUpdateUsername } from "../user.hook";
 
-type ChangeUsernameDialogProps = React.ComponentProps<typeof Dialog>;
+type ChangeUsernameDialogProps = React.ComponentProps<typeof Dialog> & {
+  children?: React.ReactElement;
+};
 
 export const changeUsernameStore = create(
   combine({ showDialogOnPageLoad: false }, (set) => ({
@@ -50,12 +53,7 @@ export function ChangeUsernameDialog({
   children,
   ...props
 }: ChangeUsernameDialogProps) {
-  const [_open, _setOpen] = useState(props.defaultOpen);
-  const open = props.open ?? _open;
-  const setOpen = (open: boolean) => {
-    props.onOpenChange?.(open);
-    _setOpen(open);
-  };
+  const [dialogHandle] = useState(createDialogHandle);
 
   const { user } = useAuth();
   const [username, setUsername] = useState(user?.username || "");
@@ -74,13 +72,13 @@ export function ChangeUsernameDialog({
     }
 
     await updateUsername.mutateAsync({ username: result.data });
-    setOpen(false);
+    dialogHandle.open(null);
   };
 
   return (
-    <Dialog {...props} open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+    <Dialog handle={dialogHandle} {...props}>
+      {children && <DialogTrigger render={children} />}
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Change Username</DialogTitle>
           <DialogDescription>

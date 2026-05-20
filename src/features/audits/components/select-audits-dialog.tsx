@@ -5,6 +5,7 @@ import { QueryState } from "@/components/query-states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, IconToggleButton } from "@/components/ui/button";
 import {
+  createDialogHandle,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -22,6 +23,7 @@ type SelectableAudit = NonNullable<
 >["data"][number];
 
 type SelectAuditsDialogProps = React.ComponentProps<typeof Dialog> & {
+  children: React.ReactElement;
   onSelect: (audits: SelectableAudit[]) => void | Promise<void>;
   defaultSelectedAudits?: SelectableAudit[];
   buttonText?: string;
@@ -33,15 +35,16 @@ export const SelectAuditsDialog = ({
   defaultSelectedAudits,
   buttonText = "Select",
   loadingText,
+  children,
   ...props
 }: SelectAuditsDialogProps) => {
   // Controlled and uncontrolled open states
-  const [_open, _setOpen] = useState(props.defaultOpen);
-  const open = props.open ?? _open;
+  const [dialogHandle] = useState(() => createDialogHandle());
   const setOpen = (open: boolean) => {
-    props.onOpenChange?.(open);
-    _setOpen(open);
-    if (!open) {
+    if (open) {
+      dialogHandle.open(null);
+    } else {
+      dialogHandle.close();
       setSelectedAudits(defaultSelectedAudits ?? []);
     }
   };
@@ -76,8 +79,8 @@ export const SelectAuditsDialog = ({
   };
 
   return (
-    <Dialog {...props} open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{props.children}</DialogTrigger>
+    <Dialog handle={dialogHandle} {...props}>
+      {children && <DialogTrigger render={children} />}
       <DialogContent closeButton={false}>
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle className="font-semibold text-xl">
@@ -92,9 +95,10 @@ export const SelectAuditsDialog = ({
 
         <ScrollArea className="h-100 px-6 py-4">
           <QueryState
-            query={{ ...audits, isPending: audits.isPending || isLoading }}
-            errorPrefix="Error fetching audits"
-            loadingText={loadingText}
+            query={audits}
+            getIsLoading={(query) =>
+              (query.isPending || isLoading) && (loadingText || true)
+            }
           >
             <div className="flex flex-col gap-4">
               {audits.data?.data.map((audit) => {

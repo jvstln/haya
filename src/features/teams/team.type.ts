@@ -1,5 +1,5 @@
 import type z from "zod";
-import type { QueryParams } from "@/types/type";
+import type { QueryParams } from "@/types";
 import type { User } from "../users/user.type";
 import type { messageTeamMembersSchema, newTeamSchema } from "./team.schema";
 

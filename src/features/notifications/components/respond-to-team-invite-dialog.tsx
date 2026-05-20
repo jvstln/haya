@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  createDialogHandle,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -21,13 +22,7 @@ export const RespondToTeamInviteDialog = ({
   notification,
   ...props
 }: RespondToTeamInviteDialogProps) => {
-  // Handle controlled and uncontrolled open state
-  const [_open, _setOpen] = useState(props.defaultOpen);
-  const open = props.open ?? _open;
-  const setOpen = (open: boolean) => {
-    props.onOpenChange?.(open);
-    _setOpen(open);
-  };
+  const [dialogHandle] = useState(createDialogHandle);
 
   const router = useRouter();
 
@@ -47,7 +42,7 @@ export const RespondToTeamInviteDialog = ({
       { teamId, action },
       {
         onSuccess: () => {
-          setOpen(false);
+          dialogHandle.close();
           setRespondingAction(null);
           if (action === "accept") {
             router.push(`/dashboard/teams?teamId=${teamId}`);
@@ -61,7 +56,7 @@ export const RespondToTeamInviteDialog = ({
   };
 
   return (
-    <Dialog {...props} open={open} onOpenChange={setOpen}>
+    <Dialog handle={dialogHandle} {...props}>
       <DialogContent closeButton={false}>
         <DialogHeader className="items-center">
           <DialogTitle>{notification?.title || "Team Invitation"}</DialogTitle>

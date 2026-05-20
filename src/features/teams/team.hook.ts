@@ -2,9 +2,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { invalidateNotificationQueries } from "@/features/notifications/notification.hook";
 import { queryClient } from "@/lib/queryclient";
+import { invalidateAuditQueries } from "../audits/audit.hook";
 import * as TeamService from "./team.service";
 import type { TeamFilters } from "./team.type";
-import { invalidateAuditQueries } from "../audits/audit.hook";
 
 export function useTeams(filters: TeamFilters = {}) {
   return useQuery({

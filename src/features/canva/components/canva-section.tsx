@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { MenuIcon } from "lucide-react";
 import { toast } from "sonner";
 import { AiIcon } from "@/components/icons";
@@ -35,7 +36,6 @@ import { newSectionSchema } from "../canva.schema";
 import { useCanvaStore } from "../canva.store";
 import { CanvaSectionComment } from "./canva-section-comment";
 import { CanvaSectionImage } from "./canva-section-image";
-import { useMutation } from "@tanstack/react-query";
 
 type CanvaSectionCoreProps = {
   children?: React.ReactNode;
@@ -61,23 +61,23 @@ const CanvaSectionCore = ({
       data-slot="canva-section"
     >
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            color="secondary"
-            appearance="ghost"
-            size="icon"
-            // className="absolute top-1 right-1 z-10 size-auto rounded-sm p-1"
-            className="self-end"
-            data-slot="section-menu"
-          >
-            <MenuIcon />
-            <span className="sr-only">Section menu</span>
-          </Button>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              color="secondary"
+              appearance="ghost"
+              size="icon"
+              className="self-end"
+            />
+          }
+        >
+          <MenuIcon />
+          <span className="sr-only">Section menu</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
             data-variant="destructive"
-            onSelect={() => onRemove?.()}
+            onClick={() => onRemove?.()}
           >
             Remove Slide
           </DropdownMenuItem>

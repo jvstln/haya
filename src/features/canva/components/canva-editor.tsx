@@ -27,7 +27,7 @@ export const CanvaEditor = () => {
   const emptySectionsCount = useCanvaStore((state) => state.emptySectionsCount);
 
   const addEmptySection = useCanvaStore((state) => state.addEmptySection);
-  const setCurrentPage = useCanvaStore((state) => state.setCurrentPage);
+  const _setCurrentPage = useCanvaStore((state) => state.setCurrentPage);
   const addCustomSection = useCanvaStore((state) => state.addCustomSection);
 
   const audit = useAudit(auditId ?? "");
@@ -35,9 +35,9 @@ export const CanvaEditor = () => {
   // Set the current page to the first page of the audit if it exists
   useEffect(() => {
     if (audit.data && !currentPage) {
-      setCurrentPage(audit.data.content?.pages[0]);
+      // setCurrentPage(audit.data.content?.pages[0]);
     }
-  }, [audit.data, currentPage, setCurrentPage]);
+  }, [audit.data, currentPage]);
 
   // Initialize custom sections
   useEffect(() => {
@@ -78,10 +78,8 @@ export const CanvaEditor = () => {
 
   return (
     <QueryState
-      query={{
-        ...audit,
-        isPending: audit.isPending && !pathname.endsWith("/new"),
-      }}
+      query={audit}
+      getIsLoading={(query) => query.isPending && !pathname.endsWith("/new")}
     >
       <TransformWrapper
         initialScale={1}

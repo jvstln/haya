@@ -2,6 +2,11 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant hover-hover {
+  @media (hover: hover) {
+    @slot;
+  }
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -84,12 +89,16 @@
 
   --accent: var(--border);
   --accent-foreground: var(--primary-foreground);
+  
   --destructive: oklch(60% 0.2 25);
+  --destructive-foreground: var(--color-white);
   --success: oklch(60% 0.2 140);
+  --success-foreground: var(--color-white);
+
   --cyan: oklch(from #00c0e8 l c h);
 
-  --card: oklch(from #303131 l c h);
-  --card-foreground: var(--foreground);
+  --card: var(--muted);
+  --card-foreground: var(--muted-foreground);
   --popover: var(--background);
   --popover-foreground: var(--foreground);
 
@@ -166,7 +175,8 @@
 }
 
 @layer components {
-  .link {
+  .link,
+  [data-slot="link"] {
     @apply text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary;
   }
   /* Animated border glow effect */
@@ -180,6 +190,10 @@
     offset-path: border-box;
     offset-anchor: 100% 50%; /* Front of the beam leads */
     animation: border-beam 3s linear infinite;
+  }
+
+  [data-slot="dashboard-slot"] {
+    @apply relative flex min-h-screen w-full flex-col gap-6 p-3 md:p-6;
   }
 
   @keyframes border-beam {

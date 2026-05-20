@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ArrowLeft2 } from "iconsax-reactjs";
@@ -44,19 +45,28 @@ export type Views =
   | "resetPassword";
 
 // A mini store to manage the current view of the onboarding form dialog. null means the dialog is closed
-const useOnboardingFormDialogView = create<Views | null>()(() => null);
+export const useOnboardingFormDialogView = create<{
+  view: Views | null;
+  setView: (view: Views | null) => void;
+}>()((set) => ({
+  view: null,
+  setView(view) {
+    set({ view });
+  },
+}));
 
 // A function that controls when the dialog is open
 export const setOnboardingFormDialogView = (view: Views | null) => {
-  useOnboardingFormDialogView.setState(view);
+  useOnboardingFormDialogView.getState().setView(view);
 };
 
 export const OnboardingFormDialog = ({
   children,
   ...props
-}: Partial<ComponentProps<typeof Dialog>>) => {
-  const view = useOnboardingFormDialogView();
-  const setView = setOnboardingFormDialogView;
+}: Omit<ComponentProps<typeof Dialog>, "defaultOpen" | "open"> & {
+  children?: React.ReactElement;
+}) => {
+  const { view, setView } = useOnboardingFormDialogView();
 
   // --- Code to ensure dialog remains visible when wallet modal is opened and closed ---
   const { visible } = useWalletModal();
@@ -162,11 +172,14 @@ export const OnboardingFormDialog = ({
     <Dialog
       {...props}
       open={isMutating || view === "verifyOtp" ? true : !!view}
-      onOpenChange={(open) => {
+      onOpenChange={(...args) => {
+        const open = args[0];
+        props.onOpenChange?.(...args);
         if (!open) setView(null);
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children && <DialogTrigger render={children} />}
+
       <DialogContent className="flex flex-col">
         {view.startsWith("signUp") && (
           <div className="mb-4 flex flex-row items-center gap-1">

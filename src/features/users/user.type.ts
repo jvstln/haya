@@ -1,4 +1,4 @@
-import type { QueryParams } from "@/types/type";
+import type { QueryParams } from "@/types";
 
 export type UserFilters = QueryParams;
 

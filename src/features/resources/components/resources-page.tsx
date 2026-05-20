@@ -2,7 +2,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import { DashboardHeader } from "@/components/dashboard-header";
+import {
+  DashboardHeader,
+  DashboardSlot,
+  DashboardTitle,
+} from "@/components/dashboard-ui";
 import { FolderIcon } from "@/components/icons";
 import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
@@ -46,11 +50,14 @@ export const ResourcesPage = () => {
   const resources = useResources();
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--resource-card-height:189px] [--resource-card-width:212px] md:p-6">
-      <DashboardHeader
-        title="Unlock Premium Growth Resources for Smarter Conversions"
-        cta={<SubscribeToResourcesForm />}
-      />
+    <DashboardSlot>
+      <DashboardHeader>
+        <DashboardTitle>
+          Build your team, where AI meets human expertise for flawless UX
+          insights
+        </DashboardTitle>
+        <SubscribeToResourcesForm />
+      </DashboardHeader>
 
       <div className="flex items-center justify-between gap-1">
         <Button
@@ -96,10 +103,7 @@ export const ResourcesPage = () => {
 
       <div className="flex flex-wrap gap-4">
         {resources.isPending || resources.isError ? (
-          <QueryState
-            query={resources}
-            errorPrefix="Error fetching resources"
-          />
+          <QueryState query={resources} />
         ) : (
           resources.data.data.map((resource) => {
             return (
@@ -123,6 +127,6 @@ export const ResourcesPage = () => {
           onPageChange={(page) => setFilters((f) => ({ ...f, page }))}
         />
       )}
-    </div>
+    </DashboardSlot>
   );
 };

@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from ".";
 
-type IconToggleButtonProps = React.ComponentProps<typeof Button> & {
+type IconToggleButtonProps = Button.ButtonProps & {
   isActive?: boolean;
 };
 
@@ -12,7 +12,6 @@ export function IconToggleButton({
 }: IconToggleButtonProps) {
   return (
     <Button
-      type="button"
       appearance={isActive ? "solid" : "outline"}
       color={isActive ? "primary" : "secondary"}
       size="icon-sm"
