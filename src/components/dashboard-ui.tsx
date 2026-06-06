@@ -3,7 +3,17 @@
 //   cta: React.ReactNode;
 // };
 
+import type React from "react";
 import { cn } from "@/lib/utils";
+import type { Icon } from "./icons";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 // export const DashboardHeader = ({ title, cta }: DashboardHeaderProps) => {
 //   return (
@@ -78,5 +88,58 @@ export const DashboardDescription = (props: React.ComponentProps<"p">) => {
       className="peer-data-[slot=dashboard-title]:-mt-2 text-muted-foreground text-sm"
       {...props}
     />
+  );
+};
+
+export const DashboardSummaryCard = ({
+  classNames,
+  title,
+  description,
+  value,
+  icon: Icon,
+  accent,
+  isLoading,
+  ...props
+}: React.ComponentProps<typeof Card> & {
+  classNames?: Partial<Record<"root", string>>;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  value?: React.ReactNode;
+  icon?: Icon;
+  isLoading?: boolean;
+  accent?: string;
+}) => {
+  if (isLoading) {
+    return (
+      <Skeleton
+        className={cn("h-24", accent, classNames?.root, props.className)}
+      />
+    );
+  }
+
+  return (
+    <Card {...props} className={cn(accent, classNames?.root, props.className)}>
+      <CardHeader>
+        <CardTitle className="flex justify-between gap-4">
+          {title}
+
+          {Icon && (
+            <span
+              className={cn(
+                "flex size-7 shrink-0 items-center justify-center rounded-lg bg-(--bg) text-(--fg,var(--color-white))",
+              )}
+            >
+              <Icon className="size-4" />
+            </span>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="mt-auto flex flex-col">
+        <span className="font-bold font-mono text-2xl text-foreground tracking-tight">
+          {value}
+        </span>
+        {description && <CardDescription>{description}</CardDescription>}
+      </CardContent>
+    </Card>
   );
 };

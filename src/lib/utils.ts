@@ -73,4 +73,14 @@ export const getPlaceholderArrays = (() => {
   };
 })();
 
+export function isMobileDevice(userAgent: string, viewportWidth: number): boolean {
+  return (
+    userAgent.includes("iPhone") ||
+    userAgent.includes("Android") ||
+    viewportWidth < 768
+  );
+}
+
 export * from "./color.util";
+export * from "./date.util";
+

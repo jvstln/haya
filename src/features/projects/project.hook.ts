@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createQueryKeys } from "@/lib/queryclient";
 import * as ProjectService from "./project.service";
-import type { ProjectFilters, SessionFilter } from "./project.type";
+import type { ProjectFilters } from "./project.type";
 
 export const projectQueryKeys = createQueryKeys({
   list: ["projects", "$filters"],
@@ -19,17 +19,6 @@ export const useProjects = (filters: ProjectFilters = {}) => {
   });
 };
 
-export const useProjectSessions = (
-  projectId: string,
-  filters: Omit<SessionFilter, "projectId"> = {},
-) => {
-  return useQuery({
-    queryKey: projectQueryKeys.getQueryKey("sessions", { projectId, filters }),
-    queryFn: () => ProjectService.getSessions({ projectId, ...filters }),
-    enabled: !!projectId,
-  });
-};
-
 export const useProject = (id: string) => {
   return useQuery({
     queryKey: projectQueryKeys.getQueryKey("detail", { id }),
@@ -43,20 +32,6 @@ export const useProjectOverview = (projectId: string) => {
     queryKey: projectQueryKeys.getQueryKey("overview", { projectId }),
     queryFn: () => ProjectService.getProjectOverview(projectId),
     enabled: !!projectId,
-  });
-};
-
-export const useSession = ({
-  projectId,
-  sessionId,
-}: {
-  projectId: string;
-  sessionId: string;
-}) => {
-  return useQuery({
-    queryKey: projectQueryKeys.getQueryKey("session", { projectId, sessionId }),
-    queryFn: () => ProjectService.getSession({ projectId, sessionId }),
-    enabled: !!projectId && !!sessionId,
   });
 };
 
@@ -92,6 +67,7 @@ export const useDeleteProject = () => {
     onSuccess: (_data, id) => {
       toast.success("Project deleted successfully");
       projectQueryKeys.invalidateQueries("detail", { id });
+      projectQueryKeys.invalidatePrefix("list");
     },
     onError: (error) => {
       toast.error(error.message || "Failed to delete project");

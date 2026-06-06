@@ -1,7 +1,6 @@
 "use client";
 
 import { useCopyToClipboard } from "@uidotdev/usehooks";
-import { Eye } from "iconsax-reactjs";
 import {
   Code2,
   Copy,

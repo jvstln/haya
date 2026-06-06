@@ -87,15 +87,16 @@
   --ring: var(--border);
   --input: var(--secondary);
 
-  --accent: var(--border);
+  --accent: color-mix(var(--primary), var(--background) 70%);
   --accent-foreground: var(--primary-foreground);
   
   --destructive: oklch(60% 0.2 25);
   --destructive-foreground: var(--color-white);
   --success: oklch(60% 0.2 140);
   --success-foreground: var(--color-white);
-
+  
   --cyan: oklch(from #00c0e8 l c h);
+  --cyan-foreground: var(--color-white);
 
   --card: var(--muted);
   --card-foreground: var(--muted-foreground);

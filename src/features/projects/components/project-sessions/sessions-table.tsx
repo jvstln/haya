@@ -4,17 +4,17 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Play } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-import { toast } from "sonner";
 import { QueryState } from "@/components/query-states";
 import { Badge } from "@/components/ui/badge";
 import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn, getPlaceholderArrays } from "@/lib/utils";
-import type { useProjectSessions } from "../../project.hook";
+import { formatDuration, formatShortDateTime } from "@/lib/date.util";
+import { getPlaceholderArrays, isMobileDevice } from "@/lib/utils";
+import type { useSessions } from "../../project.session.hook";
 import type { Session } from "../../project.type";
 
 interface SessionsTableProps {
-  sessions: ReturnType<typeof useProjectSessions>;
+  sessions: ReturnType<typeof useSessions>;
   // search?: string;
   // projectId: string;
 }
@@ -91,12 +91,9 @@ export const SessionsTable = ({
         id: "duration",
         header: "Duration",
         cell: (info) => {
-          const durationSec = info.getValue();
-          const minutes = Math.floor(durationSec / 60);
-          const remainingSeconds = durationSec % 60;
           return (
             <span className="font-mono text-muted-foreground">
-              {minutes}m {remainingSeconds}s
+              {formatDuration(info.getValue())}
             </span>
           );
         },
@@ -106,10 +103,7 @@ export const SessionsTable = ({
         header: "Device / Viewport",
         cell: (info) => {
           const { userAgent, viewportWidth, viewportHeight } = info.getValue();
-          const isMobile =
-            userAgent.includes("iPhone") ||
-            userAgent.includes("Android") ||
-            viewportWidth < 768;
+          const isMobile = isMobileDevice(userAgent, viewportWidth);
           return (
             <div className="flex flex-col gap-0.5 text-muted-foreground text-xs">
               <span className="max-w-[120px] truncate" title={userAgent}>
@@ -126,15 +120,10 @@ export const SessionsTable = ({
         id: "createdAt",
         header: "Time",
         cell: (info) => {
-          const dateStr = info.getValue();
-          const formatted = new Date(dateStr).toLocaleString("en-US", {
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
           return (
-            <span className="text-muted-foreground text-xs">{formatted}</span>
+            <span className="text-muted-foreground text-xs">
+              {formatShortDateTime(info.getValue())}
+            </span>
           );
         },
       }),
@@ -150,7 +139,7 @@ export const SessionsTable = ({
         },
       }),
     ],
-    [columnHelper],
+    [],
   );
 
   const table = useDataTable({

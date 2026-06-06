@@ -1,6 +1,7 @@
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Warning2 } from "iconsax-reactjs";
 import type React from "react";
+import { isValidElement } from "react";
 import { cn } from "@/lib/utils";
 import { FolderIcon } from "./icons";
 import { Button } from "./ui/button";
@@ -27,7 +28,7 @@ type QueryStateProps<
         query: Extract<TQuery, { data: NonNullable<TData> }>,
       ) => React.ReactNode);
 
-  getIsLoading?: (query: TQuery) => boolean | string;
+  getIsLoading?: (query: TQuery) => boolean | React.ReactNode;
   getIsError?: (query: TQuery) => boolean | string;
   getIsEmpty?: (
     query: Extract<TQuery, { data: NonNullable<TData> }>,
@@ -154,6 +155,8 @@ export function QueryState<
     : false;
 
   if (getIsLoading ? possibleLoadingMessage : query?.isPending) {
+    if (isValidElement(possibleLoadingMessage)) return possibleLoadingMessage;
+
     return (
       <LoadingState
         loadingText={

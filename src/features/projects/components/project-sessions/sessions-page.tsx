@@ -1,20 +1,15 @@
 "use client";
 
-import { ArrowLeft2 } from "iconsax-reactjs";
 import { Clock, Flame, Globe, ShieldAlert, Target, Users } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { DashboardSlot, DashboardTitle } from "@/components/dashboard-ui";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { InputSearch } from "@/components/ui/input-search";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFilters } from "@/hooks/use-filters";
 import { cn, getPlaceholderArrays } from "@/lib/utils";
-import {
-  useProject,
-  useProjectOverview,
-  useProjectSessions,
-} from "../../project.hook";
+import { useProject, useProjectOverview } from "../../project.hook";
+import { useSessions } from "../../project.session.hook";
 import { SessionsTable } from "./sessions-table";
 
 interface ProjectSessionsPageProps {
@@ -30,7 +25,7 @@ export const SessionsPage = ({ projectId }: ProjectSessionsPageProps) => {
   const overview = useProjectOverview(projectId);
   const { filters, originalFilters, setFilters } = useFilters();
 
-  const sessionsQuery = useProjectSessions(projectId, filters);
+  const sessionsQuery = useSessions(projectId, filters);
 
   // Calculate dynamic metrics from the loaded sessions
   const avgDuration = useMemo(() => {
