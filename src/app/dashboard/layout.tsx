@@ -2,7 +2,10 @@
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarContentProvider } from "@/components/providers/sidebar-content.provider";
+import {
+  defaultSidebarContent,
+  SidebarContentProvider,
+} from "@/components/providers/sidebar-content.provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { useAuth } from "@/features/auth/auth.hook";
@@ -28,7 +31,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarContentProvider>
+    <SidebarContentProvider value={defaultSidebarContent}>
       <SidebarProvider
         className="flex flex-col"
         style={{ "--header-height": HEADER_HEIGHT } as React.CSSProperties}

@@ -21,7 +21,7 @@ export default function ProjectsLayout({
 
   const project = useProject(projectId);
 
-  const sidebarContent: SidebarContentState = {
+  const sidebarContent: Omit<SidebarContentState, "depth"> = {
     content: [
       project.data ? (
         <div

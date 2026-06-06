@@ -24,9 +24,10 @@ type SidebarContentItem =
 
 export type SidebarContentState = {
   content: SidebarContentItem[];
+  depth: number;
 };
 
-const defaultSidebarContent = {
+export const defaultSidebarContent = {
   content: [
     {
       title: "Get Started",
@@ -60,21 +61,18 @@ const defaultSidebarContent = {
       icon: People,
     },
   ],
-};
+  depth: -1,
+} satisfies SidebarContentState;
 
 /**
- * Provider might not even be needed but leaving it for now
+ * Context used to determine which sidebar content to use. Context with the highest depth wins.
  */
-const SidebarContentContext = createContext<SidebarContentState>(
-  defaultSidebarContent,
-);
+const SidebarContentContext = createContext<{ depth: number }>({ depth: -1 });
 
 /**
- * A store that stores sidebarContents as a stack.
- * It is used internally because of react context limitations.
- * React context can only provide values to children and when children are nested, it doesnt provide values up the tree. consider this
- * There is a program with using context to set sidebar contents. imagine this scenario
+ * A store that stores sidebarContents with the depth provided by the SidebarContentContext.
  *
+ * @example
  * dashboard/layout.tsx
  * <SidebarProvider value={dashboardSidebarContent}>
  *   <AppSidebar/> // renders the sidebar content and consumes sidebarContent value
@@ -86,26 +84,21 @@ const SidebarContentContext = createContext<SidebarContentState>(
  * <SidebarProvider value={projectSidebarContent}>{children}</SidebarProvider>
  *
  */
-
 const useSidebarContentStore = create<{ stack: SidebarContentState[] }>()(
-  () => ({
-    stack: [defaultSidebarContent],
-  }),
+  () => ({ stack: [] }),
 );
 
 export const useSidebarContent = (): SidebarContentState => {
-  const context = useContext(SidebarContentContext);
-  const sidebarStack = useSidebarContentStore((state) => state.stack);
+  const sidebarContentStore = useSidebarContentStore();
 
-  if (!context) {
-    throw new Error(
-      "useSidebarContent must be used within a SidebarContentProvider.",
-    );
-  }
+  let contentWithMaxDepth: SidebarContentState = defaultSidebarContent;
+  sidebarContentStore.stack.forEach((sidebarContent) => {
+    if (sidebarContent.depth > contentWithMaxDepth.depth) {
+      contentWithMaxDepth = sidebarContent;
+    }
+  });
 
-  // return context;
-  // instead of returning the context value, return the last item in the stack
-  return sidebarStack[sidebarStack.length - 1];
+  return contentWithMaxDepth;
 };
 
 export const SidebarContentProvider = ({
@@ -113,23 +106,28 @@ export const SidebarContentProvider = ({
   value = defaultSidebarContent,
 }: {
   children: React.ReactNode;
-  value?: SidebarContentState;
+  value?: Omit<SidebarContentState, "depth">;
 }) => {
-  // Push the sidebarContent value to the sidebarContentStore stack and pop it off when component unmounts
+  const { depth: parentDepth } = useContext(SidebarContentContext);
+  const depth = parentDepth + 1;
+
+  // add the sidebarContent value to the sidebarContentStore and remove it when component unmounts
   useEffect(() => {
+    const newContent = { ...value, depth };
+
     useSidebarContentStore.setState((state) => ({
-      stack: [...state.stack, value],
+      stack: [...state.stack, newContent],
     }));
 
     return () => {
       useSidebarContentStore.setState((state) => ({
-        stack: state.stack.slice(0, -1),
+        stack: state.stack.filter((s) => s !== newContent),
       }));
     };
-  }, [value]);
+  }, [value, depth]);
 
   return (
-    <SidebarContentContext.Provider value={value}>
+    <SidebarContentContext.Provider value={{ depth }}>
       {children}
     </SidebarContentContext.Provider>
   );
