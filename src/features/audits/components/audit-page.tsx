@@ -1,5 +1,10 @@
 "use client";
 import { useState } from "react";
+import {
+  DashboardHeader,
+  DashboardSlot,
+  DashboardTitle,
+} from "@/components/dashboard-ui";
 import { FolderIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
@@ -10,7 +15,6 @@ import { useAuth } from "@/features/auth/auth.hook";
 import { useFilters } from "@/hooks/use-filters";
 import { useDeleteAudit } from "../audit.hook";
 import type { AuditFilters, AuditWithoutContent } from "../audit.type";
-import { TagInstallation } from "./tag-installation";
 
 type Action = {
   type: "delete";
@@ -29,10 +33,10 @@ export const AuditPage = () => {
   const deleteAudit = useDeleteAudit();
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--audit-card-height:189px] [--audit-card-width:212px] md:p-6">
-      <TagInstallation />
-
-      <h1 className="text-h3">All behavioural data</h1>
+    <DashboardSlot className="relative flex min-h-screen w-full flex-col gap-6 p-3 [--audit-card-height:189px] [--audit-card-width:212px] md:p-6">
+      <DashboardHeader>
+        <DashboardTitle>All behavioural data</DashboardTitle>
+      </DashboardHeader>
 
       <div className="-mt-2 flex items-center justify-between gap-1">
         <Button
@@ -103,6 +107,6 @@ export const AuditPage = () => {
           }}
         />
       )}
-    </div>
+    </DashboardSlot>
   );
 };

@@ -11,7 +11,6 @@ import {
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { TagInstallation } from "@/features/audits/components/tag-installation";
 
 const initialAgents = [
   {
@@ -77,8 +76,6 @@ export default function AgentsPage() {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col gap-8 p-4">
-      <TagInstallation />
-
       <div className="flex flex-col gap-4">
         <h2 className="font-semibold text-white text-xl">All Agents</h2>
 
