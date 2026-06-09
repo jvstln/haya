@@ -50,12 +50,6 @@ export const defaultSidebarContent = {
       icon: Code,
     },
     {
-      title: "Personas",
-      url: "#",
-      icon: Personalcard,
-      tooltip: "Coming Soon",
-    },
-    {
       title: "Team",
       url: "/dashboard/teams",
       icon: People,

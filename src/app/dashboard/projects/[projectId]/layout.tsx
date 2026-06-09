@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft2, Eye, MouseSquare } from "iconsax-reactjs";
+import { ArrowLeft2, Eye, MouseSquare, User } from "iconsax-reactjs";
 import { Settings } from "lucide-react";
 import type { Route } from "next";
 import { useParams } from "next/navigation";
@@ -62,6 +62,11 @@ export default function ProjectsLayout({
         title: "Sessions",
         url: `/dashboard/projects/${projectId}/sessions` as Route,
         icon: MouseSquare,
+      },
+      {
+        title: "Personas",
+        url: `/dashboard/projects/${projectId}/personas` as Route,
+        icon: User,
       },
       {
         title: "Settings",

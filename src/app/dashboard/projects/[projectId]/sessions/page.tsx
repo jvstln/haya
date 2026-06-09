@@ -1,4 +1,4 @@
-import { SessionsPage } from "@/features/projects/components/project-sessions/sessions-page";
+import { SessionsPage } from "@/features/project-sessions/components/sessions-page";
 
 interface PageProps {
   params: Promise<{ projectId: string }>;

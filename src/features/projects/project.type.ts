@@ -1,5 +1,6 @@
 import type z from "zod";
 import type { QueryParams } from "@/types";
+import type { Session } from "../project-sessions/project-session.type";
 import type { newProjectSchema, projectSettingsSchema } from "./project.schema";
 
 export type NewProject = z.infer<typeof newProjectSchema>;
@@ -42,29 +43,6 @@ export type ProjectOverview = {
 export type ProjectFilters = QueryParams & {};
 
 export type ProjectSettings = z.infer<typeof projectSettingsSchema>;
-
-export type Session = {
-  _id: string;
-  projectId: string;
-  sessionId: string;
-  createdAt: string;
-  deviceId: string;
-  duration: number;
-  endTime: null;
-  entryUrl: string;
-  eventCount: number;
-  pageViewCount: number;
-  replayCapped: false;
-  replayDuration: null;
-  replayPublicId: null;
-  replayUrl: null;
-  startTime: string;
-  status: string;
-  updatedAt: string;
-  userAgent: string;
-  viewportHeight: number;
-  viewportWidth: number;
-};
 
 export type SessionDetailed = Session;
 

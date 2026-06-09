@@ -26,7 +26,7 @@ import {
 } from "@/lib/date.util";
 import { cn, getPlaceholderArrays, isMobileDevice } from "@/lib/utils";
 import type { Params } from "@/types";
-import { useSession } from "../../project.session.hook";
+import { useSession } from "../project-session.hook";
 import { SessionReplay } from "./session-replay";
 
 export const SessionDetailsPage = () => {
@@ -101,32 +101,31 @@ export const SessionDetailsPage = () => {
           {
             label: "Duration",
             value: formatDuration(sessionQuery.data?.session.duration || 0),
-            accent:
+            className:
               "[--bg:var(--color-primary)] [--fg:var(--color-primary-foreground)]",
             icon: Clock,
           },
           {
             label: "Page Views",
             value: sessionQuery.data?.session.pageViewCount,
-            accent:
+            className:
               "[--bg:var(--color-cyan)] [--fg:var(--color-cyan-foreground)]",
             icon: Globe,
           },
           {
             label: "Events",
             value: sessionQuery.data?.session.eventCount,
-            accent:
+            className:
               "[--bg:var(--color-success)] [--fg:var(--color-success-foreground)]",
             icon: Activity,
           },
         ].map((info) => (
           <DashboardSummaryCard
-            className="basis-1/5"
+            className={cn("basis-1/5", info.className)}
             key={info.label}
             title={info.label}
             value={info.value}
             icon={info.icon}
-            accent={info.accent}
             isLoading={sessionQuery.isPending}
           />
         ))}

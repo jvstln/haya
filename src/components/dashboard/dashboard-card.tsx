@@ -23,6 +23,7 @@ type DashboardCardProps<TLink> = {
   >;
 };
 
+/** @deprecated */
 export const DashboardCard = <const TLink extends string>({
   href,
   classNames,

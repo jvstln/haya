@@ -97,28 +97,27 @@ export const DashboardSummaryCard = ({
   description,
   value,
   icon: Icon,
-  accent,
   isLoading,
   ...props
-}: React.ComponentProps<typeof Card> & {
+}: Pick<React.ComponentProps<typeof Card>, "className"> & {
   classNames?: Partial<Record<"root", string>>;
   title?: React.ReactNode;
   description?: React.ReactNode;
   value?: React.ReactNode;
   icon?: Icon;
   isLoading?: boolean;
-  accent?: string;
 }) => {
   if (isLoading) {
     return (
-      <Skeleton
-        className={cn("h-24", accent, classNames?.root, props.className)}
-      />
+      <Skeleton className={cn("h-24", classNames?.root, props.className)} />
     );
   }
 
   return (
-    <Card {...props} className={cn(accent, classNames?.root, props.className)}>
+    <Card
+      {...props}
+      className={cn("min-w-35", classNames?.root, props.className)}
+    >
       <CardHeader>
         <CardTitle className="flex justify-between gap-4">
           {title}

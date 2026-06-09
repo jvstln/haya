@@ -10,13 +10,11 @@ import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDuration, formatShortDateTime } from "@/lib/date.util";
 import { getPlaceholderArrays, isMobileDevice } from "@/lib/utils";
-import type { useSessions } from "../../project.session.hook";
-import type { Session } from "../../project.type";
+import type { useSessions } from "../project-session.hook";
+import type { Session } from "../project-session.type";
 
 interface SessionsTableProps {
   sessions: ReturnType<typeof useSessions>;
-  // search?: string;
-  // projectId: string;
 }
 
 const columnHelper = createColumnHelper<Session>();

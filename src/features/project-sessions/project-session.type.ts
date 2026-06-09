@@ -1,0 +1,22 @@
+export type Session = {
+  _id: string;
+  projectId: string;
+  sessionId: string;
+  createdAt: string;
+  deviceId: string;
+  duration: number;
+  endTime: null;
+  entryUrl: string;
+  eventCount: number;
+  pageViewCount: number;
+  replayCapped: false;
+  replayDuration: null;
+  replayPublicId: null;
+  replayUrl: null;
+  startTime: string;
+  status: string;
+  updatedAt: string;
+  userAgent: string;
+  viewportHeight: number;
+  viewportWidth: number;
+};

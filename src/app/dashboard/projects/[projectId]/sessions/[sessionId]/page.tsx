@@ -1,4 +1,4 @@
-import { SessionDetailsPage } from "@/features/projects/components/project-sessions/session-details-page";
+import { SessionDetailsPage } from "@/features/project-sessions/components/session-details-page";
 
 export default function SessionDetailsRoute() {
   return <SessionDetailsPage />;

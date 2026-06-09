@@ -22,7 +22,7 @@ import {
 import { getErrorMessage } from "@/lib/api";
 import { formatTimestamp } from "@/lib/date.util";
 import { cn, isEmpty } from "@/lib/utils";
-import { useSessionReplayEvents } from "../../project.session.hook";
+import { useSessionReplayEvents } from "../project-session.hook";
 
 // ─── Constants ──────────────────────────────────────────────────────
 const SPEED_OPTIONS = [1, 2, 4, 8] as const;
