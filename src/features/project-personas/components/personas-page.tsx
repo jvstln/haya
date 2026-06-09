@@ -12,12 +12,21 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Card, CardContent } from "@/components/ui/card";
 import { InputSearch } from "@/components/ui/input-search";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSessions } from "@/features/project-sessions/project-session.hook";
 import { useProjectOverview } from "@/features/projects/project.hook";
 import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
 import { usePersona } from "../project-persona.hook";
+import { PersonaBehaviorSettings } from "./persona-settings";
 import { PersonasTable } from "./personas-table";
 
 export const PersonasPage = () => {
@@ -131,15 +140,29 @@ export const PersonasPage = () => {
             </Button>
           </ButtonGroup>
 
-          <div className="w-full sm:max-w-xs">
-            <InputSearch
-              placeholder="Search by persona or URL"
-              value={originalFilters.search || ""}
-              onChange={(e) => {
-                setFilters((f) => ({ ...f, search: e.target.value }));
-              }}
-            />
-          </div>
+          <InputSearch
+            placeholder="Search by persona or URL"
+            value={originalFilters.search || ""}
+            onChange={(e) => {
+              setFilters((f) => ({ ...f, search: e.target.value }));
+            }}
+          />
+          <Popover>
+            <PopoverTrigger render={<Button className="rounded-full" />}>
+              Configure
+            </PopoverTrigger>
+            <PopoverContent align="end">
+              <PopoverHeader>
+                <PopoverTitle>Behavioral configuration</PopoverTitle>
+                <PopoverDescription>
+                  Persona is defined by a set of behavioral rules, conditions,
+                  and events that identify and group similar users.
+                </PopoverDescription>
+              </PopoverHeader>
+
+              <PersonaBehaviorSettings />
+            </PopoverContent>
+          </Popover>
         </div>
 
         {/* State Display and Table */}

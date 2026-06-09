@@ -139,14 +139,12 @@ export const SessionsPage = ({ projectId }: ProjectSessionsPageProps) => {
             </Button>
           </ButtonGroup>
 
-          <div className="w-full sm:max-w-xs">
-            <InputSearch
-              value={originalFilters.search || ""}
-              onChange={(e) => {
-                setFilters((f) => ({ ...f, search: e.target.value }));
-              }}
-            />
-          </div>
+          <InputSearch
+            value={originalFilters.search || ""}
+            onChange={(e) => {
+              setFilters((f) => ({ ...f, search: e.target.value }));
+            }}
+          />
         </div>
 
         {/* State Display and Table */}
