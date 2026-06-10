@@ -1,5 +1,17 @@
 import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
 
+export const weekdays = [
+  { weekday: "Sunday" },
+  { weekday: "Monday" },
+  { weekday: "Tuesday" },
+  { weekday: "Wednesday" },
+  { weekday: "Thursday" },
+  { weekday: "Friday" },
+  { weekday: "Saturday" },
+] as const;
+
+export type Weekday = (typeof weekdays)[number]["weekday"];
+
 /**
  * Formats a seconds value into a compact human-readable duration.
  * @example formatDuration(125) → "2m 5s"
@@ -71,4 +83,3 @@ export function formatRelativeTime(ms: number): string {
   const seconds = totalSeconds % 60;
   return `+${minutes}:${String(seconds).padStart(2, "0")}`;
 }
-

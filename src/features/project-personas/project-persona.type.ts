@@ -1,3 +1,4 @@
+import type { Weekday } from "@/lib/date.util";
 import type { QueryParams } from "@/types";
 
 export type PersonaFilters = QueryParams & {
@@ -14,4 +15,9 @@ export type Persona = {
   rageClickSessions: string;
   ctaConversion: string;
   severity: string;
+};
+
+export type PersonasSettings = {
+  projectId: string;
+  schedule: { type: "manual" } | { type: "automatic"; weekday: Weekday };
 };

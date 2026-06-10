@@ -26,7 +26,7 @@ import { useProjectOverview } from "@/features/projects/project.hook";
 import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
 import { usePersona } from "../project-persona.hook";
-import { PersonaBehaviorSettings } from "./persona-settings";
+import { PersonasBehaviorSettings } from "./persona-settings";
 import { PersonasTable } from "./personas-table";
 
 export const PersonasPage = () => {
@@ -160,7 +160,7 @@ export const PersonasPage = () => {
                 </PopoverDescription>
               </PopoverHeader>
 
-              <PersonaBehaviorSettings />
+              <PersonasBehaviorSettings />
             </PopoverContent>
           </Popover>
         </div>
