@@ -80,7 +80,8 @@ export const SessionReplay = ({ replayUrl }: SessionReplayProps) => {
 
         // Read the recorded viewport from the FullSnapshot (rrweb type 2)
         const snapshot = events.data.find(
-          (e) => e instanceof Object && "type" in e && e.type === 2,
+          (e) =>
+            ("type" in e && e.type === 2) || (e?.data?.width && e.data.height),
         );
 
         const recordedWidth = snapshot?.data?.width || 1280;
