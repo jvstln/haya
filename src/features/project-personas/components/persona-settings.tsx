@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 import { type Weekday, weekdays } from "@/lib/date.util";
 import { useUpdatePersonasSettings } from "../project-persona.hook";
 import type { PersonasSettings } from "../project-persona.type";
@@ -66,7 +67,10 @@ export const PersonasBehaviorSettings = () => {
       <div className="flex flex-col gap-2">
         <Field orientation={"horizontal"}>
           <FieldContent>
-            <FieldLabel>Analysis timing</FieldLabel>
+            <FieldLabel>
+              Analysis timing
+              {updatePersonasSettings.isPending && <Spinner />}
+            </FieldLabel>
             <FieldDescription>
               Set to receive behavioral analysis on preferred days
             </FieldDescription>
@@ -105,6 +109,7 @@ export const PersonasBehaviorSettings = () => {
           </Select>
 
           <Button
+            disabled={updatePersonasSettings.isPending}
             onClick={() => {
               handleUpdatePersonasSettings({ type: "manual" });
             }}

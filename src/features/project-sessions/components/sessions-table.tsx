@@ -34,7 +34,8 @@ export const SessionsTable = ({
           return (
             <Link
               href={`/dashboard/projects/${session.projectId}/sessions/${session.sessionId}`}
-              className="group relative flex h-11 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border/40 bg-muted/40"
+              className="group relative flex h-11 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border/40"
+              style={{ background: "red" }}
             >
               <div className="absolute inset-0 bg-linear-to-br from-secondary/50 to-muted opacity-60" />
               <div className="z-10 flex size-7 items-center justify-center rounded-full bg-primary/10 backdrop-blur-xs transition-transform group-hover:scale-110 group-hover:bg-primary/20">

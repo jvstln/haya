@@ -102,7 +102,7 @@ export const AuditDetailsPage = () => {
           <Badge className="bg-[#FFAFA499]">{auditType.label}</Badge>
         )}
 
-        <div className="ml-auto flex items-center gap-2 md:gap-4">
+        {/* <div className="ml-auto flex items-center gap-2 md:gap-4">
           <Button
             color="secondary"
             className="rounded-full"
@@ -116,7 +116,7 @@ export const AuditDetailsPage = () => {
             <Blend className="size-5.5 rounded-sm bg-cyan p-1" />
             Assign
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Control to switch between image view and content view only on mobile */}

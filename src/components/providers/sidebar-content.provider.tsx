@@ -44,16 +44,11 @@ export const defaultSidebarContent = {
       url: "/dashboard/track-experience",
       icon: Radar,
     },
-    {
-      title: "Agents",
-      url: "/dashboard/agents",
-      icon: Code,
-    },
-    {
-      title: "Team",
-      url: "/dashboard/teams",
-      icon: People,
-    },
+    // {
+    //   title: "Team",
+    //   url: "/dashboard/teams",
+    //   icon: People,
+    // },
   ],
   depth: -1,
 } satisfies SidebarContentState;
