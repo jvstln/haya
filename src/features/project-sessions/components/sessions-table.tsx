@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDuration, formatShortDateTime } from "@/lib/date.util";
-import { getPlaceholderArrays, isMobileDevice } from "@/lib/utils";
+import { getPlaceholderArrays, isMobileDevice, stringToHsl } from "@/lib/utils";
 import type { useSessions } from "../project-session.hook";
 import type { Session } from "../project-session.type";
 
@@ -35,7 +35,7 @@ export const SessionsTable = ({
             <Link
               href={`/dashboard/projects/${session.projectId}/sessions/${session.sessionId}`}
               className="group relative flex h-11 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border/40"
-              style={{ background: "red" }}
+              style={{ background: stringToHsl(session.sessionId, 80, 20) }}
             >
               <div className="absolute inset-0 bg-linear-to-br from-secondary/50 to-muted opacity-60" />
               <div className="z-10 flex size-7 items-center justify-center rounded-full bg-primary/10 backdrop-blur-xs transition-transform group-hover:scale-110 group-hover:bg-primary/20">

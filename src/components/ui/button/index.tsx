@@ -45,17 +45,17 @@ const buttonVariants = cva(
   },
 );
 
-export namespace Button {
-  export type ButtonBaseProps = VariantProps<typeof buttonVariants> & {
+declare namespace Button {
+  type ButtonVariantProps = VariantProps<typeof buttonVariants>;
+  type ButtonBaseProps = ButtonVariantProps & {
     isLoading?: boolean;
     loadingText?: string;
   };
 
-  export type ButtonProps = ButtonBaseProps &
-    ButtonPrimitive.Props & { href?: never };
-  export type LinkButtonProps<TLink = string> = ButtonBaseProps &
+  type ButtonProps = ButtonBaseProps & ButtonPrimitive.Props & { href?: never };
+  type LinkButtonProps<TLink = string> = ButtonBaseProps &
     LinkPrimitiveProps<TLink> & { disabled?: boolean };
-  export type Props = ButtonProps | LinkButtonProps;
+  type Props = ButtonProps | LinkButtonProps;
 }
 
 function Button(props: Button.ButtonProps): React.JSX.Element;

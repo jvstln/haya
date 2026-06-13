@@ -62,6 +62,7 @@ export const DashboardHeader = ({
         "relative flex flex-col items-start gap-4 rounded-xl border border-secondary bg-muted p-6",
         className,
       )}
+      data-slot="dashboard-header"
       {...props}
     >
       {children}
@@ -85,7 +86,7 @@ export const DashboardTitle = ({
 export const DashboardDescription = (props: React.ComponentProps<"p">) => {
   return (
     <p
-      className="peer-data-[slot=dashboard-title]:-mt-2 text-muted-foreground text-sm"
+      className="peer-data-[slot=dashboard-title]:[[data-slot=dashboard-header]>&]:-mt-2 text-muted-foreground text-sm"
       {...props}
     />
   );

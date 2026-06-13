@@ -17,7 +17,7 @@ import { InputSearch } from "@/components/ui/input-search";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
 import { useFilters } from "@/hooks/use-filters";
-import { stringToColor } from "@/lib/color.util";
+import { stringToHsl } from "@/lib/color.util";
 import { getInitials } from "@/lib/utils";
 import { useTeams } from "../team.hook";
 import type { Team } from "../team.type";
@@ -106,7 +106,7 @@ const TeamsPage = () => {
                     <div
                       className="flex h-full items-center justify-center text-background text-h1"
                       style={{
-                        backgroundColor: stringToColor(team._id),
+                        backgroundColor: stringToHsl(team._id),
                       }}
                     >
                       {getInitials(team.owner.username)}

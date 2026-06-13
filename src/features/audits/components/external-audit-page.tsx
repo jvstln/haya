@@ -2,22 +2,37 @@
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Trash } from "lucide-react";
+import { Calendar } from "iconsax-reactjs";
+import {
+  BadgeDollarSign,
+  Bot,
+  FileSearch,
+  Megaphone,
+  Palette,
+  Trash,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { FolderIcon } from "@/components/icons";
+import {
+  DashboardDescription,
+  DashboardHeader,
+  DashboardSlot,
+  DashboardTitle,
+} from "@/components/dashboard-ui";
+import { QueryState } from "@/components/query-states";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { InputSearch } from "@/components/ui/input-search";
-import { HayaSpinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudits, useDeleteAudit } from "@/features/audits/audit.hook";
 import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
@@ -201,119 +216,129 @@ export const ExternalAuditPage = () => {
   });
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col gap-6 p-4 md:p-6">
-      {/* Top Card: Friction Simulation */}
-      <Card className="relative overflow-hidden bg-linear-to-br from-primary/10 via-transparent to-transparent p-6">
-        <div>
-          <h2 className="font-bold text-white text-xl">Friction Simulation</h2>
-          <p className="mt-2 max-w-2xl text-muted-foreground text-sm">
-            Watch your user(s) walk through your product, get behavioral insight
-            on what is causing users drop-off.
-          </p>
-        </div>
-        <div>
-          <NewAuditForm>
-            <Button color="primary" size="default" className="rounded-full">
-              Track Experience
-            </Button>
-          </NewAuditForm>
-        </div>
-      </Card>
+    <DashboardSlot>
+      <DashboardHeader>
+        <DashboardTitle>Friction Simulation</DashboardTitle>
+        <DashboardDescription>
+          Watch your personas walk through your product, get behavioral insight
+          on what is causing users drop-off.
+        </DashboardDescription>
 
-      {/* Bottom Card: All Products */}
-      <Card className="flex flex-col gap-6 p-6">
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bold text-white text-xl">All Products</h2>
-          <p className="text-muted-foreground text-sm">
-            All products you have tracked will appear here.
-          </p>
-        </div>
-
-        {/* Filter and Search Bar */}
-        <div className="flex items-center justify-between gap-1">
-          <Button
-            appearance={!filters.status ? "solid" : "ghost"}
-            color="secondary"
-            size="sm"
-            onClick={() =>
-              setFilters(({ status, ...f }) => ({ ...f, page: 1 }))
-            }
-          >
-            All
+        <NewAuditForm>
+          <Button color="primary" size="default" className="rounded-full">
+            Track Experience
           </Button>
-          {/* <Button
-            appearance={filters.status === "assigned" ? "solid" : "ghost"}
-            color="secondary"
-            size="sm"
-            onClick={() => setFilters((f) => ({ ...f, status: "completed", page: 1 }))}
-          >
-            Assigned
-          </Button> */}
-          <Button
-            appearance={filters.status === "completed" ? "solid" : "ghost"}
-            color="secondary"
-            size="sm"
-            onClick={() =>
-              setFilters((f) => ({ ...f, status: "completed", page: 1 }))
-            }
-          >
-            Completed
-          </Button>
+        </NewAuditForm>
+      </DashboardHeader>
 
-          <InputSearch
-            placeholder="Search by url"
-            value={originalFilters.search}
-            onChange={(e) => {
-              setFilters((f) => ({ ...f, search: e.target.value }));
-            }}
-          />
-        </div>
+      <DashboardTitle>Tracked Activities</DashboardTitle>
 
-        {/* Table / State display */}
-        <CardContent className="p-0">
-          {audits.isPending ? (
-            <div className="flex h-64 flex-col items-center justify-center gap-2 py-12">
-              <HayaSpinner />
-              <span className="text-muted-foreground text-sm">Loading...</span>
-            </div>
-          ) : audits.isError ? (
-            <div className="flex h-64 flex-col items-center justify-center gap-4 py-12">
-              <span className="font-semibold text-destructive text-sm">
-                Error loading audits: {audits.error?.message || "Unknown error"}
-              </span>
+      <Tabs>
+        <TabsList className="mb-6">
+          <TabsTrigger value="allProducts">All Products</TabsTrigger>
+          <TabsTrigger value="agents">Agents</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="allProducts">
+          <Card className="flex flex-col gap-6 p-6">
+            <CardHeader>
+              <CardTitle>All Products</CardTitle>
+              <CardDescription>
+                All products you have tracked will appear here.
+              </CardDescription>
+            </CardHeader>
+
+            {/* Filter and Search Bar */}
+            <div className="flex items-center justify-between gap-1">
               <Button
-                onClick={() => audits.refetch()}
-                appearance="outline"
+                appearance={!filters.status ? "solid" : "ghost"}
                 color="secondary"
                 size="sm"
+                onClick={() =>
+                  setFilters(({ status, ...f }) => ({ ...f, page: 1 }))
+                }
               >
-                Try Again
+                All
               </Button>
+              <Button
+                appearance={filters.status === "completed" ? "solid" : "ghost"}
+                color="secondary"
+                size="sm"
+                onClick={() =>
+                  setFilters((f) => ({ ...f, status: "completed", page: 1 }))
+                }
+              >
+                Completed
+              </Button>
+
+              <InputSearch
+                placeholder="Search by url"
+                value={originalFilters.search}
+                onChange={(e) => {
+                  setFilters((f) => ({ ...f, search: e.target.value }));
+                }}
+              />
             </div>
-          ) : !audits.data || audits.data.data.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <Empty className="border-none bg-transparent">
-                <EmptyMedia className="relative">
-                  <FolderIcon className="size-28 text-primary/80" />
-                  <div className="absolute inset-0 rounded-full bg-primary/5 blur-xl" />
-                </EmptyMedia>
-                <EmptyHeader>
-                  <EmptyTitle className="mt-2 font-medium text-muted-foreground text-sm">
-                    No audit yet
-                  </EmptyTitle>
-                </EmptyHeader>
-              </Empty>
-            </div>
-          ) : (
-            <DataTable
-              table={table}
-              page={audits.data.pagination.currentPage}
-              totalPages={audits.data.pagination.totalPages}
-              setPage={(page) => setFilters((f) => ({ ...f, page }))}
-            />
-          )}
-        </CardContent>
-      </Card>
+
+            {/* Table / State display */}
+            <CardContent className="p-0">
+              <QueryState
+                query={audits}
+                getIsEmpty={(query) =>
+                  query.data.data.length === 0 && "No tracked products found"
+                }
+              >
+                {(audits) => (
+                  <DataTable
+                    table={table}
+                    page={audits.data.pagination.currentPage}
+                    totalPages={audits.data.pagination.totalPages}
+                    setPage={(page) => setFilters((f) => ({ ...f, page }))}
+                  />
+                )}
+              </QueryState>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="agents">
+          <Card>
+            <CardTitle>All Active Agents</CardTitle>
+            <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {agents.map((agent) => {
+                const Icon = agent.icon;
+                return (
+                  <Card key={agent.id}>
+                    <div className="mb-4 flex items-center">
+                      <div className={`rounded-xl p-2.5 ${agent.colorClass}`}>
+                        <Icon className="h-6 w-6" />
+                      </div>
+                    </div>
+
+                    <div className="mb-6 grow">
+                      <h3 className="mb-1.5 font-semibold text-base text-white">
+                        {agent.name}
+                      </h3>
+                      <p className="text-muted-foreground text-sm">
+                        {agent.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-auto flex items-center justify-between">
+                      <span
+                        className={`font-semibold text-xs tracking-wide ${agent.active ? "text-primary" : "text-muted-foreground"}`}
+                      >
+                        {agent.active ? "Active" : "Inactive"}
+                      </span>
+                      <Switch checked={agent.active} disabled />
+                    </div>
+                  </Card>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Confirmation Dialog for deletion */}
       {action?.type === "delete" && (
@@ -325,6 +350,57 @@ export const ExternalAuditPage = () => {
           }}
         />
       )}
-    </div>
+    </DashboardSlot>
   );
 };
+
+const agents = [
+  {
+    id: "onboarding",
+    name: "Onboarding",
+    description: "Time-to-value · empty states · activation gates",
+    active: true,
+    icon: Calendar,
+    colorClass: "bg-[#7c3aed]/10 text-[#a855f7]",
+  },
+  {
+    id: "gamification",
+    name: "Gamification",
+    description: "Reward loops · streaks · re-engagement",
+    active: true,
+    icon: Bot,
+    colorClass: "bg-[#ea580c]/10 text-[#fb923c]",
+  },
+  {
+    id: "pricing",
+    name: "Pricing",
+    description: "Plan anchoring · CTA copy · risk reversal",
+    active: true,
+    icon: BadgeDollarSign,
+    colorClass: "bg-[#10b981]/10 text-[#34d399]",
+  },
+  {
+    id: "visual-design",
+    name: "Visual design",
+    description: "Hierarchy · contrast · trust signals",
+    active: true,
+    icon: Palette,
+    colorClass: "bg-[#3b82f6]/10 text-[#60a5fa]",
+  },
+  {
+    id: "seo",
+    name: "SEO",
+    description: "Meta · schema · internal linking",
+    active: true,
+    icon: FileSearch,
+    colorClass: "bg-[#06b6d4]/10 text-[#22d3ee]",
+  },
+  {
+    id: "marketing",
+    name: "Marketing",
+    description: "Positioning · ICP · social proof",
+    active: true,
+    icon: Megaphone,
+    colorClass: "bg-[#f43f5e]/10 text-[#fb7185]",
+  },
+];

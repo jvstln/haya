@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import { QueryState } from "@/components/query-states";
 import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getPlaceholderArrays } from "@/lib/utils";
+import { getPlaceholderArrays, stringToHsl } from "@/lib/utils";
 import type { usePersona } from "../project-persona.hook";
 import type { Persona } from "../project-persona.type";
 
@@ -33,6 +33,7 @@ export const PersonasTable = ({
             <Link
               href={`/dashboard/projects/${persona.projectId}/sessions/${persona.sessionId}`}
               className="group relative flex h-11 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border/40 bg-zinc-950"
+              style={{ background: stringToHsl(persona.sessionId, 80, 20) }}
             >
               {/* Mock UI layout inside the thumbnail to match the image */}
               <div className="absolute inset-0 flex flex-col justify-between bg-black/40 p-1.5 opacity-30">

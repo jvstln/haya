@@ -139,6 +139,6 @@ export function getStatusColor(
   return matchedAlias?.[0] ?? fallback;
 }
 
-export function stringToColor(str: string) {
-  return `hsl(${stringToHashedNumber(str) % 360}, 70%, 60%)`;
+export function stringToHsl(str: string, s = 70, l = 60) {
+  return `hsl(${stringToHashedNumber(str) % 360}, ${s}%, ${l}%)`;
 }
