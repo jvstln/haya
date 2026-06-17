@@ -46,7 +46,7 @@ export const ProjectDetailsPage = ({ projectId }: ProjectDetailsPageProps) => {
                 <DashboardTitle className="max-w-xs truncate md:max-w-md">
                   {project.data.name}
                 </DashboardTitle>
-                <Badge variant={project.data.isActive ? "default" : "outline"}>
+                <Badge appearance={project.data.isActive ? "solid" : "outline"}>
                   {project.data.isActive ? "Active" : "Inactive"}
                 </Badge>
               </div>

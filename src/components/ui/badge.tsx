@@ -11,12 +11,12 @@ const badgeVariants = cva(
     variants: {
       appearance: {
         solid:
-          "border border-transparent bg-(--bg) text-(--fg) [a&]:hover:opacity-90",
+          "border border-transparent bg-(--bg-v) text-(--fg-v) [a&]:hover:opacity-90",
         outline:
-          "border border-(--bg) bg-transparent text-(--fg) [a&]:hover:bg-(--bg)/10",
-        soft: "border border-transparent bg-(--bg)/15 text-(--bg) [a&]:hover:bg-(--bg)/25",
+          "border border-(--bg-v) bg-transparent text-(--fg-v) [a&]:hover:bg-(--bg-v)/10",
+        soft: "border border-transparent bg-(--bg-v)/15 text-(--bg-v) [a&]:hover:bg-(--bg-v)/25",
         ghost:
-          "border border-transparent bg-transparent text-(--fg) [a&]:hover:bg-(--bg)/15",
+          "border border-transparent bg-transparent text-(--bg-v) [a&]:hover:bg-(--bg-v)/15",
       },
       color: {
         primary: themeColors.primary,
@@ -25,7 +25,12 @@ const badgeVariants = cva(
         success: themeColors.success,
         warning: themeColors.warning,
         info: themeColors.info,
+        neutral: themeColors.neutral,
         colorful: themeColors.colorful,
+      },
+      inverted: {
+        true: "[--bg-v:var(--fg)] [--fg-v:var(--bg)]",
+        false: "[--bg-v:var(--bg)] [--fg-v:var(--fg)]",
       },
       size: {
         default: "h-7 px-4 py-2 text-xs",
@@ -36,6 +41,7 @@ const badgeVariants = cva(
       appearance: "solid",
       color: "primary",
       size: "default",
+      inverted: false,
     },
   },
 );
@@ -43,74 +49,27 @@ const badgeVariants = cva(
 type BadgeProps = React.ComponentProps<"span"> &
   VariantProps<typeof badgeVariants> & {
     asChild?: boolean;
-    // Map legacy variants for backward compatibility
-    variant?:
-      | "default"
-      | "secondary"
-      | "destructive"
-      | "outline"
-      | "success"
-      | "warning"
-      | "info"
-      | "critical"
-      | "high"
-      | "medium"
-      | "low";
   };
 
 function Badge({
   className,
   appearance,
   color,
+  inverted,
   size,
-  variant,
   asChild = false,
   ...props
 }: BadgeProps) {
   const Comp = asChild ? Slot : "span";
 
-  let finalAppearance = appearance;
-  let finalColor = color;
-
-  // Legacy variant mapping
-  if (variant) {
-    if (variant === "outline") {
-      finalAppearance = "outline";
-      finalColor = color || "primary";
-    } else if (variant === "secondary") {
-      finalAppearance = "solid";
-      finalColor = "secondary";
-    } else if (variant === "destructive" || variant === "critical") {
-      finalAppearance = variant === "critical" ? "soft" : "solid";
-      finalColor = "destructive";
-    } else if (variant === "success") {
-      finalAppearance = "solid";
-      finalColor = "success";
-    } else if (variant === "warning" || variant === "high") {
-      finalAppearance = variant === "high" ? "soft" : "solid";
-      finalColor = "warning";
-    } else if (variant === "info") {
-      finalAppearance = "solid";
-      finalColor = "info";
-    } else if (variant === "medium") {
-      finalAppearance = "soft";
-      finalColor = "warning"; // Approximate
-    } else if (variant === "low") {
-      finalAppearance = "soft";
-      finalColor = "success"; // Approximate
-    } else {
-      finalAppearance = "solid";
-      finalColor = "primary";
-    }
-  }
-
   return (
     <Comp
       data-slot="badge"
-      data-appearance={finalAppearance}
-      data-color={finalColor}
+      data-appearance={appearance}
+      data-color={color}
+      data-inverted={inverted || undefined}
       className={cn(
-        badgeVariants({ appearance: finalAppearance, color: finalColor, size }),
+        badgeVariants({ appearance, color, inverted, size }),
         className,
       )}
       {...props}

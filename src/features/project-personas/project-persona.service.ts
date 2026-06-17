@@ -1,78 +1,18 @@
 import { api } from "@/lib/api";
 import { weekdays } from "@/lib/date.util";
 import type {
-  Persona,
+  PersonaAnalysisData,
   PersonaFilters,
   PersonasSettings,
 } from "./project-persona.type";
 
 export async function getPersonas(params: PersonaFilters) {
-  const dummyPersonas: Persona[] = [
-    {
-      id: "1",
-      projectId: params.projectId,
-      sessionId: "session-1",
-      name: "The Hesitant Explorer",
-      avgDuration: "6m 48s",
-      uniqueUsers: "2,914",
-      rageClickSessions: "9.4%",
-      ctaConversion: "9.4%",
-      severity: "Critical",
-    },
-    {
-      id: "2",
-      projectId: params.projectId,
-      sessionId: "session-2",
-      name: "The Rage-Clicker",
-      avgDuration: "6m 48s",
-      uniqueUsers: "2,914",
-      rageClickSessions: "9.4%",
-      ctaConversion: "9.4%",
-      severity: "Critical",
-    },
-    {
-      id: "3",
-      projectId: params.projectId,
-      sessionId: "session-3",
-      name: "The Ghost",
-      avgDuration: "6m 48s",
-      uniqueUsers: "2,914",
-      rageClickSessions: "9.4%",
-      ctaConversion: "9.4%",
-      severity: "Critical",
-    },
-    {
-      id: "4",
-      projectId: params.projectId,
-      sessionId: "session-4",
-      name: "The Power Converter",
-      avgDuration: "6m 48s",
-      uniqueUsers: "2,914",
-      rageClickSessions: "9.4%",
-      ctaConversion: "9.4%",
-      severity: "Critical",
-    },
-    {
-      id: "5",
-      projectId: params.projectId,
-      sessionId: "session-5",
-      name: "The Window Shopper",
-      avgDuration: "6m 48s",
-      uniqueUsers: "2,914",
-      rageClickSessions: "9.4%",
-      ctaConversion: "9.4%",
-      severity: "Critical",
-    },
-  ];
-  return {
-    personas: dummyPersonas,
-  };
-  // const response = await api.get(
-  //   `/analytics/projects/${params.projectId}/persona-analysis`,
-  //   { params },
-  // );
+  const response = await api.get<{ data: PersonaAnalysisData }>(
+    `/analytics/projects/${params.projectId}/persona-analysis`,
+    { params },
+  );
 
-  // return response.data;
+  return response.data.data;
 }
 
 export async function getPersonasSettings(projectId: string) {

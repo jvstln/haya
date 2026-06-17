@@ -9,6 +9,7 @@ export const themeColors = {
   success: "[--bg:var(--color-success)] [--fg:var(--color-success-foreground)]",
   warning: "[--bg:#f97316] [--fg:var(--color-white)]", // orange-500
   info: "[--bg:var(--color-cyan)] [--fg:var(--color-white)]", // cyan
+  neutral: "[--bg:var(--color-foreground)] [--fg:var(--color-background)]", // cyan
   colorful:
     "bg-(image:--bg) [--bg:var(--colorful-gradient)] [--fg:var(--color-white)]",
 } as const;
@@ -100,15 +101,8 @@ const statusColorGroups = {
     "queued",
     "scheduled",
   ],
-  secondary: [
-    "secondary",
-    "inactive",
-    "archived",
-    "muted",
-    "low",
-    "unknown",
-    "none",
-  ],
+  secondary: ["secondary", "inactive", "archived", "muted"],
+  neutral: ["low", "unknown", "none"],
   colorful: ["premium"],
 } as const satisfies Record<ThemeColor, string[]>;
 type ColorStatusAlias =
@@ -121,7 +115,7 @@ const statusColorGroupsEntries = Object.entries(statusColorGroups) as Array<
  * Resolves a status string to a theme color.
  * Input is normalized (trimmed, lowercased, separators stripped).
  */
-export function getStatusColor(
+export function resolveStatusColor(
   status: ColorStatusAlias | string | null | undefined,
   fallback: ThemeColor = "secondary",
 ): ThemeColor {

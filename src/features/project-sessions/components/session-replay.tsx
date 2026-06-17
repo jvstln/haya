@@ -30,12 +30,12 @@ const SKIP_SECONDS = 5;
 const PROGRESS_POLL_MS = 100;
 
 // ─── Types ──────────────────────────────────────────────────────────
-export type SessionReplayProps = {
+export type RrwebReplayProps = {
   replayUrl?: string | null;
 };
 
 // ─── Component ──────────────────────────────────────────────────────
-export const SessionReplay = ({ replayUrl }: SessionReplayProps) => {
+export function RrwebReplay({ replayUrl }: RrwebReplayProps) {
   // Refs
   const outerRef = useRef<HTMLDivElement>(null);
   const replayerRef = useRef<Replayer | null>(null);
@@ -284,10 +284,7 @@ export const SessionReplay = ({ replayUrl }: SessionReplayProps) => {
   // ── Empty state ─────────────────────────────────────────────────
   if (!replayUrl || isEmpty(events.data)) {
     return (
-      <QueryState
-        query={events}
-        getIsEmpty={() => "No session replay recording available"}
-      />
+      <QueryState query={events} getIsEmpty={() => "No  recording available"} />
     );
   }
 
@@ -296,11 +293,7 @@ export const SessionReplay = ({ replayUrl }: SessionReplayProps) => {
     return (
       <QueryState
         query={events}
-        getIsError={(events) =>
-          events.error?.message ||
-          error ||
-          "An error occurred. Please try again"
-        }
+        getIsError={(events) => getErrorMessage(events.error)}
       />
     );
   }
@@ -505,4 +498,4 @@ export const SessionReplay = ({ replayUrl }: SessionReplayProps) => {
       </div>
     </Card>
   );
-};
+}

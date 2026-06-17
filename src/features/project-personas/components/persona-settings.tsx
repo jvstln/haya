@@ -1,7 +1,6 @@
 import { useParams } from "next/navigation";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldContent,
@@ -15,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { type Weekday, weekdays } from "@/lib/date.util";
 import { useUpdatePersonasSettings } from "../project-persona.hook";
@@ -23,7 +21,7 @@ import type { PersonasSettings } from "../project-persona.type";
 
 export const PersonasBehaviorSettings = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const [mode, setMode] = useState<"automatic" | "manual">("automatic");
+  const [_mode, setMode] = useState<"automatic" | "manual">("automatic");
   const [day, setDay] = useState<Weekday | null>(null);
   const updatePersonasSettings = useUpdatePersonasSettings();
 

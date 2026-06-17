@@ -64,7 +64,7 @@ const ProjectsPage = () => {
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Badge variant="secondary" size="default" className="rounded-full">
+          <Badge color="secondary" className="rounded-full">
             {projectsQuery.data ? `${projects.length} total` : "Loading..."}
           </Badge>
         </div>

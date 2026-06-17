@@ -18,7 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getStatusColor } from "@/lib/color.util";
+import { resolveStatusColor } from "@/lib/color.util";
 import {
   formatDuration,
   formatRelativeTime,
@@ -27,7 +27,7 @@ import {
 import { cn, getPlaceholderArrays, isMobileDevice } from "@/lib/utils";
 import type { Params } from "@/types";
 import { useSession } from "../project-session.hook";
-import { SessionReplay } from "./session-replay";
+import { RrwebReplay } from "./session-replay";
 
 export const SessionDetailsPage = () => {
   const params =
@@ -61,7 +61,7 @@ export const SessionDetailsPage = () => {
             <div className="ml-auto flex items-center gap-2">
               <Badge
                 appearance="soft"
-                color={getStatusColor(sessionQuery.data.session.status)}
+                color={resolveStatusColor(sessionQuery.data.session.status)}
               >
                 {sessionQuery.data.session.status}
               </Badge>
@@ -135,7 +135,7 @@ export const SessionDetailsPage = () => {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Left Column: Replay Player */}
         <div className="flex min-w-0 flex-col lg:col-span-8">
-          <SessionReplay replayUrl={sessionQuery.data?.session.replayUrl} />
+          <RrwebReplay replayUrl={sessionQuery.data?.session.replayUrl} />
         </div>
 
         {/* Right Column: Tabbed Info & Events */}
@@ -266,7 +266,7 @@ export const SessionDetailsPage = () => {
                           </span>
                           <Badge
                             appearance="soft"
-                            color={getStatusColor(
+                            color={resolveStatusColor(
                               sessionQuery.data.session.status,
                             )}
                             size="sm"

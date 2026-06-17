@@ -1,8 +1,8 @@
 "use client";
 
+import { format, formatDistanceStrict } from "date-fns";
 import { Clock, Flame, Globe, ShieldAlert, Target, Users } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
 import {
   DashboardSlot,
   DashboardSummaryCard,
@@ -20,12 +20,10 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useSessions } from "@/features/project-sessions/project-session.hook";
 import { useProjectOverview } from "@/features/projects/project.hook";
 import { useFilters } from "@/hooks/use-filters";
 import { cn } from "@/lib/utils";
-import { usePersona } from "../project-persona.hook";
+import { usePersonas } from "../project-persona.hook";
 import { PersonasBehaviorSettings } from "./persona-settings";
 import { PersonasTable } from "./personas-table";
 
@@ -34,30 +32,7 @@ export const PersonasPage = () => {
   const overview = useProjectOverview(projectId);
   const { filters, originalFilters, setFilters } = useFilters();
 
-  const sessionsQuery = useSessions(projectId, filters);
-  const personasQuery = usePersona({ projectId, ...filters });
-
-  // Calculate dynamic metrics from the loaded sessions
-  const avgDuration = useMemo(() => {
-    const sessions = sessionsQuery.data?.sessions || [];
-    if (sessions.length === 0) return "0s";
-    const total = sessions.reduce(
-      (acc: number, s: { duration?: number }) => acc + (s.duration || 0),
-      0,
-    );
-    const avg = total / sessions.length;
-    const mins = Math.floor(avg / 60);
-    const secs = Math.round(avg % 60);
-    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
-  }, [sessionsQuery.data?.sessions]);
-
-  const uniqueDevices = useMemo(() => {
-    const sessions = sessionsQuery.data?.sessions || [];
-    const devices = new Set(
-      sessions.map((s: { deviceId?: string }) => s.deviceId).filter(Boolean),
-    );
-    return devices.size;
-  }, [sessionsQuery.data?.sessions]);
+  const personasQuery = usePersonas({ projectId, ...filters });
 
   return (
     <DashboardSlot>
@@ -67,14 +42,10 @@ export const PersonasPage = () => {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-7">
         {/* Top Visited Page card */}
         <DashboardSummaryCard
-          title="Top Visited Page"
+          title="Top Priority"
           value={
-            overview.data?.topPages?.[0]?.page ?? "No page views tracked yet"
-          }
-          description={
-            overview.data?.topPages?.[0]?.views
-              ? `${overview.data?.topPages?.[0]?.views} views recorded`
-              : ""
+            personasQuery.data?.analysis?.topPriority ??
+            "No top priorities found"
           }
           icon={Globe}
           isLoading={overview.isPending}
@@ -88,27 +59,39 @@ export const PersonasPage = () => {
           {
             title: "Total sessions",
             icon: Clock,
-            value: overview.data?.totalSessions ?? 0,
+            value: personasQuery.data?.analysis?.totalSessions ?? "-",
           },
           {
-            title: "Total events",
+            title: "Friction score",
             icon: Target,
-            value: overview.data?.totalEvents ?? 0,
+            value: personasQuery.data?.analysis?.frictionScore ?? "-",
           },
           {
             title: "Avg. duration",
             icon: ShieldAlert,
-            value: avgDuration,
+            value: personasQuery.data
+              ? formatDistanceStrict(
+                  0,
+                  (personasQuery.data.analysis?.avgSessionDuration || 0) * 1000,
+                ).replace(
+                  /(\d+)\s*(minutes?|seconds?)/,
+                  (_, digits, suffix) => {
+                    return `${digits} ${suffix[0]}`;
+                  },
+                )
+              : "",
           },
           {
             title: "Unique devices",
             icon: Users,
-            value: uniqueDevices,
+            value: personasQuery.data?.analysis?.uniqueUsers ?? "-",
           },
           {
-            title: "Replays ready",
+            title: "Generated at",
             icon: Flame,
-            value: overview.data?.replayReadySessions ?? 0,
+            value: personasQuery.data?.analysis?.generatedAt
+              ? format(personasQuery.data.analysis.generatedAt, "PP")
+              : "-",
           },
         ].map((metric) => {
           return (
@@ -167,7 +150,7 @@ export const PersonasPage = () => {
 
         {/* State Display and Table */}
         <CardContent className="p-0">
-          <PersonasTable personas={personasQuery} />
+          <PersonasTable personas={personasQuery} projectId={projectId} />
         </CardContent>
       </Card>
     </DashboardSlot>

@@ -1,39 +1,47 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
+import { formatDistance } from "date-fns";
 import { Play } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { QueryState } from "@/components/query-states";
+import { Badge } from "@/components/ui/badge";
 import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getPlaceholderArrays, stringToHsl } from "@/lib/utils";
-import type { usePersona } from "../project-persona.hook";
+import {
+  getPlaceholderArrays,
+  resolveStatusColor,
+  stringToHsl,
+} from "@/lib/utils";
+import type { usePersonas } from "../project-persona.hook";
 import type { Persona } from "../project-persona.type";
 
 interface PersonasTableProps {
-  personas: ReturnType<typeof usePersona>;
+  personas: ReturnType<typeof usePersonas>;
+  projectId: string;
 }
 
 const columnHelper = createColumnHelper<Persona>();
 
-export const PersonasTable = ({
-  personas,
-  // search = "",
-  // projectId,
-}: PersonasTableProps) => {
+export const PersonasTable = ({ personas, projectId }: PersonasTableProps) => {
   const columns = useMemo(
     () => [
-      columnHelper.accessor((row) => row, {
-        id: "sessionReplay",
-        header: "Session Replay",
+      columnHelper.accessor("representativeReplayUrl", {
+        header: "Replay",
         cell: (info) => {
-          const persona = info.getValue();
+          const persona = info.row.original;
           return (
             <Link
-              href={`/dashboard/projects/${persona.projectId}/sessions/${persona.sessionId}`}
+              href={`/dashboard/projects/${projectId}/personas/${persona.representativeSessionId}`}
               className="group relative flex h-11 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border/40 bg-zinc-950"
-              style={{ background: stringToHsl(persona.sessionId, 80, 20) }}
+              style={{
+                background: stringToHsl(
+                  persona.representativeSessionId,
+                  80,
+                  20,
+                ),
+              }}
             >
               {/* Mock UI layout inside the thumbnail to match the image */}
               <div className="absolute inset-0 flex flex-col justify-between bg-black/40 p-1.5 opacity-30">
@@ -69,69 +77,71 @@ export const PersonasTable = ({
           );
         },
       }),
-      columnHelper.accessor((row) => row.avgDuration, {
-        id: "avgDuration",
+      columnHelper.accessor("avgSessionDuration", {
         header: "Avg. session duration",
         cell: (info) => {
           return (
             <span className="font-medium text-foreground">
-              {info.getValue()}
+              {formatDistance(0, info.getValue() * 1000, {
+                includeSeconds: true,
+              })
+                .replace(/(\d+)\s*minutes?/, "$1 min")
+                .replace(/(\d+)\s*seconds?/, "$1 sec")}
             </span>
           );
         },
       }),
-      columnHelper.accessor((row) => row.uniqueUsers, {
-        id: "uniqueUsers",
-        header: "Unique Users",
+      columnHelper.accessor("percentage", {
+        header: "Distribution",
         cell: (info) => {
           return (
             <span className="font-medium text-muted-foreground text-sm">
-              {info.getValue()}
+              {info.getValue()}%
             </span>
           );
         },
       }),
-      columnHelper.accessor((row) => row.rageClickSessions, {
-        id: "rageClickSessions",
+      columnHelper.accessor("rageClickRate", {
         header: "Rage-click sessions",
         cell: (info) => {
+          const rate = info.getValue();
           return (
             <span className="font-medium text-muted-foreground text-sm">
-              {info.getValue()}
+              {Math.round(rate * 100)}%
             </span>
           );
         },
       }),
-      columnHelper.accessor((row) => row.ctaConversion, {
-        id: "ctaConversion",
+      columnHelper.accessor("ctaConversionRate", {
         header: "CTA conversion",
         cell: (info) => {
+          const rate = info.getValue();
           return (
             <span className="font-medium text-muted-foreground text-sm">
-              {info.getValue()}
+              {Math.round(rate * 100)}%
             </span>
           );
         },
       }),
-      columnHelper.accessor((row) => row.severity, {
-        id: "severity",
+      columnHelper.accessor("severity", {
         header: "Severity",
         cell: (info) => {
           const val = info.getValue();
+
           return (
-            <div className="flex items-center gap-1.5 text-[#e07f6e]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#ef4444]" />
-              <span className="font-semibold text-sm">{val}</span>
-            </div>
+            <Badge color={resolveStatusColor(val)} appearance={"soft"}>
+              <span className="size-1.5 rounded-full bg-current" />
+              {val}
+            </Badge>
           );
         },
       }),
     ],
-    [],
+    [projectId],
   );
 
   const table = useDataTable({
-    data: personas.data?.personas ?? [],
+    data: personas.data?.analysis?.personas ?? [],
     columns,
   });
 
@@ -149,17 +159,19 @@ export const PersonasTable = ({
     <QueryState
       query={personas}
       getIsEmpty={(personas) =>
-        personas.data.personas.length === 0 &&
+        (personas.data?.analysis?.personas ?? []).length === 0 &&
         "No personas found matching search criteria"
       }
     >
       {() => (
-        <DataTable
-          table={table}
-          // page={sessions.data?.pagination.currentPage || 1}
-          // totalPages={sessions.data?.pagination.totalPages || 1}
-          // setPage={(page) => sessions.refetch?.({ page })}
-        />
+        <>
+          <DataTable table={table} />
+          {/* <LogicalPagination
+          currentPage={sessions.data?.pagination.currentPage || 1}
+          totalPages={sessions.data?.pagination.totalPages || 1}
+          onPageChange={(page) => sessions.refetch?.({ page })}
+          /> */}
+        </>
       )}
     </QueryState>
   );

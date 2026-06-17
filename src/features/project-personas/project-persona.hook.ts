@@ -11,7 +11,7 @@ const personaQueryKeys = createQueryKeys({
   personas: ["personas", "$filtersOrId"],
 });
 
-export function usePersona(params: PersonaFilters) {
+export function usePersonas(params: PersonaFilters) {
   return useQuery({
     queryKey: personaQueryKeys.getQueryKey("personas", {
       filtersOrId: params.projectId,

@@ -69,12 +69,8 @@ export const ProjectCard = ({
           </div>
         </div>
         <Badge
-          variant={project.isActive ? "default" : "outline"}
-          className={
-            project.isActive
-              ? "border-success/20 bg-success/10 text-success"
-              : "border-zinc-800 text-zinc-500"
-          }
+          appearance={project.isActive ? "solid" : "outline"}
+          color={project.isActive ? "success" : "secondary"}
         >
           {project.isActive ? "Active" : "Inactive"}
         </Badge>
@@ -114,7 +110,7 @@ export const ProjectCard = ({
           <div className="flex flex-wrap gap-1.5">
             {project.settings?.sessionReplay && (
               <Badge
-                variant="secondary"
+                color="secondary"
                 className="bg-zinc-800/40 text-[10px] text-zinc-300"
               >
                 Replays
@@ -122,7 +118,7 @@ export const ProjectCard = ({
             )}
             {project.settings?.heatmaps && (
               <Badge
-                variant="secondary"
+                color="secondary"
                 className="bg-zinc-800/40 text-[10px] text-zinc-300"
               >
                 Heatmaps
@@ -130,7 +126,7 @@ export const ProjectCard = ({
             )}
             {project.settings?.trackClicks && (
               <Badge
-                variant="secondary"
+                color="secondary"
                 className="bg-zinc-800/40 text-[10px] text-zinc-300"
               >
                 Clicks
@@ -138,7 +134,7 @@ export const ProjectCard = ({
             )}
             {project.settings?.trackScrolls && (
               <Badge
-                variant="secondary"
+                color="secondary"
                 className="bg-zinc-800/40 text-[10px] text-zinc-300"
               >
                 Scrolls
