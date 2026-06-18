@@ -71,8 +71,8 @@ export const ShareFindingsDialog = ({
               <LoadingState />
             ) : exportPdf.isSuccess ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-                <Verify className="size-32 text-primary" />
-                <p className="text-foreground text-lg">
+                <Verify className="size-14 text-primary" />
+                <p className="text-foreground text-sm">
                   Report generated successfully.
                   {email && (
                     <a href={`mailto:${email}`} className="link">

@@ -98,7 +98,7 @@ export const AuditDetailsPage = () => {
         )}
 
         <ShareFindingsDialog audit={audit.data}>
-          <Button color="secondary" size="sm">
+          <Button appearance="soft" size="sm" className="ml-auto">
             <Share />
             Share
           </Button>
