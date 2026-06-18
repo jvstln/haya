@@ -1,4 +1,4 @@
-import type { AppRoutes, LayoutRoutes } from "../../.next/types/routes";
+import type { AppRoutes } from "../../.next/types/routes";
 
 export type Pagination = {
   currentPage: number;

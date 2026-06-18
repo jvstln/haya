@@ -20,8 +20,11 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-ring: var(--ring);
+
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-cyan: var(--cyan);
 
   --color-muted-foreground: var(--muted-foreground);
@@ -89,12 +92,12 @@
 
   --accent: color-mix(var(--primary), var(--background) 70%);
   --accent-foreground: var(--primary-foreground);
-  
+
   --destructive: oklch(60% 0.2 25);
   --destructive-foreground: var(--color-white);
   --success: oklch(60% 0.2 140);
   --success-foreground: var(--color-white);
-  
+
   --cyan: oklch(from #00c0e8 l c h);
   --cyan-foreground: var(--color-white);
 

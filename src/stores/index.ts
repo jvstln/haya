@@ -2,4 +2,4 @@ import { create } from "zustand";
 
 type GlobalStore = {};
 
-export const useGlobalStore = create<GlobalStore>()((set) => ({}));
+export const useGlobalStore = create<GlobalStore>()((_set) => ({}));

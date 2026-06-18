@@ -1,11 +1,4 @@
-import {
-  Category,
-  Code,
-  People,
-  Personalcard,
-  Radar,
-  Routing,
-} from "iconsax-reactjs";
+import { Category, Radar, Routing } from "iconsax-reactjs";
 import type { Route } from "next";
 import { createContext, useContext, useEffect } from "react";
 import { create } from "zustand";

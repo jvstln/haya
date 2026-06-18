@@ -73,7 +73,10 @@ export const getPlaceholderArrays = (() => {
   };
 })();
 
-export function isMobileDevice(userAgent: string, viewportWidth: number): boolean {
+export function isMobileDevice(
+  userAgent: string,
+  viewportWidth: number,
+): boolean {
   return (
     userAgent.includes("iPhone") ||
     userAgent.includes("Android") ||
@@ -83,4 +86,3 @@ export function isMobileDevice(userAgent: string, viewportWidth: number): boolea
 
 export * from "./color.util";
 export * from "./date.util";
-
