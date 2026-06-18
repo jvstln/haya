@@ -26,8 +26,8 @@ import {
 } from "@/lib/date.util";
 import { cn, getPlaceholderArrays, isMobileDevice } from "@/lib/utils";
 import type { Params } from "@/types";
+import { RrwebReplay } from "../../../components/rrweb-replay";
 import { useSession } from "../project-session.hook";
-import { RrwebReplay } from "./session-replay";
 
 export const SessionDetailsPage = () => {
   const params =

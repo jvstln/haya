@@ -1,5 +1,6 @@
 import { Replayer } from "@rrweb/replay";
 import "@rrweb/replay/dist/style.css";
+import { useQuery } from "@tanstack/react-query";
 import {
   Maximize,
   Minimize,
@@ -10,6 +11,7 @@ import {
   SkipForward,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import z from "zod";
 import { QueryState } from "@/components/query-states";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,10 +21,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { getErrorMessage } from "@/lib/api";
+import { api, getErrorMessage } from "@/lib/api";
 import { formatTimestamp } from "@/lib/date.util";
 import { cn, isEmpty } from "@/lib/utils";
-import { useSessionReplayEvents } from "../project-session.hook";
 
 // ─── Constants ──────────────────────────────────────────────────────
 const SPEED_OPTIONS = [1, 2, 4, 8] as const;
@@ -51,7 +52,27 @@ export function RrwebReplay({ replayUrl }: RrwebReplayProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
 
-  const events = useSessionReplayEvents(replayUrl);
+  // const events = useSessionReplayEvents(replayUrl);
+  const events = useQuery({
+    queryKey: ["rrwebReplay", replayUrl],
+    queryFn: async () => {
+      if (!replayUrl) return;
+
+      const response = await api.get<string>(replayUrl, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // Events is multiple JSON string separated with new lines (NDJSON)
+      const parsedEvents = response.data
+        .split(/\n/)
+        .filter(Boolean)
+        .map((ev) => JSON.parse(ev));
+
+      const eventsSchema = z.array(z.any());
+      return eventsSchema.parse(parsedEvents);
+    },
+    enabled: !!replayUrl,
+  });
 
   // ── Progress polling ────────────────────────────────────────────
   const stopProgressPolling = useCallback(() => {
