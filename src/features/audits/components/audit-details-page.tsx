@@ -1,11 +1,5 @@
 "use client";
-import {
-  ArrowLeft,
-  Blend,
-  BoxAdd,
-  Information,
-  Warning2,
-} from "iconsax-reactjs";
+import { ArrowLeft, Information, Share, Warning2 } from "iconsax-reactjs";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +25,7 @@ import { getIsAuditInProgress } from "../audit.service";
 import { AuditDetailsImage } from "./audit-details-image";
 import { ConversionOptimization } from "./audit-details-views";
 import { AuditLoadingDialog } from "./audit-loading-dialog";
+import { ShareFindingsDialog } from "./share-findings-dialog";
 
 export const AuditDetailsPage = () => {
   const params = useParams();
@@ -102,6 +97,12 @@ export const AuditDetailsPage = () => {
           <Badge className="bg-[#FFAFA499]">{auditType.label}</Badge>
         )}
 
+        <ShareFindingsDialog audit={audit.data}>
+          <Button color="secondary" size="sm">
+            <Share />
+            Share
+          </Button>
+        </ShareFindingsDialog>
         {/* <div className="ml-auto flex items-center gap-2 md:gap-4">
           <Button
             color="secondary"

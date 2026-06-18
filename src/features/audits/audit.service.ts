@@ -65,6 +65,16 @@ async function deleteAudit(auditId: string) {
   return response.data;
 }
 
+async function exportPdf(auditId: string) {
+  const response = await api.get<Blob>(
+    `/analyze/analysis/${auditId}/download-pdf`,
+    {
+      responseType: "blob",
+    },
+  );
+  return response.data;
+}
+
 async function getPreAuditInfo(payload: { url: string }) {
   const response = await api.post("/analyze/discover", payload);
   return response.data as PreAuditInfo;
@@ -82,6 +92,7 @@ export {
   createAudit,
   deleteAudits,
   deleteAudit,
+  exportPdf,
   getPreAuditInfo,
   getIsAuditInProgress,
 };

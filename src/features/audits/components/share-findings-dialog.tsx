@@ -1,7 +1,7 @@
 "use client";
 
 import { Edit, Verify } from "iconsax-reactjs";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,14 +17,15 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { gsap, useGSAP } from "@/lib/gsap.util";
 import { cn } from "@/lib/utils";
-import { LogoDark } from "@/public/logo";
+import { useExportPdf } from "../audit.hook";
 import type { Audit } from "../audit.type";
-
-type Step = "input" | "compiling" | "success";
+import { ShareFindingsBanner } from "./share-findings-banner";
 
 type ShareFindingsDialogProps = React.ComponentProps<typeof Dialog> & {
-  audit: Audit;
+  audit?: Audit;
   children?: React.ReactElement;
 };
 
@@ -32,21 +33,30 @@ export const ShareFindingsDialog = ({
   audit,
   ...props
 }: ShareFindingsDialogProps) => {
-  const [step, setStep] = useState<Step>("success");
   const [email, setEmail] = useState("");
 
+  const exportPdf = useExportPdf();
+
   const handleSend = () => {
-    setStep("compiling");
-    // Simulate compilation
-    setTimeout(() => {
-      setStep("success");
-    }, 3000);
+    if (!audit?._id) return;
+    exportPdf.mutate(audit._id);
   };
 
   return (
-    <Dialog {...props}>
-      {props.children && <DialogTrigger render={props.children} />}
-      <DialogContent className="flex h-full max-h-[90vh] flex-col overflow-hidden sm:max-w-auto">
+    <Dialog
+      {...props}
+      onOpenChange={(...args) => {
+        props.onOpenChange?.(...args);
+        const open = args[0];
+        if (!open) {
+          exportPdf.reset();
+        }
+      }}
+    >
+      {props.children && (
+        <DialogTrigger disabled={!audit} render={props.children} />
+      )}
+      <DialogContent className="flex flex-col overflow-hidden">
         <DialogHeader className="">
           <DialogTitle>Share Findings</DialogTitle>
           <DialogDescription>
@@ -57,68 +67,57 @@ export const ShareFindingsDialog = ({
         <div className="flex grow pt-8">
           {/* Left Column: Content */}
           <div className="flex flex-1 flex-col">
-            {step === "input" && (
+            {exportPdf.isPending ? (
+              <LoadingState />
+            ) : exportPdf.isSuccess ? (
+              <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+                <Verify className="size-32 text-primary" />
+                <p className="text-foreground text-lg">
+                  Report generated successfully.
+                  {email && (
+                    <a href={`mailto:${email}`} className="link">
+                      Check your email
+                    </a>
+                  )}
+                </p>
+              </div>
+            ) : (
               <div className="flex h-full flex-col justify-center">
                 <form
                   className="flex flex-col gap-3"
-                  onSubmit={(e) => e.preventDefault()}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSend();
+                  }}
                 >
-                  <Label>Email</Label>
+                  <Label>Email (optional)</Label>
                   <InputGroup>
                     <InputGroupInput
-                      placeholder="enter email to receive the findings"
+                      placeholder="enter email to receive the generated findings"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      // className="text-white placeholder:text-muted-foreground/50"
                     />
                     <InputGroupAddon align="inline-end">
                       <Edit className="text-primary" />
                     </InputGroupAddon>
                   </InputGroup>
 
-                  <Button onClick={handleSend} disabled={!email}>
-                    Send Report
+                  <Button
+                    type="submit"
+                    isLoading={exportPdf.isPending}
+                    loadingText="Generating..."
+                  >
+                    Generate report
                   </Button>
                 </form>
-              </div>
-            )}
-
-            {step === "compiling" && (
-              <div className="flex flex-col gap-6">
-                <div className="space-y-2">
-                  <h3 className="text-h3">Compiling Audit Reports</h3>
-                  <p className="text-muted-foreground text-sm">
-                    We are compiling all design and report findings and will
-                    notify you once it is sent to your email. You can continue
-                    other activities while we work in the background.
-                  </p>
-                </div>
-
-                <ul className="space-y-4">
-                  <ChecklistItem label="Gathering design insights..." checked />
-                  <ChecklistItem label="Matching all findings" checked />
-                  <ChecklistItem label="Compiling findings" checked />
-                  <ChecklistItem label="We are almost there" checked />
-                </ul>
-              </div>
-            )}
-
-            {step === "success" && (
-              <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-                <Verify className="size-32 text-primary" />
-                <p className="text-lg text-white">
-                  Successfully sent.{" "}
-                  <a href={`mailto:${email}`} className="link">
-                    Check your email
-                  </a>
-                </p>
               </div>
             )}
           </div>
 
           {/* Right Column: Preview Card */}
           <div className="flex flex-1 items-center justify-center bg-transparent p-8">
-            <PreviewCard url={audit.url} />
+            <ShareFindingsBanner />
           </div>
         </div>
       </DialogContent>
@@ -126,39 +125,84 @@ export const ShareFindingsDialog = ({
   );
 };
 
-const ChecklistItem = ({
-  label,
-  checked,
-}: {
-  label: string;
-  checked: boolean;
-}) => (
-  <li className="flex items-center gap-3">
-    <Verify
-      size={20}
-      className={cn(checked ? "text-primary" : "text-muted-foreground")}
-    />
-    <span className="text-muted-foreground text-sm">{label}</span>
-  </li>
-);
+const LoadingState = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [currentStep, setCurrentStep] = useState(0);
 
-const PreviewCard = ({ url }: { url: string }) => {
+  const stepsList = [
+    "Gathering design insights...",
+    "Matching all findings",
+    "Compiling findings",
+    "We are almost there",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev < stepsList.length - 1 ? prev + 1 : prev));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        ".step-item",
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, stagger: 0.15, duration: 0.4 },
+      );
+    },
+    { scope: containerRef },
+  );
+
   return (
-    <div className="relative flex aspect-square w-full flex-col justify-center overflow-hidden rounded-[40px] bg-[#7C66FF] p-10 text-black shadow-2xl">
-      {/* Petal decorations */}
-      <div className="-translate-y-1/2 absolute top-5 right-5 size-56 translate-x-1/2 opacity-90">
-        <LogoDark />
-      </div>
-      <div className="-translate-x-1/2 absolute bottom-5 left-5 size-56 translate-y-1/2 opacity-90">
-        <LogoDark />
+    <div ref={containerRef} className="flex flex-col gap-6">
+      <div className="space-y-2">
+        <h3 className="text-h3">Compiling Audit Reports</h3>
+        <p className="text-muted-foreground text-sm">
+          We are compiling all design and report findings and will notify you
+          once it is sent to your email. You can continue other activities while
+          we work in the background.
+        </p>
       </div>
 
-      <div className="relative z-10 space-y-4">
-        <h2 className="font-bold font-syncopate text-[64px] leading-none tracking-[16px]">
-          UX <br /> AUDIT
-        </h2>
-        <p className="font-medium text-sm opacity-80">{url}</p>
-      </div>
+      <ul className="space-y-4">
+        {stepsList.map((label, index) => {
+          const isCompleted = index < currentStep;
+          const isActive = index === currentStep;
+
+          return (
+            <li
+              key={label}
+              className={cn(
+                "step-item flex items-center gap-3 transition-opacity duration-300",
+                index > currentStep ? "opacity-30" : "opacity-100",
+              )}
+            >
+              <div className="relative flex size-5 shrink-0 items-center justify-center">
+                {isCompleted ? (
+                  <Verify className="text-primary" size={20} />
+                ) : isActive ? (
+                  <Spinner className="text-primary" />
+                ) : (
+                  <span className="size-2 rounded-full bg-muted-foreground/30" />
+                )}
+              </div>
+              <span
+                className={cn(
+                  "text-sm transition-colors duration-300",
+                  isCompleted
+                    ? "text-primary"
+                    : isActive
+                      ? "font-medium text-white"
+                      : "text-muted-foreground",
+                )}
+              >
+                {label}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };

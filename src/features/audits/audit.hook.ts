@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { toast } from "sonner";
+import { downloadFile } from "@/lib/file.util";
 import { queryClient } from "@/lib/queryclient";
 import { urlSchema } from "@/schemas";
 import * as AuditService from "./audit.service";
@@ -72,6 +73,16 @@ export const useDeleteAudit = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Audit deleted successfully");
       invalidateAuditQueries();
+    },
+  });
+};
+
+export const useExportPdf = () => {
+  return useMutation({
+    mutationFn: AuditService.exportPdf,
+    onError: (error) => toast.error(`Error: ${error.message}`),
+    onSuccess: (data, auditId) => {
+      downloadFile(data, `haya-audit-${auditId}.pdf`);
     },
   });
 };
