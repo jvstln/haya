@@ -2,7 +2,11 @@
 
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
-import { Input, inputColorClassName } from "@/components/ui/input";
+import {
+  Input,
+  inputColorClassName,
+  inputSizeClassName,
+} from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
@@ -12,8 +16,9 @@ function InputGroup({ className, ...props }: React.ComponentProps<"fieldset">) {
       data-slot="input-group"
       className={cn(
         inputColorClassName,
-        "group/input-group relative flex w-full items-center rounded-md border border-input shadow-xs outline-none transition-[color,box-shadow] dark:bg-input/30",
-        "h-9 min-w-0 has-[>textarea]:h-auto",
+        inputSizeClassName,
+        "group/input-group relative flex items-center shadow-xs outline-none transition-[color,box-shadow]",
+        "has-[>textarea]:h-auto",
 
         // Variants based on alignment.
         "has-[>[data-align=inline-start]]:[&>input]:pl-2",
