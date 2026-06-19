@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createQueryKeys } from "@/lib/queryclient";
 import {
   getPersonas,
   getPersonasSettings,
@@ -7,24 +6,16 @@ import {
 } from "./project-persona.service";
 import type { PersonaFilters } from "./project-persona.type";
 
-const personaQueryKeys = createQueryKeys({
-  personas: ["personas", "$filtersOrId"],
-});
-
 export function usePersonas(params: PersonaFilters) {
   return useQuery({
-    queryKey: personaQueryKeys.getQueryKey("personas", {
-      filtersOrId: params.projectId,
-    }),
+    queryKey: ["personas", params.projectId],
     queryFn: () => getPersonas(params),
   });
 }
 
 export function usePersonasSettings(projectId: string) {
   return useQuery({
-    queryKey: personaQueryKeys.getQueryKey("personas", {
-      filtersOrId: projectId,
-    }),
+    queryKey: ["personas", projectId],
     queryFn: () => getPersonasSettings(projectId),
   });
 }

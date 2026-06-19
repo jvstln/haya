@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { projectQueryKeys } from "../projects/project.hook";
 import type { SessionFilter } from "../projects/project.type";
 import * as projectSessionService from "./project-session.service";
 
@@ -8,7 +7,7 @@ export const useSessions = (
   filters: Omit<SessionFilter, "projectId"> = {},
 ) => {
   return useQuery({
-    queryKey: projectQueryKeys.getQueryKey("sessions", { projectId, filters }),
+    queryKey: ["projects", projectId, "sessions", filters],
     queryFn: () => projectSessionService.getSessions({ projectId, ...filters }),
     enabled: !!projectId,
   });
@@ -22,7 +21,7 @@ export const useSession = ({
   sessionId: string;
 }) => {
   return useQuery({
-    queryKey: projectQueryKeys.getQueryKey("session", { projectId, sessionId }),
+    queryKey: ["projects", projectId, "sessions", sessionId],
     queryFn: () => projectSessionService.getSession({ projectId, sessionId }),
     enabled: !!projectId && !!sessionId,
   });

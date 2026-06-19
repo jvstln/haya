@@ -160,8 +160,7 @@ export const SessionsTable = ({
     <QueryState
       query={sessions}
       getIsEmpty={(sessions) =>
-        sessions.data.sessions.length === 0 &&
-        "No sessions found matching search criteria"
+        sessions.data.sessions.length === 0 && "No sessions found"
       }
     >
       {() => (

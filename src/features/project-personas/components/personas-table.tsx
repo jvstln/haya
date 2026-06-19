@@ -160,7 +160,7 @@ export const PersonasTable = ({ personas, projectId }: PersonasTableProps) => {
       query={personas}
       getIsEmpty={(personas) =>
         (personas.data?.analysis?.personas ?? []).length === 0 &&
-        "No personas found matching search criteria"
+        "No personas found"
       }
     >
       {() => (
