@@ -79,7 +79,7 @@ export const AuditDetailsPage = () => {
     <div className="flex flex-col gap-6 from-0% from-primary/20 via-transparent p-4 max-md:bg-linear-to-b">
       {/* Top Action Bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-4">
-        <Button href="/dashboard/track-experience" size="sm" appearance="soft">
+        <Button href="/dashboard/track-experience" appearance="soft">
           <ArrowLeft className="mr-1 size-4" />
           Back
         </Button>
@@ -98,26 +98,11 @@ export const AuditDetailsPage = () => {
         )}
 
         <ShareFindingsDialog audit={audit.data}>
-          <Button appearance="soft" size="sm" className="ml-auto">
+          <Button appearance="soft" className="ml-auto">
             <Share />
-            Share
+            Download findings
           </Button>
         </ShareFindingsDialog>
-        {/* <div className="ml-auto flex items-center gap-2 md:gap-4">
-          <Button
-            color="secondary"
-            className="rounded-full"
-            disabled={!audit.data}
-            href={`/dashboard/canva/${audit.data?._id}`}
-          >
-            <BoxAdd className="size-5.5 rounded-sm bg-primary-compliment p-1" />
-            Canva
-          </Button>
-          <Button color="secondary" className="rounded-full">
-            <Blend className="size-5.5 rounded-sm bg-cyan p-1" />
-            Assign
-          </Button>
-        </div> */}
       </div>
 
       {/* Control to switch between image view and content view only on mobile */}
