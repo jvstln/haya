@@ -13,6 +13,7 @@ export interface PersonaSessionSignature {
 }
 
 export interface Persona {
+  _id: string
   name: string;
   description: string;
   percentage: number;
@@ -30,8 +31,8 @@ export interface Persona {
     channel: string;
   };
   sessionSignature: PersonaSessionSignature;
-  representativeSessionId: string;
-  representativeReplayUrl: string;
+  representativeSessionId: string | null;
+  representativeReplayUrl: string | null;
 }
 
 export interface PersonaAnalysis {
@@ -44,7 +45,7 @@ export interface PersonaAnalysis {
   frictionScore: number;
   topPriority: string;
   generatedAt: string;
-  status: string;
+  status: 'completed' | string;
   personas: Persona[];
 }
 

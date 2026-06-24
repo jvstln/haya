@@ -15,9 +15,12 @@ export async function getPersonas(params: PersonaFilters) {
   return response.data.data;
 }
 
-export async function getPersonasSettings(projectId: string) {
+export async function getPersona(params: {
+  projectId: string;
+  personaId: string;
+}) {
   const response = await api.get(
-    `/analytics/projects/${projectId}/persona-analysis`,
+    `/analytics/projects/${params.projectId}/personas/${params.personaId}`,
   );
 
   return response.data;

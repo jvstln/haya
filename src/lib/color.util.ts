@@ -1,5 +1,3 @@
-import { stringToHashedNumber } from "./utils";
-
 export const themeColors = {
   primary: "[--bg:var(--color-primary)] [--fg:var(--color-primary-foreground)]",
   secondary:
@@ -131,8 +129,4 @@ export function resolveStatusColor(
   });
 
   return matchedAlias?.[0] ?? fallback;
-}
-
-export function stringToHsl(str: string, s = 70, l = 60) {
-  return `hsl(${stringToHashedNumber(str) % 360}, ${s}%, ${l}%)`;
 }

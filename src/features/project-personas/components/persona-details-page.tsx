@@ -11,27 +11,23 @@ import { Button } from "@/components/ui/button";
 import { resolveStatusColor } from "@/lib/color.util";
 import { cn } from "@/lib/utils";
 import type { Params } from "@/types";
-import { usePersonas } from "../project-persona.hook";
+import { usePersona } from "../project-persona.hook";
 import { PersonaDetailsViews } from "./persona-details-views";
 
 export const PersonaDetailsPage = () => {
   const params =
     useParams<Params<"/dashboard/projects/[projectId]/personas/[personaId]">>();
 
-  const personasQuery = usePersonas({ projectId: params.projectId });
+  const persona = usePersona(params);
 
-  const persona = personasQuery.data?.analysis?.personas.find(
-    (persona) => persona.representativeSessionId === params.personaId,
-  );
-
-  if (personasQuery.isError) {
-    return <QueryState query={personasQuery} />;
+  if (persona.isError) {
+    return <QueryState query={persona} />;
   }
 
-  if (!persona) {
+  if (!persona.data) {
     return (
       <QueryState
-        query={personasQuery}
+        query={persona}
         getIsEmpty={() =>
           !persona && "There is no persona available for display"
         }
@@ -52,18 +48,18 @@ export const PersonaDetailsPage = () => {
           Back to personas
         </Button>
 
-        {personasQuery.data && (
+        {persona.data && (
           <>
             <span className="font-mono text-muted-foreground text-sm">
-              Persona: {persona.name}{" "}
+              Persona: {persona.data.name}{" "}
             </span>
 
             <div className="ml-auto flex items-center gap-2">
               <Badge
                 appearance="soft"
-                color={resolveStatusColor(persona.severity)}
+                color={resolveStatusColor(persona.data.severity)}
               >
-                {persona.severity}
+                {persona.data.severity}
               </Badge>
             </div>
           </>
@@ -75,14 +71,14 @@ export const PersonaDetailsPage = () => {
         <DashboardSummaryCard
           className="basis-2/5"
           title="Business Impact"
-          value={persona.businessImpact || "No business impact found"}
-          isLoading={personasQuery.isPending}
+          value={persona.data.businessImpact || "No business impact found"}
+          isLoading={persona.isPending}
         />
 
         {[
           {
             label: "Avg. Duration",
-            value: formatDistance(0, persona.avgSessionDuration || 0, {
+            value: formatDistance(0, persona.data.avgSessionDuration || 0, {
               includeSeconds: true,
             }),
             className:
@@ -91,14 +87,14 @@ export const PersonaDetailsPage = () => {
           },
           {
             label: "Affected Page",
-            value: persona.affectedPage,
+            value: persona.data.affectedPage,
             className:
               "[--bg:var(--color-cyan)] [--fg:var(--color-cyan-foreground)]",
             icon: Globe,
           },
           {
             label: "Friction",
-            value: persona.psychologicalFriction,
+            value: persona.data.psychologicalFriction,
             className:
               "[--bg:var(--color-success)] [--fg:var(--color-success-foreground)]",
             icon: Activity,
@@ -110,7 +106,7 @@ export const PersonaDetailsPage = () => {
             title={info.label}
             value={info.value}
             icon={info.icon}
-            isLoading={personasQuery.isPending}
+            isLoading={persona.isPending}
           />
         ))}
       </div>
@@ -119,12 +115,12 @@ export const PersonaDetailsPage = () => {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Left Column: Replay Player */}
         <div className="flex min-w-0 flex-col lg:col-span-7">
-          <RrwebReplay replayUrl={persona.representativeReplayUrl} />
+          <RrwebReplay replayUrl={persona.data.representativeReplayUrl} />
         </div>
 
         {/* Right Column: Insights & Breakdown */}
         <div className="flex min-w-0 flex-col lg:col-span-5">
-          <PersonaDetailsViews persona={persona} />
+          <PersonaDetailsViews persona={persona.data} />
         </div>
       </div>
     </div>

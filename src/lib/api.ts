@@ -68,11 +68,10 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    throw {
-      ...error,
-      originalMessage: error.message,
-      message: getErrorMessage(error),
-    };
+    error.originalMessage = error.message;
+    error.message = getErrorMessage(error);
+
+    return Promise.reject(error);
   },
 );
 

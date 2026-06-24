@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   getPlaceholderArrays,
   resolveStatusColor,
-  stringToHsl,
+  stringToHashedNumber,
 } from "@/lib/utils";
 import type { usePersonas } from "../project-persona.hook";
 import type { Persona } from "../project-persona.type";
@@ -25,22 +25,18 @@ interface PersonasTableProps {
 const columnHelper = createColumnHelper<Persona>();
 
 export const PersonasTable = ({ personas, projectId }: PersonasTableProps) => {
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    return [
       columnHelper.accessor("representativeReplayUrl", {
         header: "Replay",
         cell: (info) => {
           const persona = info.row.original;
           return (
             <Link
-              href={`/dashboard/projects/${projectId}/personas/${persona.representativeSessionId}`}
+              href={`/dashboard/projects/${projectId}/personas/${persona._id}`}
               className="group relative flex h-11 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border/40 bg-zinc-950"
               style={{
-                background: stringToHsl(
-                  persona.representativeSessionId,
-                  80,
-                  20,
-                ),
+                background: `hsl(${stringToHashedNumber(persona._id)} 80 20)`,
               }}
             >
               {/* Mock UI layout inside the thumbnail to match the image */}
@@ -66,12 +62,17 @@ export const PersonasTable = ({ personas, projectId }: PersonasTableProps) => {
           );
         },
       }),
-      columnHelper.accessor((row) => row.name, {
-        id: "personaClass",
+      columnHelper.accessor("name", {
         header: "Persona Class",
         cell: (info) => {
+          const persona = info.row.original;
           return (
-            <span className="cursor-pointer font-semibold text-[#e07f6e] hover:underline">
+            <span
+              className="font-semibold"
+              style={{
+                color: `hsl(${stringToHashedNumber(persona._id)} 70 50)`,
+              }}
+            >
               {info.getValue()}
             </span>
           );
@@ -136,9 +137,8 @@ export const PersonasTable = ({ personas, projectId }: PersonasTableProps) => {
           );
         },
       }),
-    ],
-    [projectId],
-  );
+    ];
+  }, [projectId]);
 
   const table = useDataTable({
     data: personas.data?.analysis?.personas ?? [],
