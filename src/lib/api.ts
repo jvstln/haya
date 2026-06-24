@@ -1,6 +1,9 @@
 import axios from "axios";
+import { toast } from "sonner";
 import { getAuth } from "@/features/auth/auth.service";
+import { useAuthStore } from "@/features/auth/auth.store";
 import { getInvitationCode } from "@/features/auth/components/invitation-code-prompt";
+import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 
 export const api = axios.create({
   baseURL: "https://api.usehaya.io/api/v1",
@@ -61,6 +64,7 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Format error messages properly
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -71,6 +75,21 @@ api.interceptors.response.use(
     };
   },
 );
+
+// Log user out if token has expired and prompt for login
+api.interceptors.response.use(null, async (error) => {
+  if (
+    error.response?.status === 401 &&
+    error.message?.toLowerCase().includes("token") &&
+    useAuthStore.getState().accessToken
+  ) {
+    useAuthStore.getState().resetAuth();
+    toast.error("Session expired. Please log in again.");
+    setOnboardingFormDialogView("login");
+  }
+
+  return Promise.reject(error);
+});
 
 export const getErrorMessage = (error: unknown, fallback?: string) => {
   if (axios.isAxiosError(error)) {
