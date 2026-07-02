@@ -60,7 +60,11 @@ export const useAuthStore = create<
       name: "haya.auth",
       storage: createJSONStorage(() => cookieStorage),
       onRehydrateStorage: () => (state) => {
-        state?.refreshAuth();
+        if (typeof window !== "undefined") {
+          setTimeout(() => {
+            state?.refreshAuth();
+          }, 0);
+        }
         state?.setHasHydrated(true);
       },
       // Prevent hydrated state from being stored in storage

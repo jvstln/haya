@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
-import { getAuth } from "@/features/auth/auth.service";
 import { useAuthStore } from "@/features/auth/auth.store";
+import { getAuth } from "@/features/auth/auth-cookie";
 import { getInvitationCode } from "@/features/auth/components/invitation-code-prompt";
 import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 

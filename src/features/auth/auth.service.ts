@@ -1,7 +1,5 @@
-import Cookies from "js-cookie";
 import { api } from "@/lib/api";
 import type {
-  AuthState,
   ForgotPassword,
   LoginEmail,
   ResendVerification,
@@ -9,6 +7,7 @@ import type {
   SignUpEmail,
   VerifyOtp,
 } from "./auth.type";
+import { getAuth } from "./auth-cookie";
 import { getInvitationCode } from "./components/invitation-code-prompt";
 
 async function signUpEmail(payload: SignUpEmail) {
@@ -63,30 +62,7 @@ async function resetPassword(payload: ResetPassword) {
   return response.data;
 }
 
-/** Read access token from cookie - works on both client and server */
-async function getAuth(): Promise<AuthState | null> {
-  try {
-    let authString: string | undefined;
-
-    if (typeof window === "undefined") {
-      // Server-side: use next/headers
-      const { cookies } = await import("next/headers");
-      const cookieStore = await cookies();
-      authString = cookieStore.get("haya.auth")?.value;
-    } else {
-      // Client-side: use js-cookie
-      authString = Cookies.get("haya.auth");
-    }
-
-    const auth: AuthState = JSON.parse(authString || "{}").state;
-
-    if (!auth) return null;
-
-    return auth;
-  } catch {
-    return null;
-  }
-}
+// Imported from ./auth-cookie
 
 export {
   signUpEmail,

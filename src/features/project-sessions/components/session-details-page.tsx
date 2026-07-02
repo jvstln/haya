@@ -11,7 +11,11 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { DashboardSlot, DashboardSummaryCard } from "@/components/dashboard-ui";
+import {
+  DashboardSlot,
+  DashboardSummary,
+  DashboardSummaryCard,
+} from "@/components/dashboard-ui";
 import { QueryState } from "@/components/query-states";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -96,7 +100,7 @@ export const SessionDetailsPage = () => {
       </div>
 
       {/* Stats Summary Grid */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-7">
+      <DashboardSummary>
         <DashboardSummaryCard
           className="basis-2/5"
           title="Entry Page"
@@ -136,7 +140,7 @@ export const SessionDetailsPage = () => {
             isLoading={sessionQuery.isPending}
           />
         ))}
-      </div>
+      </DashboardSummary>
 
       {/* Control to switch between replay view and details view only on mobile */}
       <MobileViewSwitch

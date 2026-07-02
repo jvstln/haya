@@ -1,8 +1,19 @@
 import { useGSAP } from "@gsap/react";
-import gsap, { Flip, ScrollToPlugin, ScrollTrigger } from "gsap/all";
+import gsap, {
+  DrawSVGPlugin,
+  Flip,
+  ScrollToPlugin,
+  ScrollTrigger,
+} from "gsap/all";
 import SplitText from "gsap/SplitText";
 
-gsap.registerPlugin(Flip, ScrollToPlugin, ScrollTrigger, SplitText);
+gsap.registerPlugin(
+  Flip,
+  ScrollToPlugin,
+  ScrollTrigger,
+  SplitText,
+  DrawSVGPlugin,
+);
 
 const useGSAPWrapper = (...wrapperArgs: Parameters<typeof useGSAP>) => {
   const [contextFunction, config] = wrapperArgs;
