@@ -7,8 +7,8 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { QueryState } from "@/components/query-states";
 import { Badge } from "@/components/ui/badge";
-import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DataTable, useDataTable } from "@/components/ui/table/data-table";
 import {
   getPlaceholderArrays,
   resolveStatusColor,

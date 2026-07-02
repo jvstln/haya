@@ -28,10 +28,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DataTable, useDataTable } from "@/components/ui/data-table";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import { InputSearch } from "@/components/ui/input-search";
 import { Switch } from "@/components/ui/switch";
+import { DataTable, useDataTable } from "@/components/ui/table/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudits, useDeleteAudit } from "@/features/audits/audit.hook";
 import { useFilters } from "@/hooks/use-filters";
@@ -249,27 +249,31 @@ export const ExternalAuditPage = () => {
             </CardHeader>
 
             {/* Filter and Search Bar */}
-            <div className="flex items-center justify-between gap-1">
-              <Button
-                appearance={!filters.status ? "solid" : "ghost"}
-                color="secondary"
-                size="sm"
-                onClick={() =>
-                  setFilters(({ status, ...f }) => ({ ...f, page: 1 }))
-                }
-              >
-                All
-              </Button>
-              <Button
-                appearance={filters.status === "completed" ? "solid" : "ghost"}
-                color="secondary"
-                size="sm"
-                onClick={() =>
-                  setFilters((f) => ({ ...f, status: "completed", page: 1 }))
-                }
-              >
-                Completed
-              </Button>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-1">
+                <Button
+                  appearance={!filters.status ? "solid" : "ghost"}
+                  color="secondary"
+                  size="sm"
+                  onClick={() =>
+                    setFilters(({ status, ...f }) => ({ ...f, page: 1 }))
+                  }
+                >
+                  All
+                </Button>
+                <Button
+                  appearance={
+                    filters.status === "completed" ? "solid" : "ghost"
+                  }
+                  color="secondary"
+                  size="sm"
+                  onClick={() =>
+                    setFilters((f) => ({ ...f, status: "completed", page: 1 }))
+                  }
+                >
+                  Completed
+                </Button>
+              </div>
 
               <InputSearch
                 placeholder="Search by url"

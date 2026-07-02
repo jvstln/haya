@@ -47,7 +47,7 @@ export const ProjectCard = ({
       onClick={() => router.push(`/dashboard/projects/${project._id}`)}
       className="group relative w-full cursor-pointer transition-all duration-300 hover:scale-[1.01] md:w-[350px]"
     >
-      <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
+      <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/5 text-primary">
             <Globe className="h-5 w-5" />
@@ -149,7 +149,7 @@ export const ProjectCard = ({
         </div>
       </CardContent>
 
-      <CardFooter className="flex items-center justify-between border-zinc-900/60 border-t pt-4">
+      <CardFooter className="flex items-center justify-between border-zinc-900/60 border-t">
         <div className="flex gap-2">
           <Button
             size="sm"

@@ -13,7 +13,7 @@ export interface PersonaSessionSignature {
 }
 
 export interface Persona {
-  _id: string
+  _id: string;
   name: string;
   description: string;
   percentage: number;
@@ -45,7 +45,7 @@ export interface PersonaAnalysis {
   frictionScore: number;
   topPriority: string;
   generatedAt: string;
-  status: 'completed' | string;
+  status: "completed" | string;
   personas: Persona[];
 }
 

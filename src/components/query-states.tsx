@@ -17,7 +17,7 @@ import { HayaSpinner } from "./ui/spinner";
 
 type QueryStateProps<
   TData = unknown,
-  TQuery extends Partial<UseQueryResult<TData>> = Partial<
+  TQuery extends Partial<UseQueryResult<TData>> | undefined = Partial<
     UseQueryResult<TData>
   >,
 > = {

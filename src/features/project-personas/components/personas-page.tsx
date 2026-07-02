@@ -39,7 +39,7 @@ export const PersonasPage = () => {
       <DashboardTitle>Grouped Personas</DashboardTitle>
 
       {/* Analytics KPI Dashboard Panel */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-7">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(calc(var(--spacing)*40),1fr))] gap-4">
         {/* Top Visited Page card */}
         <DashboardSummaryCard
           title="Top Priority"
@@ -50,7 +50,7 @@ export const PersonasPage = () => {
           icon={Globe}
           isLoading={overview.isPending}
           className={cn(
-            "[--bg:color-mix(var(--color-primary),transparent_80%)] [--fg:var(--color-primary)] md:col-span-2",
+            "col-span-2 [--bg:color-mix(var(--color-primary),transparent_80%)] [--fg:var(--color-primary)]",
           )}
         />
 
@@ -134,7 +134,7 @@ export const PersonasPage = () => {
             <PopoverTrigger render={<Button className="rounded-full" />}>
               Configure
             </PopoverTrigger>
-            <PopoverContent align="end">
+            <PopoverContent align="end" className="">
               <PopoverHeader>
                 <PopoverTitle>Behavioral configuration</PopoverTitle>
                 <PopoverDescription>

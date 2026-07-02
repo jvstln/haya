@@ -1,6 +1,7 @@
 import { SearchNormal } from "iconsax-reactjs";
 import { cn } from "@/lib/utils";
-import { Input } from "./input";
+import type { Input } from "./input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./input-group";
 
 type InputSearchProps = React.ComponentProps<typeof Input> & {
   classNames?: Partial<Record<"root" | "input" | "icon", string>>;
@@ -12,27 +13,21 @@ export const InputSearch = ({
   ...props
 }: InputSearchProps) => {
   return (
-    <div
+    <InputGroup
       className={cn(
-        "relative ml-auto w-50 transition-[width] duration-300 ease-in-out focus-within:w-64",
+        "w-50 rounded-full transition-[width] duration-300 ease-in-out focus-within:not-[class*=w-full]:w-64",
         classNames?.root,
+        className,
       )}
     >
-      <Input
+      <InputGroupInput
         type="search"
-        className={cn(
-          "rounded-full border-secondary pl-12",
-          classNames?.input,
-          className,
-        )}
+        className={cn(classNames?.input)}
         {...props}
       />
-      <SearchNormal
-        className={cn(
-          "-translate-y-1/2 absolute top-1/2 left-4 size-4",
-          classNames?.icon,
-        )}
-      />
-    </div>
+      <InputGroupAddon>
+        <SearchNormal className={cn(classNames?.icon)} />
+      </InputGroupAddon>
+    </InputGroup>
   );
 };

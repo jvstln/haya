@@ -305,7 +305,19 @@ export function RrwebReplay({ replayUrl }: RrwebReplayProps) {
   // ── Empty state ─────────────────────────────────────────────────
   if (!replayUrl || isEmpty(events.data)) {
     return (
-      <QueryState query={events} getIsEmpty={() => "No  recording available"} />
+      <Card>
+        <QueryState
+          query={{ data: {} }}
+          getIsEmpty={(query) => ({
+            query,
+            title: "Replay not available",
+            description: !replayUrl
+              ? "There is no session recording replay associated with this persona."
+              : "The session recording file was empty or could not be loaded.",
+            cta: null,
+          })}
+        />
+      </Card>
     );
   }
 

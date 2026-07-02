@@ -10,14 +10,17 @@ import {
   Smartphone,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { DashboardSummaryCard } from "@/components/dashboard-ui";
+import { useState } from "react";
+import { DashboardSlot, DashboardSummaryCard } from "@/components/dashboard-ui";
 import { QueryState } from "@/components/query-states";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MobileViewSwitch } from "@/components/ui/mobile-view-switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { resolveStatusColor } from "@/lib/color.util";
 import {
   formatDuration,
@@ -34,13 +37,17 @@ export const SessionDetailsPage = () => {
     useParams<Params<"/dashboard/projects/[projectId]/sessions/[sessionId]">>();
 
   const sessionQuery = useSession({ ...params });
+  const [currentView, setCurrentView] = useState<"replay" | "details">(
+    "replay",
+  );
+  const isMobile = useBreakpoint("max-md");
 
   if (sessionQuery.isError) {
     return <QueryState query={sessionQuery} />;
   }
 
   return (
-    <div className="flex flex-col gap-6 from-0% from-primary/20 via-transparent p-4 max-md:bg-linear-to-b">
+    <DashboardSlot className="max-md:pb-28">
       {/* Top Action Bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-4">
         <Button
@@ -58,7 +65,7 @@ export const SessionDetailsPage = () => {
               Session {sessionQuery.data.session.sessionId.slice(0, 12)}…
             </span>
 
-            <div className="ml-auto flex items-center gap-2">
+            <div className="flex items-center gap-2 md:ml-auto">
               <Badge
                 appearance="soft"
                 color={resolveStatusColor(sessionQuery.data.session.status)}
@@ -89,7 +96,7 @@ export const SessionDetailsPage = () => {
       </div>
 
       {/* Stats Summary Grid */}
-      <div className="flex gap-4 *:grow">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-7">
         <DashboardSummaryCard
           className="basis-2/5"
           title="Entry Page"
@@ -131,15 +138,35 @@ export const SessionDetailsPage = () => {
         ))}
       </div>
 
+      {/* Control to switch between replay view and details view only on mobile */}
+      <MobileViewSwitch
+        currentView={currentView}
+        onViewChange={setCurrentView}
+        options={[
+          { value: "replay", label: "Replay View" },
+          { value: "details", label: "Details View" },
+        ]}
+      />
+
       {/* Main Content Columns */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Left Column: Replay Player */}
-        <div className="flex min-w-0 flex-col lg:col-span-8">
+        <div
+          className={cn(
+            "flex min-w-0 flex-col lg:col-span-8",
+            isMobile && currentView !== "replay" && "hidden",
+          )}
+        >
           <RrwebReplay replayUrl={sessionQuery.data?.session.replayUrl} />
         </div>
 
         {/* Right Column: Tabbed Info & Events */}
-        <Card className="flex h-full min-h-[600px] flex-col lg:col-span-4 lg:h-[700px]">
+        <Card
+          className={cn(
+            "flex h-full min-h-[600px] flex-col lg:col-span-4 lg:h-[700px]",
+            isMobile && currentView !== "details" && "hidden",
+          )}
+        >
           <QueryState
             query={sessionQuery}
             getIsLoading={(query) =>
@@ -343,7 +370,7 @@ export const SessionDetailsPage = () => {
           </QueryState>
         </Card>
       </div>
-    </div>
+    </DashboardSlot>
   );
 };
 

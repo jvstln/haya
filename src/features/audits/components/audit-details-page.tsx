@@ -2,6 +2,11 @@
 import { ArrowLeft, Information, Share, Warning2 } from "iconsax-reactjs";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import {
+  DashboardSlot,
+  DashboardSummary,
+  DashboardSummaryCard,
+} from "@/components/dashboard-ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +18,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { MobileViewSwitch } from "@/components/ui/mobile-view-switch";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HayaSpinner } from "@/components/ui/spinner";
@@ -76,14 +82,13 @@ export const AuditDetailsPage = () => {
   );
 
   return (
-    <div className="flex flex-col gap-6 from-0% from-primary/20 via-transparent p-4 max-md:bg-linear-to-b">
+    <DashboardSlot className="max-md:pb-28">
       {/* Top Action Bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-4">
         <Button href="/dashboard/track-experience" appearance="soft">
           <ArrowLeft className="mr-1 size-4" />
           Back
         </Button>
-
         <a
           href={audit.data?.url}
           target="_blank"
@@ -92,11 +97,9 @@ export const AuditDetailsPage = () => {
         >
           {audit.data?.url}
         </a>
-
         {auditType && (
           <Badge className="bg-[#FFAFA499]">{auditType.label}</Badge>
         )}
-
         <ShareFindingsDialog audit={audit.data}>
           <Button appearance="soft" className="ml-auto">
             <Share />
@@ -104,34 +107,15 @@ export const AuditDetailsPage = () => {
           </Button>
         </ShareFindingsDialog>
       </div>
-
       {/* Control to switch between image view and content view only on mobile */}
-      <div
-        className="fixed inset-x-0 bottom-0 z-10 flex items-center justify-center p-4 backdrop-blur-2xs md:hidden"
-        style={{
-          background:
-            "linear-gradient(to right, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.9) 20% 80%, rgb(0 0 0 / 0.5))",
-          boxShadow: "0px -10px 20px rgba(0, 0, 0, 0.5)",
-        }}
-      >
-        <div className="mb-7 flex items-center justify-center gap-2 rounded-full bg-secondary p-2">
-          <Button
-            appearance={currentView === "image" ? "solid" : "ghost"}
-            className="rounded-full"
-            onClick={() => setCurrentView("image")}
-          >
-            Image View
-          </Button>
-          <Button
-            appearance={currentView === "content" ? "solid" : "ghost"}
-            className="rounded-full"
-            onClick={() => setCurrentView("content")}
-          >
-            Content View
-          </Button>
-        </div>
-      </div>
-
+      <MobileViewSwitch
+        currentView={currentView}
+        onViewChange={setCurrentView}
+        options={[
+          { value: "image", label: "Image View" },
+          { value: "content", label: "Content View" },
+        ]}
+      />
       {/* Stats Summary Grid */}
       {audit.isPending ? (
         <div className="flex gap-4 *:grow">
@@ -150,59 +134,48 @@ export const AuditDetailsPage = () => {
           </span>
         </Card>
       ) : (
-        <div className="flex gap-4 *:grow">
-          <Card className="basis-2/5">
-            <CardHeader className="text-muted-foreground">
-              Top priority
-            </CardHeader>
-            <span className="text-h3">
-              {audit.data.content.audit_summary?.top_priority}
-            </span>
-          </Card>
-
+        <DashboardSummary>
+          <DashboardSummaryCard
+            title="Top priority"
+            value={audit.data.content.audit_summary?.top_priority}
+          />
           {[
             // {
             //   label: "Business health",
             //   value: audit.data.content.audit_summary.business_health_verdict,
-            //   accent: "--color-green-500",
+            //   className: "[--fg:var(--color-green-500)]",
             // },
             {
               label: "Top issues",
               value: audit.data.content.audit_summary?.critical_issues_count,
-              accent: "--color-red-500",
+              className: "[--fg:var(--color-red-500)]",
             },
             {
               label: "Quick wins",
               value: audit.data.content.audit_summary?.quick_wins_count,
-              accent: "--color-yellow-500",
+              className: "[--fg:var(--color-yellow-500)]",
             },
             {
               label: "Overall score",
               value: audit.data.content.audit_summary?.overall_score,
-              accent: "--color-blue-500",
+              className: "[--fg:var(--color-blue-500)]",
             },
             // {
             //   label: "Total findings",
             //   value: audit.data.content.audit_summary.total_findings,
-            //   accent: "--color-blue-500",
+            //   className: "[--fg:var(--color-blue-500)]",
             // },
           ].map((info) => (
-            <Card key={info.label} className="basis-1/5">
-              <div
-                className="flex size-7 items-center justify-center rounded-md bg-current/10 p-1.25"
-                style={{ color: `var(${info.accent})` }}
-              >
-                <Information />
-              </div>
-              <span className="text-h3">{info.value}</span>
-              <span className="font-medium text-muted-foreground text-sm">
-                {info.label}
-              </span>
-            </Card>
+            <DashboardSummaryCard
+              key={info.label}
+              title={info.label}
+              value={info.value}
+              icon={Information}
+              className={info.className}
+            />
           ))}
-        </div>
+        </DashboardSummary>
       )}
-
       {/* Main Content Columns */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Left Card: Discovered Problems */}
@@ -240,7 +213,6 @@ export const AuditDetailsPage = () => {
             </CardContent>
           </Card>
         </div>
-
         {/* Right Card: Report / Breakdown */}
         <div className={cn(isMobile && currentView !== "content" && "hidden")}>
           <Card className="flex h-full flex-col">
@@ -277,7 +249,6 @@ export const AuditDetailsPage = () => {
                   />
                 </ScrollArea>
               </CardHeader>
-
               <CardContent className="flex flex-col gap-6 pt-6">
                 {!audit.data?.content?.categories ? (
                   <div className="flex flex-col items-center gap-2 text-center">
@@ -300,6 +271,6 @@ export const AuditDetailsPage = () => {
           </Card>
         </div>
       </div>
-    </div>
+    </DashboardSlot>
   );
 };

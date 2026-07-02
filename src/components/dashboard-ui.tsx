@@ -92,6 +92,21 @@ export const DashboardDescription = (props: React.ComponentProps<"p">) => {
   );
 };
 
+export const DashboardSummary = ({
+  className,
+  ...props
+}: React.ComponentProps<"div">) => {
+  return (
+    <div
+      className={cn(
+        "grid grid-cols-[repeat(auto-fit,minmax(calc(var(--spacing)*40),1fr))] gap-4",
+        className,
+      )}
+      {...props}
+    />
+  );
+};
+
 export const DashboardSummaryCard = ({
   classNames,
   title,
@@ -117,16 +132,15 @@ export const DashboardSummaryCard = ({
   return (
     <Card
       {...props}
-      className={cn("min-w-35", classNames?.root, props.className)}
+      className={cn("md:min-w-35", classNames?.root, props.className)}
     >
       <CardHeader>
-        <CardTitle className="flex justify-between gap-4">
+        <CardTitle className="flex justify-between gap-2 max-md:flex-col-reverse md:gap-4">
           {title}
-
           {Icon && (
             <span
               className={cn(
-                "flex size-7 shrink-0 items-center justify-center rounded-lg bg-(--bg) text-(--fg,var(--color-white))",
+                "flex size-7 shrink-0 items-center justify-center rounded-lg bg-(--bg,color-mix(in_oklab,var(--fg,var(--color-primary))_10%,transparent)) text-(--fg,var(--color-primary))",
               )}
             >
               <Icon className="size-4" />
@@ -135,7 +149,7 @@ export const DashboardSummaryCard = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="mt-auto flex flex-col">
-        <span className="font-bold font-mono text-2xl text-foreground tracking-tight">
+        <span className="font-bold font-mono text-foreground text-xl tracking-tight md:text-2xl">
           {value}
         </span>
         {description && <CardDescription>{description}</CardDescription>}

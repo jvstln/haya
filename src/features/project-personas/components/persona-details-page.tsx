@@ -3,11 +3,18 @@ import { formatDistance } from "date-fns";
 import { Activity, ArrowLeft, Clock } from "iconsax-reactjs";
 import { Globe } from "lucide-react";
 import { useParams } from "next/navigation";
-import { DashboardSummaryCard } from "@/components/dashboard-ui";
+import { useState } from "react";
+import {
+  DashboardSlot,
+  DashboardSummary,
+  DashboardSummaryCard,
+} from "@/components/dashboard-ui";
 import { QueryState } from "@/components/query-states";
 import { RrwebReplay } from "@/components/rrweb-replay";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { MobileViewSwitch } from "@/components/ui/mobile-view-switch";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { resolveStatusColor } from "@/lib/color.util";
 import { cn } from "@/lib/utils";
 import type { Params } from "@/types";
@@ -19,6 +26,10 @@ export const PersonaDetailsPage = () => {
     useParams<Params<"/dashboard/projects/[projectId]/personas/[personaId]">>();
 
   const persona = usePersona(params);
+  const [currentView, setCurrentView] = useState<"replay" | "insights">(
+    "replay",
+  );
+  const isMobile = useBreakpoint("max-md");
 
   if (persona.isError) {
     return <QueryState query={persona} />;
@@ -36,7 +47,7 @@ export const PersonaDetailsPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 from-0% from-primary/20 via-transparent p-4 max-md:bg-linear-to-b">
+    <DashboardSlot className="max-md:pb-28">
       {/* Top Action Bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-4">
         <Button
@@ -67,7 +78,7 @@ export const PersonaDetailsPage = () => {
       </div>
 
       {/* Stats Summary Grid */}
-      <div className="flex gap-4 *:grow">
+      <DashboardSummary>
         <DashboardSummaryCard
           className="basis-2/5"
           title="Business Impact"
@@ -101,28 +112,48 @@ export const PersonaDetailsPage = () => {
           },
         ].map((info) => (
           <DashboardSummaryCard
-            className={cn("basis-1/5", info.className)}
             key={info.label}
+            className={cn("basis-1/5", info.className)}
             title={info.label}
             value={info.value}
             icon={info.icon}
             isLoading={persona.isPending}
           />
         ))}
-      </div>
+      </DashboardSummary>
+
+      {/* Control to switch between replay view and insights view only on mobile */}
+      <MobileViewSwitch
+        currentView={currentView}
+        onViewChange={setCurrentView}
+        options={[
+          { value: "replay", label: "Replay View" },
+          { value: "insights", label: "Insights View" },
+        ]}
+      />
 
       {/* Main Content Columns */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Left Column: Replay Player */}
-        <div className="flex min-w-0 flex-col lg:col-span-7">
+        <div
+          className={cn(
+            "flex min-w-0 flex-col lg:col-span-7",
+            isMobile && currentView !== "replay" && "hidden",
+          )}
+        >
           <RrwebReplay replayUrl={persona.data.representativeReplayUrl} />
         </div>
 
         {/* Right Column: Insights & Breakdown */}
-        <div className="flex min-w-0 flex-col lg:col-span-5">
+        <div
+          className={cn(
+            "flex min-w-0 flex-col lg:col-span-5",
+            isMobile && currentView !== "insights" && "hidden",
+          )}
+        >
           <PersonaDetailsViews persona={persona.data} />
         </div>
       </div>
-    </div>
+    </DashboardSlot>
   );
 };

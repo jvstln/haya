@@ -40,81 +40,52 @@ export const PersonasBehaviorSettings = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Automatic Option Row */}
-      {/* <Field orientation={"horizontal"}>
+    <div className="flex flex-col gap-2">
+      <Field orientation={"horizontal"}>
         <FieldContent>
-          <FieldLabel>Manual</FieldLabel>
-          <FieldDescription>Click to analyze behaviour now</FieldDescription>
+          <FieldLabel>
+            Analysis timing
+            {updatePersonasSettings.isPending && <Spinner />}
+          </FieldLabel>
+          <FieldDescription>
+            Set to receive behavioral analysis on preferred days
+          </FieldDescription>
         </FieldContent>
+      </Field>
 
-        <Checkbox
-          disabled={updatePersonasSettings.isPending}
-          checked={mode === "automatic"}
-          onCheckedChange={(checked) => {
-            if (checked) {
-              handleUpdatePersonasSettings({ type: "manual" });
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+        <Select
+          value={day}
+          onValueChange={(value) => {
+            if (value) {
+              handleUpdatePersonasSettings({
+                type: "automatic",
+                weekday: value,
+              });
             }
           }}
-        />
-      </Field> 
+        >
+          <SelectTrigger className="w-full sm:w-36">
+            <SelectValue placeholder="Select day" />
+          </SelectTrigger>
+          <SelectContent>
+            {weekdays.map(({ weekday }) => (
+              <SelectItem key={weekday} value={weekday}>
+                {weekday}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-      <Separator />
-      */}
-
-      <div className="flex flex-col gap-2">
-        <Field orientation={"horizontal"}>
-          <FieldContent>
-            <FieldLabel>
-              Analysis timing
-              {updatePersonasSettings.isPending && <Spinner />}
-            </FieldLabel>
-            <FieldDescription>
-              Set to receive behavioral analysis on preferred days
-            </FieldDescription>
-          </FieldContent>
-          {/* <Checkbox
-            disabled={updatePersonasSettings.isPending}
-            checked={mode === "manual"}
-            onCheckedChange={(checked) => {
-              if (checked) setMode("manual");
-            }}
-          /> */}
-        </Field>
-
-        <div className="flex gap-4">
-          <Select
-            value={day}
-            onValueChange={(value) => {
-              if (value) {
-                handleUpdatePersonasSettings({
-                  type: "automatic",
-                  weekday: value,
-                });
-              }
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select day" />
-            </SelectTrigger>
-            <SelectContent>
-              {weekdays.map(({ weekday }) => (
-                <SelectItem key={weekday} value={weekday}>
-                  {weekday}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Button
-            disabled={updatePersonasSettings.isPending}
-            onClick={() => {
-              handleUpdatePersonasSettings({ type: "manual" });
-            }}
-          >
-            Click to analyze now
-          </Button>
-        </div>
+        <Button
+          disabled={updatePersonasSettings.isPending}
+          onClick={() => {
+            handleUpdatePersonasSettings({ type: "manual" });
+          }}
+          className="w-full sm:w-auto"
+        >
+          Click to analyze now
+        </Button>
       </div>
     </div>
   );
