@@ -65,7 +65,7 @@ export default function GSAPGlobalAnimationProvider({
             e.target instanceof HTMLElement &&
             matches(
               e,
-              ":is(button, [data-slot=link-button], [role=button], [role=menuitem]):has(svg)",
+              ":is(button, [data-slot*=button], [role=button], [role=menuitem]):has(svg)",
             )
           )
         ) {

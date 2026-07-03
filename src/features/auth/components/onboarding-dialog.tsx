@@ -260,7 +260,7 @@ export const OnboardingFormDialog = ({
               isLoading={login.isPending || resendVerification.isPending}
             />
 
-            <div className="flex justify-between">
+            <div className="flex flex-wrap justify-between">
               <Button appearance="link" onClick={() => setView("signUpEmail")}>
                 Don't have an account? Sign up
               </Button>

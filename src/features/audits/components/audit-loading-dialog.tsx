@@ -57,6 +57,10 @@ const AnimatedLoadingText = () => {
         setCurrentText(gsap.utils.random(LOADING_MESSAGES));
       },
     });
+
+    return () => {
+      splitText.revert();
+    };
   }, [currentText]);
 
   return (

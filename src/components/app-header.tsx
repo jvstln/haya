@@ -6,7 +6,7 @@ import { useAuth } from "@/features/auth/auth.hook";
 import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 import { NotificationButton } from "@/features/notifications/components/notification-button";
 import { UserMenu } from "@/features/users/components/user-menu";
-import logo from "@/public/logo.svg";
+import logo from "@/public/logo-icon.svg";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 

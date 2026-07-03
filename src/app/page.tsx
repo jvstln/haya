@@ -1,5 +1,6 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import type React from "react";
 import { useEffect } from "react";
 import { AppHeader } from "@/components/app-header";
@@ -9,10 +10,12 @@ import {
   SidebarContentProvider,
 } from "@/components/providers/sidebar-content.provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { HayaSpinner } from "@/components/ui/spinner";
 import { useAuth } from "@/features/auth/auth.hook";
 import { useOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 import { NewProjectForm } from "@/features/projects/components/new-project-form";
 import { cn } from "@/lib/utils";
+import { useGlobalStore } from "@/stores";
 
 export default function Home() {
   // The user only sees this page if they are not logged in
@@ -42,6 +45,27 @@ export default function Home() {
       window.removeEventListener("click", authInterceptor, { capture: true });
   }, [view, setView, auth.isAuthenticated]);
   // -----------
+
+  // ----- Show welcome page on first visit -----
+  const isFirstTimeUser = useGlobalStore((state) => state.isFirstTimeUser);
+  const isGlobalStoreHydrated = useGlobalStore((state) => state.hasHydrated);
+
+  if (auth.isPending || !isGlobalStoreHydrated) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center">
+        <HayaSpinner />
+      </div>
+    );
+  }
+
+  if (!auth.isAuthenticated && isFirstTimeUser) {
+    redirect("/auth/welcome");
+  }
+  // --------------------------------------------
+
+  if (auth.isAuthenticated) {
+    redirect("/dashboard");
+  }
 
   return (
     <SidebarContentProvider value={defaultSidebarContent}>

@@ -28,7 +28,7 @@ const useGSAPWrapper = (...wrapperArgs: Parameters<typeof useGSAP>) => {
       });
 
       if (typeof contextFunction === "function") {
-        contextFunction(...args);
+        return contextFunction(...args);
       }
     },
     config ??
