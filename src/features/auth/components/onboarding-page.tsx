@@ -134,10 +134,11 @@ export default function OnboardingPage() {
         .to(previousSplitText.words, {
           autoAlpha: 0,
           stagger: {
-            each: 0.03,
+            amount: 0.05,
             from: "end",
             ease: "power1.inOut",
           },
+          duration: 0.1,
         })
         .to(
           previousIndicator,
@@ -151,15 +152,16 @@ export default function OnboardingPage() {
       // Enter animation
       gsap
         .timeline()
-        .to(currentContent, { autoAlpha: 1 }, 0)
+        .set(currentContent, { autoAlpha: 1 }, 0)
         .to(
           currentSplitText.words,
           {
             autoAlpha: 1,
             stagger: {
-              each: 0.03,
+              amount: 0.05,
               ease: "power1.inOut",
             },
+            duration: 0.1,
           },
           0,
         )
@@ -249,8 +251,9 @@ export default function OnboardingPage() {
           >
             {/* Content wrapper */}
             <div className="relative">
+              {/* Split text animation disabled. Uncomment to enable */}
               {/* Current content  */}
-              <div className="flex flex-col items-center gap-4">
+              {/* <div className="flex flex-col items-center gap-4">
                 <h1 className="invisible text-h3" data-slot="current-title">
                   {currentSlide.title}
                 </h1>
@@ -260,9 +263,9 @@ export default function OnboardingPage() {
                 >
                   {currentSlide.description}
                 </p>
-              </div>
+              </div> */}
               {/* Previous content  */}
-              {previousSlide && (
+              {/* {previousSlide && (
                 <div className="absolute top-0 flex flex-col items-center gap-4">
                   <h1
                     className="gsap-reveal text-h3"
@@ -277,11 +280,17 @@ export default function OnboardingPage() {
                     {previousSlide.description}
                   </p>
                 </div>
-              )}
+              )} */}
+              <div className="flex flex-col items-center gap-4">
+                <h1 className="text-h3">{currentSlide.title}</h1>
+                <p className="text-muted-foreground text-sm">
+                  {currentSlide.description}
+                </p>
+              </div>
             </div>
 
             {/* Progress indicator */}
-            <div className="flex gap-2 self-stretch">
+            <div className="flex justify-center gap-2 self-stretch">
               {slides.map((slide, i) => {
                 return (
                   <button
@@ -290,7 +299,7 @@ export default function OnboardingPage() {
                     onClick={() => handleStep(i)}
                     data-slot={`indicator-${i}`}
                     className={cn(
-                      "relative h-1 w-full max-w-18 grow overflow-hidden rounded-md bg-muted [--scale:0]",
+                      "relative h-1 w-full min-w-4 max-w-18 grow overflow-hidden rounded-md bg-muted [--scale:0]",
                       "before:absolute before:inset-y-0 before:left-0 before:w-full before:origin-(--origin) before:scale-x-(--scale) before:bg-primary",
                       index.previous === i && "[--scale:1]",
                     )}
