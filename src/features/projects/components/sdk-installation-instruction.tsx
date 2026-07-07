@@ -4,7 +4,7 @@ import { Globe, Smartphone } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { NextJsIcon, ReactIcon, VueJsIcon } from "@/components/icons";
-import { CodeBlock } from "@/components/ui/code-block";
+import { CodeBlock, type SupportedLanguages } from "@/components/ui/code-block";
 import { SDK_NAME } from "@/data/constants";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +25,7 @@ type PlatformOption = {
     title: string;
     description: string;
     code: string;
-    language: string;
+    language: SupportedLanguages;
     filename?: string;
     lineNumbers?: boolean;
   }>;

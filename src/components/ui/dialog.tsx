@@ -57,9 +57,9 @@ function DialogContent({
         {/* To make dialog content scrollable, add a fixed height or h-full to the className */}
         <ScrollArea
           className={cn(
-            "[--padding:calc(var(--spacing)*8)]",
+            "[--padding:--spacing(4)] md:[--padding:--spacing(8)]",
             "data-open:fade-in-0 data-open:zoom-in-95 data-closed:fade-out-0 data-closed:zoom-out-95 z-50 grid max-h-[calc(100%-2rem)] w-full max-w-[calc(100%-2rem)] gap-6 rounded-xl bg-popover p-(--padding) text-popover-foreground text-sm outline-none ring-1 ring-foreground/10 duration-100 data-closed:animate-out data-open:animate-in sm:max-w-3xl",
-            // "*:rounded-none",
+            "*:rounded-none",
             className,
           )}
         >
@@ -110,7 +110,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        "mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
         className,
       )}
       {...props}

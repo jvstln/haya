@@ -50,7 +50,7 @@ export const NewProjectForm = ({ onSuccess }: NewProjectFormProps) => {
   };
 
   return (
-    <div data-slot="dashboard-slot" className="mx-auto max-w-4xl py-6">
+    <div>
       <div className="mb-8 flex flex-col gap-2">
         <h1 className="font-bold text-foreground text-h3">
           Set Up Behavioral Tracking SDK
@@ -180,7 +180,7 @@ interface StepTwoProps {
 
 const StepTwo = ({ project, onBack, onNext }: StepTwoProps) => {
   return (
-    <Card>
+    <Card className="max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:hover:bg-transparent">
       <CardHeader>
         <CardTitle className="text-xl">Integrate Haya in Minutes</CardTitle>
         <CardDescription>

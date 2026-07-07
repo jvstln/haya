@@ -1,11 +1,22 @@
 "use client";
 
-import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, File, Terminal, XIcon } from "lucide-react";
 import type * as React from "react";
+import { siHtml5, siTypescript } from "simple-icons";
 import { Button } from "@/components/ui/button";
 import { useCopyToClipboard } from "@/hooks/use-clipboard";
 import { cn } from "@/lib/utils";
+import { SimpleIcon } from "../icons";
 import { ScrollArea, ScrollBar } from "./scroll-area";
+
+const languages = {
+  typescript: { icon: <SimpleIcon icon={siTypescript} /> },
+  html: { icon: <SimpleIcon icon={siHtml5} /> },
+  bash: { icon: <Terminal /> },
+  plaintext: { icon: <File /> },
+};
+
+export type SupportedLanguages = keyof typeof languages;
 
 export type CodeBlockProps = Pick<
   React.HTMLAttributes<HTMLDivElement>,
@@ -14,7 +25,7 @@ export type CodeBlockProps = Pick<
   /** The raw code string to display and copy. */
   code: string;
   /** Optional language hint (e.g. "typescript", "html"). */
-  language?: string;
+  language?: SupportedLanguages;
   /** Optional filename to display in a header bar. */
   filename?: string;
   /** Show line numbers. */
@@ -86,6 +97,7 @@ export function CodeBlock({
   );
 
   const lines = lineNumbers && code ? code.split("\n") : null;
+  const truncatedFilename = filename?.replace(/.*\/([\w.]+)$/, "$1");
 
   return (
     <div
@@ -100,23 +112,19 @@ export function CodeBlock({
       {hasHeader && (
         <div className="flex items-center justify-between border-secondary border-b px-4 py-2 text-muted-foreground text-xs">
           <div className="flex items-center gap-2">
-            <span className="flex gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-zinc-700" />
-              <span className="h-2.5 w-2.5 rounded-full bg-zinc-700" />
-              <span className="h-2.5 w-2.5 rounded-full bg-zinc-700" />
-            </span>
+            {language && (
+              <span className="font-sans text-zinc-500 uppercase tracking-widest *:size-4">
+                {languages[language].icon}
+              </span>
+            )}
             {filename && (
               <span className="font-medium font-sans text-foreground">
-                {filename}
+                <span className="hidden md:inline">{filename}</span>
+                <span className="inline md:hidden">{truncatedFilename}</span>
               </span>
             )}
           </div>
           <div className="flex items-center gap-2">
-            {language && (
-              <span className="font-sans text-[10px] text-zinc-500 uppercase tracking-widest">
-                {language}
-              </span>
-            )}
             {showInlineCopy && renderCopyButton("inline")}
           </div>
         </div>

@@ -5,6 +5,7 @@ import type React from "react";
 import { useEffect } from "react";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
+import { DashboardSlot } from "@/components/dashboard-ui";
 import {
   defaultSidebarContent,
   SidebarContentProvider,
@@ -77,7 +78,9 @@ export default function Home() {
         <div className="flex min-h-[calc(100vh-var(--header-height))] w-full flex-1">
           <AppSidebar />
           <main className={cn("relative flex w-full min-w-0 flex-1 flex-col")}>
-            <NewProjectForm />
+            <DashboardSlot>
+              <NewProjectForm />
+            </DashboardSlot>
           </main>
         </div>
       </SidebarProvider>
