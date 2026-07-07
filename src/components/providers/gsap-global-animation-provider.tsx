@@ -72,8 +72,8 @@ export default function GSAPGlobalAnimationProvider({
           return;
         }
 
-        const tl = getScopedTimeline(e.target);
-        tl.restart();
+        // const tl = getScopedTimeline(e.target);
+        // tl.restart();
       };
 
       const controller = new AbortController();
