@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
@@ -10,7 +9,6 @@ import {
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { useAuth } from "@/features/auth/auth.hook";
-import { useOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
 import { cn } from "@/lib/utils";
 
 const HEADER_HEIGHT = "70px";
@@ -19,13 +17,6 @@ export default function DashboardLayout({
   children,
 }: LayoutProps<"/dashboard">) {
   const auth = useAuth();
-  const { view, setView } = useOnboardingFormDialogView();
-
-  useEffect(() => {
-    if (!auth.isAuthenticated && view === null) {
-      setView("login");
-    }
-  }, [auth.isAuthenticated, view, setView]);
 
   if (auth.isPending) {
     return (

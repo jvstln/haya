@@ -302,25 +302,6 @@ export function RrwebReplay({ replayUrl }: RrwebReplayProps) {
   // ── Progress ratio ──────────────────────────────────────────────
   const progress = totalTime > 0 ? Math.min(1, currentTime / totalTime) : 0;
 
-  // ── Empty state ─────────────────────────────────────────────────
-  if (!replayUrl || isEmpty(events.data)) {
-    return (
-      <Card>
-        <QueryState
-          query={{ data: {} }}
-          getIsEmpty={(query) => ({
-            query,
-            title: "Replay not available",
-            description: !replayUrl
-              ? "There is no session recording replay associated with this persona."
-              : "The session recording file was empty or could not be loaded.",
-            cta: null,
-          })}
-        />
-      </Card>
-    );
-  }
-
   // ── Error state ─────────────────────────────────────────────────
   if (error || events.isError) {
     return (
@@ -343,6 +324,25 @@ export function RrwebReplay({ replayUrl }: RrwebReplayProps) {
             <Skeleton className="h-4 w-16 rounded" />
           </div>
         </CardContent>
+      </Card>
+    );
+  }
+
+  // ── Empty state ─────────────────────────────────────────────────
+  if (!replayUrl || isEmpty(events.data)) {
+    return (
+      <Card>
+        <QueryState
+          query={{ data: {} }}
+          getIsEmpty={(query) => ({
+            query,
+            title: "Replay not available",
+            description: !replayUrl
+              ? "There is no session recording replay associated with this persona."
+              : "The session recording file was empty or could not be loaded.",
+            cta: null,
+          })}
+        />
       </Card>
     );
   }

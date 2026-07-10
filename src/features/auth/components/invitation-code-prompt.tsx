@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { api } from "@/lib/api";
 
 type InvitationStore = {
   open: boolean;
@@ -19,24 +21,43 @@ type InvitationStore = {
   reject: ((reason?: unknown) => void) | null;
 };
 
-export const useInvitationStore = create<InvitationStore>(() => ({
-  open: false,
-  code: "",
-  reject: null,
-  resolve: null,
-}));
+export const useInvitationStore = create<InvitationStore>()(
+  persist(
+    (): InvitationStore => ({
+      open: false,
+      code: "",
+      reject: null,
+      resolve: null,
+    }),
+    {
+      name: "haya.invitationCode",
+      partialize: ({ code }) => ({ code }),
+    },
+  ),
+);
 
 export const getInvitationCode = async () => {
+  let code: string = useInvitationStore.getState().code;
+
+  if (code) {
+    // Validate and return code if valid
+    try {
+      const response = await api.post("/beta/validate", { code });
+      if (response.data?.valid) {
+        return {
+          code,
+        };
+      }
+    } catch {}
+  }
+
   const { promise, resolve, reject } = Promise.withResolvers<string>();
 
   useInvitationStore.setState({
     open: true,
-    code: "",
     resolve: resolve,
     reject: reject,
   });
-
-  let code: string;
 
   try {
     code = await promise;

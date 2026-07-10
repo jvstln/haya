@@ -39,22 +39,24 @@ export const AuditPage = () => {
       </DashboardHeader>
 
       <div className="-mt-2 flex items-center justify-between gap-1">
-        <Button
-          appearance={view === "sessionReplay" ? "solid" : "ghost"}
-          color="secondary"
-          size="sm"
-          onClick={() => setView("sessionReplay")}
-        >
-          Session replay
-        </Button>
-        <Button
-          appearance={view === "heatmap" ? "solid" : "ghost"}
-          color="secondary"
-          size="sm"
-          onClick={() => setView("heatmap")}
-        >
-          Heatmap
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            appearance={view === "sessionReplay" ? "solid" : "ghost"}
+            color="secondary"
+            size="sm"
+            onClick={() => setView("sessionReplay")}
+          >
+            Session replay
+          </Button>
+          <Button
+            appearance={view === "heatmap" ? "solid" : "ghost"}
+            color="secondary"
+            size="sm"
+            onClick={() => setView("heatmap")}
+          >
+            Heatmap
+          </Button>
+        </div>
 
         <InputSearch
           placeholder="Search audits"

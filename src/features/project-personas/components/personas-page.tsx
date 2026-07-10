@@ -5,6 +5,7 @@ import { Clock, Flame, Globe, ShieldAlert, Target, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import {
   DashboardSlot,
+  DashboardSummary,
   DashboardSummaryCard,
   DashboardTitle,
 } from "@/components/dashboard-ui";
@@ -38,9 +39,7 @@ export const PersonasPage = () => {
     <DashboardSlot>
       <DashboardTitle>Grouped Personas</DashboardTitle>
 
-      {/* Analytics KPI Dashboard Panel */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(calc(var(--spacing)*40),1fr))] gap-4">
-        {/* Top Visited Page card */}
+      <DashboardSummary>
         <DashboardSummaryCard
           title="Top Priority"
           value={
@@ -107,7 +106,7 @@ export const PersonasPage = () => {
             />
           );
         })}
-      </div>
+      </DashboardSummary>
 
       {/* Main Behavioral Sessions Card */}
       <Card className="flex flex-col gap-6 p-6">

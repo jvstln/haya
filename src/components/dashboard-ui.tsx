@@ -99,7 +99,7 @@ export const DashboardSummary = ({
   return (
     <div
       className={cn(
-        "grid grid-cols-[repeat(auto-fit,minmax(calc(var(--spacing)*40),1fr))] gap-4",
+        "grid grid-cols-[repeat(auto-fit,minmax(--spacing(40),1fr))] gap-4",
         className,
       )}
       {...props}
@@ -123,6 +123,11 @@ export const DashboardSummaryCard = ({
   icon?: Icon;
   isLoading?: boolean;
 }) => {
+  const valueLength =
+    typeof value === "string" || typeof value === "number"
+      ? String(value).length
+      : 0;
+
   if (isLoading) {
     return (
       <Skeleton className={cn("h-24", classNames?.root, props.className)} />
@@ -135,7 +140,7 @@ export const DashboardSummaryCard = ({
       className={cn("md:min-w-35", classNames?.root, props.className)}
     >
       <CardHeader>
-        <CardTitle className="flex justify-between gap-2 max-md:flex-col-reverse md:gap-4">
+        <CardTitle className="flex justify-between gap-2 font-semibold text-muted-foreground text-sm max-md:flex-col-reverse md:gap-4">
           {title}
           {Icon && (
             <span
@@ -149,7 +154,18 @@ export const DashboardSummaryCard = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="mt-auto flex flex-col">
-        <span className="font-bold font-mono text-foreground text-xl tracking-tight md:text-2xl">
+        <span
+          className="font-mono text-foreground tracking-tight"
+          style={
+            {
+              "--length": valueLength,
+              fontSize:
+                "clamp(var(--text-xs), calc( 1.375rem - var(--length) * (var(--spacing) * 0.1)), var(--text-lg))",
+              lineHeight:
+                "clamp(1.125rem, calc( 2.25rem - var(--length) * (var(--spacing) * 0.2)), 1.75rem)",
+            } as React.CSSProperties
+          }
+        >
           {value}
         </span>
         {description && <CardDescription>{description}</CardDescription>}

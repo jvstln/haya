@@ -1,7 +1,10 @@
 "use client";
 
 import { Activity, Globe, Play, Users, Zap } from "lucide-react";
-import { DashboardSummaryCard } from "@/components/dashboard-ui";
+import {
+  DashboardSummary,
+  DashboardSummaryCard,
+} from "@/components/dashboard-ui";
 import { QueryState } from "@/components/query-states";
 import {
   Card,
@@ -122,8 +125,7 @@ export const ProjectOverview = ({ projectId }: ProjectOverviewProps) => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Analytics KPI Metric Cards */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <DashboardSummary>
         {metrics.map((metric) => {
           return (
             <DashboardSummaryCard
@@ -135,7 +137,7 @@ export const ProjectOverview = ({ projectId }: ProjectOverviewProps) => {
             />
           );
         })}
-      </div>
+      </DashboardSummary>
 
       {/* Main Content Layout Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

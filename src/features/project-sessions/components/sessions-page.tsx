@@ -4,6 +4,7 @@ import { Clock, Flame, Globe, ShieldAlert, Target, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   DashboardSlot,
+  DashboardSummary,
   DashboardSummaryCard,
   DashboardTitle,
 } from "@/components/dashboard-ui";
@@ -51,9 +52,7 @@ export const SessionsPage = ({ projectId }: ProjectSessionsPageProps) => {
     <DashboardSlot>
       <DashboardTitle>Recorded Sessions</DashboardTitle>
 
-      {/* Analytics KPI Dashboard Panel */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-7">
-        {/* Top Visited Page card */}
+      <DashboardSummary>
         <DashboardSummaryCard
           title="Top Visited Page"
           value={
@@ -112,7 +111,7 @@ export const SessionsPage = ({ projectId }: ProjectSessionsPageProps) => {
             />
           );
         })}
-      </div>
+      </DashboardSummary>
 
       {/* Main Behavioral Sessions Card */}
       <Card className="flex flex-col gap-6 p-6">

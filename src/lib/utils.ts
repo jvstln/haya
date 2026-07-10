@@ -5,7 +5,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getInitials(name: string) {
+export function getInitials(name: string | null) {
+  if (!name) return "";
+  
   let initials = name
     .split(" ")
     .map((n) => n[0])
