@@ -22,17 +22,17 @@ import { gsap, useGSAP } from "@/lib/gsap.util";
 import { cn } from "@/lib/utils";
 import { useExportPdf } from "../audit.hook";
 import type { Audit } from "../audit.type";
-import { ShareFindingsBanner } from "./share-findings-banner";
+import { DownloadFindingsBanner } from "./download-findings-banner";
 
-type ShareFindingsDialogProps = React.ComponentProps<typeof Dialog> & {
+type DownloadFindingsDialogProps = React.ComponentProps<typeof Dialog> & {
   audit?: Audit;
   children?: React.ReactElement;
 };
 
-export const ShareFindingsDialog = ({
+export const DownloadFindingsDialog = ({
   audit,
   ...props
-}: ShareFindingsDialogProps) => {
+}: DownloadFindingsDialogProps) => {
   const [email, setEmail] = useState("");
 
   const exportPdf = useExportPdf();
@@ -58,7 +58,7 @@ export const ShareFindingsDialog = ({
       )}
       <DialogContent className="flex flex-col overflow-hidden">
         <DialogHeader className="">
-          <DialogTitle>Share Findings</DialogTitle>
+          <DialogTitle>Download Findings</DialogTitle>
           <DialogDescription>
             Get a customized audit template to share with your team
           </DialogDescription>
@@ -117,7 +117,7 @@ export const ShareFindingsDialog = ({
 
           {/* Right Column: Preview Card */}
           <div className="flex flex-1 items-center justify-center bg-transparent p-8">
-            <ShareFindingsBanner />
+            <DownloadFindingsBanner />
           </div>
         </div>
       </DialogContent>

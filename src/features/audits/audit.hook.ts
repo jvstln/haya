@@ -102,6 +102,37 @@ export const useStaticPreAuditInfo = () => {
   return usePreAuditInfo({ url: window.location.origin });
 };
 
+export const useUpdateAuditShareStatus = () => {
+  return useMutation({
+    mutationFn: AuditService.updateShareAudit,
+    onMutate: () => {
+      toast.loading("Updating audit share status...", {
+        id: "update-audit-share-status",
+        description: "",
+      });
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`, {
+        id: "update-audit-share-status",
+      });
+    },
+    onSuccess: (data) => {
+      if (data.isShared) {
+        toast.success("Audit public link created successfully", {
+          description: "Anyone with this link can view the audit report.",
+          id: "update-audit-share-status",
+        });
+      } else {
+        toast.success("Audit public link REVOKED successfully", {
+          description: "No one can can view this audit report.",
+          id: "update-audit-share-status",
+        });
+      }
+      invalidateAuditQueries();
+    },
+  });
+};
+
 export function invalidateAuditQueries() {
   ["audits", "audit"].map((key) =>
     queryClient.invalidateQueries({ queryKey: [key] }),

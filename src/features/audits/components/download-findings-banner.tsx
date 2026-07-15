@@ -1,6 +1,6 @@
 import type React from "react";
 
-export const ShareFindingsBanner = ({
+export const DownloadFindingsBanner = ({
   ...props
 }: React.SVGProps<SVGSVGElement>) => (
   <svg

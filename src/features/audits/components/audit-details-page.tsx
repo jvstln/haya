@@ -31,14 +31,17 @@ import { getIsAuditInProgress } from "../audit.service";
 import { AuditDetailsImage } from "./audit-details-image";
 import { ConversionOptimization } from "./audit-details-views";
 import { AuditLoadingDialog } from "./audit-loading-dialog";
-import { ShareFindingsDialog } from "./share-findings-dialog";
+import { DownloadFindingsDialog } from "./download-findings-dialog";
+import { ShareFindingsPopover } from "./share-findings-popover";
 
-export const AuditDetailsPage = () => {
+type AuditDetailsPageProps = { auditId?: string };
+
+export const AuditDetailsPage = ({ auditId }: AuditDetailsPageProps) => {
   const params = useParams();
   const [currentView, setCurrentView] = useState<"image" | "content">("image");
   const isMobile = useBreakpoint("max-md");
 
-  const audit = useAudit(String(params.auditId));
+  const audit = useAudit(String(auditId ?? params.auditId));
 
   if (audit.isError) {
     return (
@@ -85,7 +88,7 @@ export const AuditDetailsPage = () => {
     <DashboardSlot className="max-md:pb-28">
       {/* Top Action Bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-4">
-        <Button href="/dashboard/track-experience" appearance="soft">
+        <Button href="/dashboard/track-experience" appearance="soft" size="sm">
           <ArrowLeft className="mr-1 size-4" />
           Back
         </Button>
@@ -100,12 +103,20 @@ export const AuditDetailsPage = () => {
         {auditType && (
           <Badge className="bg-[#FFAFA499]">{auditType.label}</Badge>
         )}
-        <ShareFindingsDialog audit={audit.data}>
-          <Button appearance="soft" className="ml-auto">
+
+        <ShareFindingsPopover audit={audit.data}>
+          <Button appearance="soft" className="ml-auto" size="sm">
+            <Share />
+            Share findings
+          </Button>
+        </ShareFindingsPopover>
+
+        <DownloadFindingsDialog audit={audit.data}>
+          <Button appearance="soft" size="sm">
             <Share />
             Download findings
           </Button>
-        </ShareFindingsDialog>
+        </DownloadFindingsDialog>
       </div>
       {/* Control to switch between image view and content view only on mobile */}
       <MobileViewSwitch
@@ -203,7 +214,7 @@ export const AuditDetailsPage = () => {
                       />
                     ))
                   )}
-                  {getIsAuditInProgress(audit.data) && (
+                  {getIsAuditInProgress(audit.data) && !audit.isPending && (
                     <div className="flex flex-col items-center gap-2 py-4">
                       <HayaSpinner classNames={{ spinner: "size-8" }} />
                     </div>

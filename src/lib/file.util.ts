@@ -17,3 +17,4 @@ export const downloadFile = (file: File | Blob, filename: string) => {
   downloadLink(url, filename);
   URL.revokeObjectURL(url);
 };
+

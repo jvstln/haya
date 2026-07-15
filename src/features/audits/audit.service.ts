@@ -46,6 +46,14 @@ async function getAudits(params?: AuditFilters) {
 }
 
 async function getAudit(auditId: string) {
+  // Check if it is a not valid object id => it is probably a token for viewing public audits
+  if (auditId.length > 24) {
+    const response = await api.get<{ data: Audit }>(
+      `/share/analysis/${auditId}`,
+    );
+    return response.data.data;
+  }
+
   const response = await api.get<Audit>(`/analyze/analysis/${auditId}`);
   return response.data;
 }
@@ -80,6 +88,20 @@ async function getPreAuditInfo(payload: { url: string }) {
   return response.data as PreAuditInfo;
 }
 
+async function updateShareAudit(params: { auditId: string; enabled: boolean }) {
+  if (params.enabled) {
+    const response = await api.post<{
+      data: { shareToken: string; isShared: boolean };
+    }>(`/analyze/analysis/${params.auditId}/share`);
+    return response.data.data;
+  }
+
+  const response = await api.delete<{
+    data: { shareToken: undefined; isShared: boolean };
+  }>(`/analyze/analysis/${params.auditId}/share`);
+  return response.data.data;
+}
+
 /** Returns true if audit is in progress or pending or NOT YET DEFINED */
 function getIsAuditInProgress(audit?: Audit) {
   if (!audit) return true;
@@ -94,5 +116,6 @@ export {
   deleteAudit,
   exportPdf,
   getPreAuditInfo,
+  updateShareAudit,
   getIsAuditInProgress,
 };
