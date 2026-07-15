@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getInitials(name: string | null) {
   if (!name) return "";
-  
+
   let initials = name
     .split(" ")
     .map((n) => n[0])

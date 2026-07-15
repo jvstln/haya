@@ -202,7 +202,7 @@ export default function OnboardingPage() {
   };
 
   const currentSlide = slides[index.current];
-  const previousSlide = slides[index.previous];
+  const _previousSlide = slides[index.previous];
 
   return (
     <div

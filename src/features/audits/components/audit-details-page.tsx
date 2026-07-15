@@ -1,12 +1,8 @@
 "use client";
-import { ArrowLeft, Information, Share, Warning2 } from "iconsax-reactjs";
+import { ArrowLeft, Share, Warning2 } from "iconsax-reactjs";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import {
-  DashboardSlot,
-  DashboardSummary,
-  DashboardSummaryCard,
-} from "@/components/dashboard-ui";
+import { DashboardSlot } from "@/components/dashboard-ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +16,6 @@ import {
 } from "@/components/ui/empty";
 import { MobileViewSwitch } from "@/components/ui/mobile-view-switch";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/features/auth/auth.hook";
@@ -44,7 +39,7 @@ export const AuditDetailsPage = ({ auditId }: AuditDetailsPageProps) => {
   const isMobile = useBreakpoint("max-md");
 
   const audit = useAudit(String(auditId ?? params.auditId));
-  const auth = useAuth();
+  const _auth = useAuth();
 
   if (audit.isError) {
     return (

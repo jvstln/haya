@@ -20,7 +20,7 @@ export default function GSAPGlobalAnimationProvider({
         );
       };
 
-      const getScopedTimeline = (element: HTMLElement): gsap.core.Timeline => {
+      const _getScopedTimeline = (element: HTMLElement): gsap.core.Timeline => {
         let tl = timelinesRef.get(element);
         if (tl) {
           return tl;

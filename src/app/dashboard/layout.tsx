@@ -3,7 +3,9 @@ import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { useAuth } from "@/features/auth/auth.hook";
 
-export default function DashboardLayoutRoute({ children }: LayoutProps<"/dashboard">) {
+export default function DashboardLayoutRoute({
+  children,
+}: LayoutProps<"/dashboard">) {
   const auth = useAuth();
 
   if (auth.isPending) {
