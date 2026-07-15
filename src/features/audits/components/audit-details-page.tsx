@@ -23,12 +23,14 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HayaSpinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/features/auth/auth.hook";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cn } from "@/lib/utils";
 import { useAudit } from "../audit.hook";
 import { auditTypes } from "../audit.schema";
 import { getIsAuditInProgress } from "../audit.service";
 import { AuditDetailsImage } from "./audit-details-image";
+import { AuditDetailsSummary } from "./audit-details-summary";
 import { ConversionOptimization } from "./audit-details-views";
 import { AuditLoadingDialog } from "./audit-loading-dialog";
 import { DownloadFindingsDialog } from "./download-findings-dialog";
@@ -42,6 +44,7 @@ export const AuditDetailsPage = ({ auditId }: AuditDetailsPageProps) => {
   const isMobile = useBreakpoint("max-md");
 
   const audit = useAudit(String(auditId ?? params.auditId));
+  const auth = useAuth();
 
   if (audit.isError) {
     return (
@@ -127,66 +130,9 @@ export const AuditDetailsPage = ({ auditId }: AuditDetailsPageProps) => {
           { value: "content", label: "Content View" },
         ]}
       />
-      {/* Stats Summary Grid */}
-      {audit.isPending ? (
-        <div className="flex gap-4 *:grow">
-          {Array.from({ length: 4 }).map((_, idx) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: Element uniqueness doesnt matter
-            <Skeleton key={idx} className="h-24" />
-          ))}
-        </div>
-      ) : !audit.data.content?.audit_summary ? (
-        <Card className="items-center text-center">
-          <CardTitle className="text-amber-500 text-h3">
-            No summary info collected
-          </CardTitle>
-          <span className="text-amber-300">
-            You can try analyzing the url again.
-          </span>
-        </Card>
-      ) : (
-        <DashboardSummary>
-          <DashboardSummaryCard
-            title="Top priority"
-            value={audit.data.content.audit_summary?.top_priority}
-          />
-          {[
-            // {
-            //   label: "Business health",
-            //   value: audit.data.content.audit_summary.business_health_verdict,
-            //   className: "[--fg:var(--color-green-500)]",
-            // },
-            {
-              label: "Top issues",
-              value: audit.data.content.audit_summary?.critical_issues_count,
-              className: "[--fg:var(--color-red-500)]",
-            },
-            {
-              label: "Quick wins",
-              value: audit.data.content.audit_summary?.quick_wins_count,
-              className: "[--fg:var(--color-yellow-500)]",
-            },
-            {
-              label: "Overall score",
-              value: audit.data.content.audit_summary?.overall_score,
-              className: "[--fg:var(--color-blue-500)]",
-            },
-            // {
-            //   label: "Total findings",
-            //   value: audit.data.content.audit_summary.total_findings,
-            //   className: "[--fg:var(--color-blue-500)]",
-            // },
-          ].map((info) => (
-            <DashboardSummaryCard
-              key={info.label}
-              title={info.label}
-              value={info.value}
-              icon={Information}
-              className={info.className}
-            />
-          ))}
-        </DashboardSummary>
-      )}
+
+      <AuditDetailsSummary audit={audit} />
+
       {/* Main Content Columns */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Left Card: Discovered Problems */}

@@ -36,9 +36,9 @@ type QueryStateProps<
 };
 
 type EmptyStateProps = {
-  title: React.ReactNode;
-  description: React.ReactNode;
-  cta: React.ReactNode;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  cta?: React.ReactNode;
 };
 
 /**
