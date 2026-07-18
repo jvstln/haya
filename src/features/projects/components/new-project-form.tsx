@@ -159,7 +159,7 @@ const StepOne = ({ onSubmit, isPending }: StepOneProps) => {
           </Field>
 
           <div className="mt-2 flex justify-end border-zinc-800 border-t pt-4">
-            <Button type="submit" isLoading={isPending}>
+            <Button type="submit" isLoading={isPending} data-require-auth>
               Continue
               <ArrowRight />
             </Button>

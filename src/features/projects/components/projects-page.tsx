@@ -30,21 +30,13 @@ import { SdkInstallationInstruction } from "./sdk-installation-instruction";
 
 const ProjectsPage = () => {
   const { filters, setFilters, originalFilters } = useFilters<ProjectFilters>();
-  const projectsQuery = useProjects(filters);
+  const projects = useProjects(filters);
   const deleteProjectMutation = useDeleteProject();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [setupProject, setSetupProject] = useState<Project | null>(null);
   const [editProject, setEditProject] = useState<Project | null>(null);
   const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
-
-  const searchLower = (originalFilters.search || "").toLowerCase();
-  const projects =
-    projectsQuery.data?.filter(
-      (p) =>
-        p.name.toLowerCase().includes(searchLower) ||
-        p.domain.toLowerCase().includes(searchLower),
-    ) ?? [];
 
   return (
     <DashboardSlot>
@@ -56,6 +48,7 @@ const ProjectsPage = () => {
         <Button
           onClick={() => setCreateOpen(true)}
           className="animate-border-glow rounded-full"
+          data-require-auth
         >
           <Plus />
           Create project
@@ -65,7 +58,7 @@ const ProjectsPage = () => {
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Badge color="secondary" className="rounded-full">
-            {projectsQuery.data ? `${projects.length} total` : "Loading..."}
+            {projects.data ? `${projects.data.length} total` : "Loading..."}
           </Badge>
         </div>
 
@@ -79,38 +72,35 @@ const ProjectsPage = () => {
         />
       </div>
 
-      <QueryState query={projectsQuery}>
-        {projects.length === 0 ? (
-          <QueryState
-            query={{}}
-            getIsEmpty={() => ({
-              title: "No projects found",
-              description:
-                "Create a project to obtain an SDK tracking key and configure tracking settings.",
-              cta: (
-                <Button
-                  onClick={() => setCreateOpen(true)}
-                  appearance="outline"
-                  color="secondary"
-                >
-                  Create your first project
-                </Button>
-              ),
-            })}
-          />
-        ) : (
-          <div className="flex flex-wrap gap-6">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project._id}
-                project={project}
-                onSetup={setSetupProject}
-                onConfigure={setEditProject}
-                onDelete={setDeleteProjectId}
-              />
-            ))}
-          </div>
-        )}
+      <QueryState
+        query={projects}
+        getIsEmpty={() => ({
+          title: "No projects found",
+          description:
+            "Create a project to obtain an SDK tracking key and configure tracking settings.",
+          cta: (
+            <Button
+              onClick={() => setCreateOpen(true)}
+              appearance="outline"
+              color="secondary"
+              data-require-auth
+            >
+              Create your first project
+            </Button>
+          ),
+        })}
+      >
+        <div className="flex flex-wrap gap-6">
+          {projects.data?.map((project) => (
+            <ProjectCard
+              key={project._id}
+              project={project}
+              onSetup={setSetupProject}
+              onConfigure={setEditProject}
+              onDelete={setDeleteProjectId}
+            />
+          ))}
+        </div>
       </QueryState>
 
       {/* dialog for creating a project */}
@@ -119,7 +109,7 @@ const ProjectsPage = () => {
           <NewProjectForm
             onSuccess={() => {
               setCreateOpen(false);
-              projectsQuery.refetch();
+              projects.refetch();
             }}
           />
         </DialogContent>
@@ -171,7 +161,7 @@ const ProjectsPage = () => {
                 project={editProject}
                 onClose={() => {
                   setEditProject(null);
-                  projectsQuery.refetch();
+                  projects.refetch();
                 }}
               />
             </>

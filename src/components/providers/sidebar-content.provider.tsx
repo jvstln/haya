@@ -52,7 +52,7 @@ export const defaultSidebarContent = {
 const SidebarContentContext = createContext<{ depth: number }>({ depth: -1 });
 
 /**
- * A store that stores sidebarContents with the depth provided by the SidebarContentContext.
+ * A store that stores sidebarContents with the depth provided by the SidebarContentContext and other necessary info.
  *
  * @example
  * dashboard/layout.tsx

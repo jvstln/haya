@@ -142,7 +142,12 @@ export const NewAuditForm = ({
             />
           </Field>
 
-          <Button type="submit" size="lg" isLoading={isLoading}>
+          <Button
+            type="submit"
+            size="lg"
+            isLoading={isLoading}
+            data-require-auth
+          >
             Track experience
           </Button>
         </form>

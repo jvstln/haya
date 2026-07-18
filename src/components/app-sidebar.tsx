@@ -34,6 +34,7 @@ export const AppSidebar = () => {
     <Sidebar
       collapsible="icon"
       className="sticky top-(--header-height) h-[calc(100vh-var(--header-height))] overflow-y-auto border-secondary border-r"
+      data-public
     >
       {isMobile && (
         <SidebarHeader className="flex-row items-center justify-between gap-4 p-4">

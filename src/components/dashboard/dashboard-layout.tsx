@@ -18,18 +18,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   // The user only sees this page if they are not logged in
   // Intercept all clicks and prompt the user to login if a button or link is clicked
   // -----------
+
   const { view, setView } = useOnboardingFormDialogView();
   const auth = useAuth();
   useEffect(() => {
     if (auth.isAuthenticated) return;
 
     const authInterceptor = (event: PointerEvent) => {
-      if (
-        !(event.target instanceof HTMLElement) ||
-        !event.target.closest("a, button, [role=button]") ||
-        view ||
-        auth.isAuthenticated
-      ) {
+      if (!(event.target instanceof HTMLElement)) return;
+
+      const requiresAuth = event.target.closest("[data-require-auth]");
+
+      if (view || auth.isAuthenticated || !requiresAuth) {
         return;
       }
 

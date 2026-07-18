@@ -1,7 +1,10 @@
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Warning2 } from "iconsax-reactjs";
+import { KeyRoundIcon } from "lucide-react";
 import type React from "react";
 import { isValidElement } from "react";
+import { useAuth } from "@/features/auth/auth.hook";
+import { gsap, useGSAP } from "@/lib/gsap.util";
 import { cn } from "@/lib/utils";
 import { FolderIcon } from "./icons";
 import { Button } from "./ui/button";
@@ -154,6 +157,41 @@ export function QueryState<
     ? getIsEmpty?.(query)
     : false;
 
+  useGSAP(() => {
+    gsap.to("[data-bounce]", {
+      keyframes: [{ y: -10 }, { y: 0, ease: "bounce.out" }],
+      repeat: -1,
+      repeatDelay: 1,
+      duration: 2.5,
+    });
+  });
+
+  // -------- If user is not authenticated, show empty/login message screen ------------
+  const auth = useAuth();
+  if (!auth.isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <Empty className="border-none bg-transparent">
+          <EmptyHeader>
+            <EmptyMedia className="relative">
+              <KeyRoundIcon
+                className="size-28 animate-pulse text-primary/80"
+                data-bounce
+              />
+              <div className="absolute inset-0 rounded-full bg-primary/5 blur-xl" />
+            </EmptyMedia>
+            <EmptyTitle>You need to login to view this data</EmptyTitle>
+            <EmptyDescription>No data to display here</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button data-require-auth>Login</Button>
+          </EmptyContent>
+        </Empty>
+      </div>
+    );
+  }
+  // ------------------------------------------------------------------
+
   if (getIsLoading ? possibleLoadingMessage : query?.isPending) {
     if (isValidElement(possibleLoadingMessage)) return possibleLoadingMessage;
 
@@ -199,7 +237,10 @@ export function QueryState<
         <Empty className="border-none bg-transparent">
           <EmptyHeader>
             <EmptyMedia className="relative">
-              <FolderIcon className="size-28 animate-pulse text-primary/80" />
+              <FolderIcon
+                className="size-28 animate-pulse text-primary/80"
+                data-bounce
+              />
               <div className="absolute inset-0 rounded-full bg-primary/5 blur-xl" />
             </EmptyMedia>
             {title && <EmptyTitle>{title}</EmptyTitle>}
