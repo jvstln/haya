@@ -3,6 +3,7 @@ import { Lato, Syncopate } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { HayaProvider } from "@/components/HayaProvider";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -39,7 +40,10 @@ export default function RootLayout({
           "relative size-full min-h-screen bg-background font-lato text-foreground antialiased",
         )}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+        <HayaProvider />
+        {children}
+        </Providers>
       </body>
     </html>
   );
