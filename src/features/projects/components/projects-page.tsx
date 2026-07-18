@@ -74,21 +74,25 @@ const ProjectsPage = () => {
 
       <QueryState
         query={projects}
-        getIsEmpty={() => ({
-          title: "No projects found",
-          description:
-            "Create a project to obtain an SDK tracking key and configure tracking settings.",
-          cta: (
-            <Button
-              onClick={() => setCreateOpen(true)}
-              appearance="outline"
-              color="secondary"
-              data-require-auth
-            >
-              Create your first project
-            </Button>
-          ),
-        })}
+        getIsEmpty={(projects) => {
+          return (
+            projects.data.length === 0 && {
+              title: "No projects found",
+              description:
+                "Create a project to obtain an SDK tracking key and configure tracking settings.",
+              cta: (
+                <Button
+                  onClick={() => setCreateOpen(true)}
+                  appearance="outline"
+                  color="secondary"
+                  data-require-auth
+                >
+                  Create your first project
+                </Button>
+              ),
+            }
+          );
+        }}
       >
         <div className="flex flex-wrap gap-6">
           {projects.data?.map((project) => (
