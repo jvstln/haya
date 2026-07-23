@@ -65,15 +65,28 @@ api.interceptors.request.use(async (config) => {
 });
 
 // Format error messages properly
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    error.originalMessage = error.message;
-    error.message = getErrorMessage(error);
+api.interceptors.response.use(null, (error) => {
+  error.originalMessage = error.message;
+  error.message = getErrorMessage(error);
 
-    return Promise.reject(error);
-  },
-);
+  return Promise.reject(error);
+});
+
+// Direct user to payment if payment is required
+api.interceptors.response.use(null, (error) => {
+  if (error.response?.status === 402) {
+    toast.error(error.message || "Payment required", {
+      action: {
+        label: "Upgrade",
+        onClick: () => {
+          window.location.href = "/dashboard/pricing";
+        },
+      },
+    });
+  }
+
+  return Promise.reject(error);
+});
 
 // Log user out if token has expired and prompt for login
 api.interceptors.response.use(null, async (error) => {

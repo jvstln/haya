@@ -1,4 +1,4 @@
-import { Category, Radar, Routing } from "iconsax-reactjs";
+import { Category, Radar, Routing, WalletMoney } from "iconsax-reactjs";
 import type { Route } from "next";
 import { createContext, useContext, useEffect } from "react";
 import { create } from "zustand";
@@ -36,6 +36,11 @@ export const defaultSidebarContent = {
       title: "Track Experience",
       url: "/dashboard/track-experience",
       icon: Radar,
+    },
+    {
+      title: "Upgrade plan",
+      url: "/dashboard/pricing",
+      icon: WalletMoney,
     },
     // {
     //   title: "Team",

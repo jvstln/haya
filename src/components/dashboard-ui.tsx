@@ -76,7 +76,10 @@ export const DashboardTitle = ({
 }: React.ComponentProps<"h1">) => {
   return (
     <h1
-      className={cn("peer text-base text-foreground lg:text-h3", className)}
+      className={cn(
+        "peer text-base text-foreground leading-relaxed lg:text-h3",
+        className,
+      )}
       data-slot="dashboard-title"
       {...props}
     />

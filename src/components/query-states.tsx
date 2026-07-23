@@ -36,6 +36,8 @@ type QueryStateProps<
   getIsEmpty?: (
     query: Extract<TQuery, { data: NonNullable<TData> }>,
   ) => boolean | string | EmptyStateProps;
+  /** Whether to require authentication to display content. @default true */
+  requireAuth?: boolean;
 };
 
 type EmptyStateProps = {
@@ -150,6 +152,7 @@ export function QueryState<
   getIsError,
   getIsEmpty,
   children,
+  requireAuth = true,
 }: QueryStateProps<TData, TQuery>) {
   const possibleLoadingMessage = getIsLoading?.(query);
   const possibleErrorMessage = getIsError?.(query);
@@ -168,7 +171,7 @@ export function QueryState<
 
   // -------- If user is not authenticated, show empty/login message screen ------------
   const auth = useAuth();
-  if (!auth.isAuthenticated) {
+  if (!auth.isAuthenticated && requireAuth) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <Empty className="border-none bg-transparent">
