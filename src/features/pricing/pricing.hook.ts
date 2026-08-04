@@ -4,11 +4,11 @@ import {
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/queryclient";
-import { setOnboardingFormDialogView } from "../auth/components/onboarding-dialog";
 import {
   cancelPlan,
   getCurrentPlan,
@@ -34,6 +34,7 @@ export const useCurrentPlan = () => {
 export const useSubscribeToPlan = () => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
+  const { setVisible: setWalletModalVisible } = useWalletModal();
   const activateSubscription = useMutation({
     mutationFn: subscribeToPlan,
   });
@@ -41,7 +42,14 @@ export const useSubscribeToPlan = () => {
   const subscribe = useMutation({
     mutationFn: async ({ planKey }: { planKey: string }) => {
       if (!publicKey) {
-        setOnboardingFormDialogView("signUpWallet");
+        // Just connect a wallet for signing — never re-authenticate. The
+        // user is already logged in (email/password or Google); routing
+        // through the wallet *sign-in* flow here would silently swap their
+        // session to whatever account that wallet resolves to on the
+        // backend, which may not even be this account. Wallet-based login
+        // is still available separately for users who want it as their
+        // primary auth method — this is just the bare connect modal.
+        setWalletModalVisible(true);
         throw new Error("Connect wallet first");
       }
 

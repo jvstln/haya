@@ -7,7 +7,7 @@ import { setOnboardingFormDialogView } from "@/features/auth/components/onboardi
 import { triggerUpgradePlan } from "@/features/pricing/components/upgrade-plan-dialog";
 
 export const api = axios.create({
-  baseURL: "https://api.usehaya.io/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://api.usehaya.io/api/v1",
 });
 
 // TODO: Remove when backend updates properties
