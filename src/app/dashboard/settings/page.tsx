@@ -18,6 +18,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Textarea } from "@/components/ui/textarea";
+import { TelegramConnect } from "@/features/telegram/components/telegram-connect";
 import { getInitials, truncate } from "@/lib/utils";
 
 const allTeams = [
@@ -106,6 +107,8 @@ const SettingsPage = () => {
           </div>
         </CardContent>
       </Card>
+
+      <TelegramConnect />
     </div>
   );
 };
