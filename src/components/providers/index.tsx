@@ -3,6 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { InvitationCodePrompt } from "@/features/auth/components/invitation-code-prompt";
 import { OnboardingFormDialog } from "@/features/auth/components/onboarding-dialog";
 import { SolanaProvider } from "@/features/auth/components/solana-provider";
+import { UpgradePlanDialog } from "@/features/pricing/components/upgrade-plan-dialog";
 import { ChangeUsernameDialogGuard } from "@/features/users/components/change-username-dialog";
 import { queryClient } from "@/lib/queryclient";
 import { Toaster } from "../ui/sonner";
@@ -19,6 +20,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         </GSAPGlobalAnimationProvider>
         <Toaster position="top-center" richColors />
         <OnboardingFormDialog />
+        <UpgradePlanDialog />
         <ChangeUsernameDialogGuard />
         <InvitationCodePrompt />
       </SolanaProvider>

@@ -4,6 +4,7 @@ import { useAuthStore } from "@/features/auth/auth.store";
 import { getAuth } from "@/features/auth/auth-cookie";
 import { getInvitationCode } from "@/features/auth/components/invitation-code-prompt";
 import { setOnboardingFormDialogView } from "@/features/auth/components/onboarding-dialog";
+import { triggerUpgradePlan } from "@/features/pricing/components/upgrade-plan-dialog";
 
 export const api = axios.create({
   baseURL: "https://api.usehaya.io/api/v1",
@@ -75,14 +76,24 @@ api.interceptors.response.use(null, (error) => {
 // Direct user to payment if payment is required
 api.interceptors.response.use(null, (error) => {
   if (error.response?.status === 402) {
-    toast.error(error.message || "Payment required", {
-      action: {
-        label: "Upgrade",
-        onClick: () => {
-          window.location.href = "/dashboard/pricing";
+    const details = error.response?.data?.details;
+
+    if (details?.code === "QUOTA_EXCEEDED") {
+      triggerUpgradePlan({
+        metric: details.metric ?? null,
+        requiredPlan: details.required_plan ?? null,
+        currentPlan: details.current_plan ?? null,
+      });
+    } else {
+      toast.error(error.message || "Payment required", {
+        action: {
+          label: "Upgrade",
+          onClick: () => {
+            window.location.href = "/dashboard/pricing";
+          },
         },
-      },
-    });
+      });
+    }
   }
 
   return Promise.reject(error);
