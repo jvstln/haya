@@ -76,8 +76,8 @@ export type PricingPlanDetail = {
   planKey: string;
   billingInterval: BillingInterval;
   totalPriceUsd: 10;
-  currency: "USDC";
-  network: "solana-mainnet";
+  currency: string;
+  network: string;
   receivingAddress: string;
   usdcMintAddress: string;
 };

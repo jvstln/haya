@@ -1,5 +1,6 @@
 import {
-  createTransferInstruction,
+  createAssociatedTokenAccountIdempotentInstruction,
+  createTransferCheckedInstruction,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -59,11 +60,28 @@ export const useSubscribeToPlan = () => {
       const amountMicroUsdc = Math.round(plan.totalPriceUsd * 1_000_000); // USDC has 6 decimals
 
       const tx = new Transaction().add(
-        createTransferInstruction(fromAta, toAta, publicKey, amountMicroUsdc),
+        // Idempotent: only creates the receiving wallet's USDC token account
+        // if it doesn't exist yet. Skipping this fails the transfer below if
+        // the receiving wallet has never held this mint before.
+        createAssociatedTokenAccountIdempotentInstruction(
+          publicKey,
+          toAta,
+          receivingWallet,
+          usdcMint,
+        ),
+        // "Checked" variant guards against a stale/wrong decimals assumption
+        // silently moving the wrong amount.
+        createTransferCheckedInstruction(
+          fromAta,
+          usdcMint,
+          toAta,
+          publicKey,
+          amountMicroUsdc,
+          6,
+        ),
       );
 
       const signature = await sendTransaction(tx, connection);
-      await connection.confirmTransaction(signature, "confirmed");
 
       const response = await activateSubscription.mutateAsync({
         paymentSignature: signature,
