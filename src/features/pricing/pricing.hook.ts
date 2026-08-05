@@ -9,6 +9,7 @@ import { PublicKey, Transaction } from "@solana/web3.js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/queryclient";
+import { triggerPlanSuccess } from "./components/billing-success-dialog";
 import {
   cancelPlan,
   getCurrentPlan,
@@ -24,10 +25,11 @@ export const usePlans = () => {
   });
 };
 
-export const useCurrentPlan = () => {
+export const useCurrentPlan = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ["currentPlan"],
     queryFn: getCurrentPlan,
+    enabled: options?.enabled,
   });
 };
 
@@ -103,11 +105,12 @@ export const useSubscribeToPlan = () => {
     onMutate() {
       toast.loading("Subscribing to plan...", { id: "subscribeToPlan" });
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       toast.success(data.message || "Subscribed to plan successfully", {
         id: "subscribeToPlan",
       });
       queryClient.invalidateQueries({ queryKey: ["currentPlan"] });
+      triggerPlanSuccess(variables.planKey);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to subscribe to plan", {
@@ -126,7 +129,7 @@ export const useCancelPlan = () => {
       toast.success(data.message || "Current plan cancelled successfully");
     },
     onError: (error) => {
-      toast.success(error.message || "Failed to cancel current plan");
+      toast.error(error.message || "Failed to cancel current plan");
     },
   });
 };

@@ -1,9 +1,13 @@
 "use client";
-import { Add } from "iconsax-reactjs";
+import { Add, Crown } from "iconsax-reactjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useRef } from "react";
+import { useAuth } from "@/features/auth/auth.hook";
+import { getPlanName } from "@/features/pricing/plan-meta";
+import { useCurrentPlan } from "@/features/pricing/pricing.hook";
+import { gsap, useGSAP } from "@/lib/gsap.util";
 import { cn } from "@/lib/utils";
 import logo from "@/public/logo.svg";
 import { useSidebarContent } from "./providers/sidebar-content.provider";
@@ -19,11 +23,49 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "./ui/sidebar";
+import { Skeleton } from "./ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const AppSidebar = () => {
   const pathname = usePathname();
   const { isMobile, toggleSidebar, setOpenMobile } = useSidebar();
+
+  const auth = useAuth();
+  const currentPlan = useCurrentPlan({ enabled: auth.isAuthenticated });
+
+  const planCardRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      if (!auth.isAuthenticated || !planCardRef.current) return;
+
+      gsap.fromTo(
+        planCardRef.current,
+        { y: 8, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+      );
+      gsap.fromTo(
+        "[data-plan-icon]",
+        { scale: 0.6, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          ease: "back.out(1.7)",
+          delay: 0.1,
+        },
+      );
+      gsap.to("[data-plan-icon]", {
+        scale: 1.05,
+        duration: 1.8,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 1.1,
+      });
+    },
+    { scope: planCardRef, dependencies: [auth.isAuthenticated] },
+  );
 
   // const sidebarItems = useGlobalStore((state) => state.sidebarConfig.content);
   const sidebarItems = useSidebarContent().content;
@@ -113,6 +155,43 @@ export const AppSidebar = () => {
       </SidebarContent>
 
       <SidebarFooter>
+        {auth.isAuthenticated && (
+          <Link
+            href="/dashboard/pricing"
+            className="group-data-[collapsible=icon]:hidden"
+            aria-label={`Current plan: ${getPlanName(currentPlan.data?.currentPlan)}`}
+          >
+            <div
+              ref={planCardRef}
+              className="hover:-translate-y-0.5 relative isolate overflow-hidden rounded-xl border border-secondary bg-card p-3 transition-all hover:border-primary/50"
+            >
+              <div
+                aria-hidden="true"
+                className="-top-10 -right-6 pointer-events-none absolute size-24 rounded-full bg-primary/20 blur-2xl"
+              />
+              <div className="relative flex items-center gap-3">
+                <span
+                  data-plan-icon
+                  className="grid size-9 shrink-0 place-items-center rounded-lg border border-primary/30 text-primary"
+                >
+                  <Crown className="size-4" variant="Bold" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium text-[10px] text-muted-foreground uppercase tracking-wide">
+                    Current plan
+                  </p>
+                  {currentPlan.isPending ? (
+                    <Skeleton className="mt-1 h-4 w-16" />
+                  ) : (
+                    <p className="truncate font-bold text-foreground">
+                      {getPlanName(currentPlan.data?.currentPlan)}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Link>
+        )}
         <SidebarTrigger />
       </SidebarFooter>
     </Sidebar>
